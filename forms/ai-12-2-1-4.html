@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>인공지능 기초 질문폼 - 기계학습 유형과 알고리즘 선정</title>
+  <style>
+    :root { --bg:#f5f7fb; --card:#ffffff; --ink:#172033; --muted:#667085; --line:#d9e0ec; --accent:#2563eb; --warn:#b42318; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:linear-gradient(180deg,#eef4ff 0%,var(--bg) 42%); color:var(--ink); font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; }
+    main { width:min(760px, calc(100% - 32px)); margin:40px auto; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:24px; box-shadow:0 20px 60px rgba(31,41,55,.12); padding:28px; }
+    .eyebrow { color:var(--accent); font-weight:700; margin:0 0 8px; }
+    h1 { margin:0; font-size:clamp(1.65rem,4vw,2.35rem); letter-spacing:-.04em; }
+    .meta { margin:10px 0 22px; color:var(--muted); }
+    .warning { display:none; margin:0 0 18px; padding:12px 14px; border:1px solid #fecdca; border-radius:14px; color:var(--warn); background:#fffbfa; font-weight:700; }
+    label { display:block; margin:16px 0 7px; font-weight:700; }
+    select, input, textarea { width:100%; border:1px solid var(--line); border-radius:14px; padding:13px 14px; font:inherit; background:#fff; color:var(--ink); }
+    textarea { min-height:150px; resize:vertical; }
+    .questions { display:grid; gap:18px; margin-top:20px; }
+    .question-block { padding:18px; border-radius:18px; background:#f8fbff; border:1px solid #dbeafe; }
+    .question-block h2 { margin:0 0 10px; font-size:1.05rem; }
+    .question-text { margin:0 0 12px; font-size:1.05rem; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    button { width:100%; margin-top:20px; border:0; border-radius:16px; padding:15px 18px; background:var(--accent); color:#fff; font:inherit; font-weight:800; cursor:pointer; }
+    button:focus, input:focus, select:focus, textarea:focus { outline:3px solid rgba(37,99,235,.25); outline-offset:2px; }
+    .hint { color:var(--muted); font-size:.92rem; margin:8px 0 0; }
+    .toast { min-height:28px; margin-top:12px; color:var(--warn); font-weight:700; }
+    @media (max-width:640px) { main { margin:20px auto; } .card { padding:20px; border-radius:20px; } .row { grid-template-columns:1fr; gap:0; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="card">
+      <p class="eyebrow">인공지능 기초 · 생기부 기록용 질문폼</p>
+      <h1>기계학습 유형과 알고리즘 선정</h1>
+      <p class="meta">Ⅱ. 인공지능과 학습 · 2-1-4 · 74~75쪽</p>
+      <p class="warning">Apps Script 웹 앱 URL이 아직 설정되지 않았습니다. 선생님이 배포 URL을 넣은 뒤 사용하세요.</p>
+      <form id="reflectionForm" method="post" action="https://script.google.com/macros/s/AKfycbyXgCq6W2zzT7fxPiblqG6wA-e3CpCgztuRKrIQkExMn6oQJ9oxd-U--dVB-5H3_fZF/exec" target="hiddenSubmitFrame">
+        <input type="hidden" name="course" value="인공지능 기초">
+        <input type="hidden" name="subunitId" value="ai-12-2-1-4">
+        <input type="hidden" name="subunitTitle" value="기계학습 유형과 알고리즘 선정">
+        <input type="hidden" name="pages" value="74~75쪽">
+        <input type="hidden" name="pasteBlockCount" id="pasteBlockCount" value="0">
+        <input type="hidden" name="clientSubmittedAt" id="clientSubmittedAt" value="">
+        <input type="hidden" name="userAgent" id="userAgent" value="">
+        <label for="className">반</label>
+        <select id="className" name="className" required>
+          <option value="" selected disabled>반 선택</option>
+          <option value="인공지능C">인공지능C</option>
+<option value="인공지능F">인공지능F</option>
+<option value="인공지능G">인공지능G</option>
+        </select>
+        <div class="row">
+          <div><label for="studentNo">학번</label><input id="studentNo" name="studentNo" inputmode="numeric" autocomplete="off" pattern="[0-9]{5}" minlength="5" maxlength="5" placeholder="예: 30106" required></div>
+          <div><label for="name">이름</label><input id="name" name="name" autocomplete="name" required></div>
+        </div>
+        <div class="questions">
+          <section class="question-block">
+            <h2>질문 1</h2>
+            <p class="question-text">분류, 회귀, 군집 중 하나를 골라 실제 문제 상황에 적용해 보고, 왜 그 유형이 적절한지 쓰세요.</p>
+            <input type="hidden" name="question1" value="분류, 회귀, 군집 중 하나를 골라 실제 문제 상황에 적용해 보고, 왜 그 유형이 적절한지 쓰세요.">
+            <label for="answer1">답변 1</label>
+            <textarea id="answer1" name="answer1" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
+          </section>
+<section class="question-block">
+            <h2>질문 2</h2>
+            <p class="question-text">&#x27;기계학습 유형과 알고리즘 선정&#x27; 수업에서 새롭게 이해한 개념을 하나 고르고, 그 개념을 자신의 말로 설명하세요.</p>
+            <input type="hidden" name="question2" value="&#x27;기계학습 유형과 알고리즘 선정&#x27; 수업에서 새롭게 이해한 개념을 하나 고르고, 그 개념을 자신의 말로 설명하세요.">
+            <label for="answer2">답변 2</label>
+            <textarea id="answer2" name="answer2" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
+          </section>
+<section class="question-block">
+            <h2>질문 3</h2>
+            <p class="question-text">&#x27;기계학습 유형과 알고리즘 선정&#x27; 내용이 실제 생활, 진로, 사회 문제 중 어디와 연결된다고 생각하는지 구체적인 예를 들어 쓰세요.</p>
+            <input type="hidden" name="question3" value="&#x27;기계학습 유형과 알고리즘 선정&#x27; 내용이 실제 생활, 진로, 사회 문제 중 어디와 연결된다고 생각하는지 구체적인 예를 들어 쓰세요.">
+            <label for="answer3">답변 3</label>
+            <textarea id="answer3" name="answer3" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
+          </section>
+        </div>
+        <p class="hint">모든 답변 칸은 붙여넣기와 드래그 입력이 막혀 있습니다. 직접 작성한 내용만 제출하세요.</p>
+        <button type="submit">제출하기</button>
+      </form>
+      <div id="toast" class="toast" aria-live="polite"></div>
+      <iframe name="hiddenSubmitFrame" title="hidden submit frame" style="display:none"></iframe>
+    </section>
+  </main>
+  <script>
+    const form = document.getElementById('reflectionForm');
+    const answers = Array.from(document.querySelectorAll('textarea[data-no-paste="true"]'));
+    const pasteCount = document.getElementById('pasteBlockCount');
+    const toast = document.getElementById('toast');
+    const lastValues = new Map();
+    function blockPaste(textarea, message) {
+      pasteCount.value = String(Number(pasteCount.value) + 1);
+      textarea.value = lastValues.get(textarea.id) || '';
+      toast.textContent = message;
+      window.setTimeout(() => { toast.textContent = ''; }, 2500);
+    }
+    answers.forEach((textarea) => {
+      lastValues.set(textarea.id, '');
+      textarea.addEventListener('input', () => { lastValues.set(textarea.id, textarea.value); });
+      textarea.addEventListener('paste', (event) => { event.preventDefault(); blockPaste(textarea, '붙여넣기 대신 직접 작성해 주세요.'); });
+      textarea.addEventListener('drop', (event) => { event.preventDefault(); blockPaste(textarea, '드래그해서 넣기는 사용할 수 없습니다.'); });
+      textarea.addEventListener('dragover', (event) => { event.preventDefault(); });
+      textarea.addEventListener('beforeinput', (event) => {
+        if (/insertFrom(Paste|Drop|Yank)/.test(event.inputType || '')) {
+          event.preventDefault();
+          blockPaste(textarea, '붙여넣기나 드래그 입력은 기록하지 않습니다.');
+        }
+      });
+    });
+    form.addEventListener('submit', () => {
+      document.getElementById('clientSubmittedAt').value = new Date().toISOString();
+      document.getElementById('userAgent').value = navigator.userAgent;
+      toast.textContent = '제출했습니다. 선생님 안내에 따라 창을 닫아도 됩니다.';
+    });
+  </script>
+</body>
+</html>
