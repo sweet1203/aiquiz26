@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>인공지능 기초 질문폼 - 인공지능의 원리</title>
+  <title>인공지능 기초 질문폼 - 딥러닝의 학습</title>
   <style>
     :root { --bg:#f5f7fb; --card:#ffffff; --ink:#172033; --muted:#667085; --line:#d9e0ec; --accent:#2563eb; --warn:#b42318; }
     * { box-sizing: border-box; }
@@ -33,14 +33,14 @@
   <main>
     <section class="card">
       <p class="eyebrow">인공지능 기초 · 생기부 기록용 질문폼</p>
-      <h1>인공지능의 원리</h1>
-      <p class="meta">Ⅰ. 인공지능의 이해 · 1-1-2 · 20~23쪽</p>
+      <h1>딥러닝의 학습</h1>
+      <p class="meta">Ⅱ. 인공지능과 학습 · 2-2-1-1 · 93~95쪽</p>
       <p class="warning">Apps Script 웹 앱 URL이 아직 설정되지 않았습니다. 선생님이 배포 URL을 넣은 뒤 사용하세요.</p>
       <form id="reflectionForm" method="post" action="https://script.google.com/macros/s/AKfycbyXgCq6W2zzT7fxPiblqG6wA-e3CpCgztuRKrIQkExMn6oQJ9oxd-U--dVB-5H3_fZF/exec" target="hiddenSubmitFrame">
         <input type="hidden" name="course" value="인공지능 기초">
-        <input type="hidden" name="subunitId" value="ai-02-1-1-2">
-        <input type="hidden" name="subunitTitle" value="인공지능의 원리">
-        <input type="hidden" name="pages" value="20~23쪽">
+        <input type="hidden" name="subunitId" value="ai-15-2-2-1-1">
+        <input type="hidden" name="subunitTitle" value="딥러닝의 학습">
+        <input type="hidden" name="pages" value="93~95쪽">
         <input type="hidden" name="pasteBlockCount" id="pasteBlockCount" value="0">
         <input type="hidden" name="clientSubmittedAt" id="clientSubmittedAt" value="">
         <input type="hidden" name="userAgent" id="userAgent" value="">
@@ -58,22 +58,22 @@
         <div class="questions">
           <section class="question-block">
             <h2>질문 1</h2>
-            <p class="question-text">교육·상업·교통 운송·의료·법률·국방·제조·공공 여덟 분야 중 하나를 고르고, 그 분야에서 찾은 최신 사례를 쓰세요. 그리고 그 사례가 인식·판단(추론)·행동 중 어느 단계를 가장 많이 쓰는지도 쓰세요.</p>
-            <input type="hidden" name="question1" value="교육·상업·교통 운송·의료·법률·국방·제조·공공 여덟 분야 중 하나를 고르고, 그 분야에서 찾은 최신 사례를 쓰세요. 그리고 그 사례가 인식·판단(추론)·행동 중 어느 단계를 가장 많이 쓰는지도 쓰세요.">
+            <p class="question-text">붓꽃 분류 모델이 출력한 값이 (0.12, 0.04, 0.84)였고 실제 레이블은 버지니카였습니다. 이 모델의 예측이 맞았는지 쓰고, 그럼에도 오차가 0이 아닌 이유를 설명하세요.</p>
+            <input type="hidden" name="question1" value="붓꽃 분류 모델이 출력한 값이 (0.12, 0.04, 0.84)였고 실제 레이블은 버지니카였습니다. 이 모델의 예측이 맞았는지 쓰고, 그럼에도 오차가 0이 아닌 이유를 설명하세요.">
             <label for="answer1">답변 1</label>
             <textarea id="answer1" name="answer1" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
           </section>
 <section class="question-block">
             <h2>질문 2</h2>
-            <p class="question-text">자율주행 자동차를 예로 인식 → 판단·추론 → 행동의 세 단계를 배웠습니다. 이 중 한 단계가 잘못되면 어떤 일이 벌어질지, 단계를 하나 골라 예를 들어 쓰세요.</p>
-            <input type="hidden" name="question2" value="자율주행 자동차를 예로 인식 → 판단·추론 → 행동의 세 단계를 배웠습니다. 이 중 한 단계가 잘못되면 어떤 일이 벌어질지, 단계를 하나 골라 예를 들어 쓰세요.">
+            <p class="question-text">TensorFlow Playground에서 퍼셉트론 1개로는 분류가 안 되다가 은닉층을 2개로 늘리자 되었습니다. 왜 그런지 자신의 말로 설명하세요.</p>
+            <input type="hidden" name="question2" value="TensorFlow Playground에서 퍼셉트론 1개로는 분류가 안 되다가 은닉층을 2개로 늘리자 되었습니다. 왜 그런지 자신의 말로 설명하세요.">
             <label for="answer2">답변 2</label>
             <textarea id="answer2" name="answer2" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
           </section>
 <section class="question-block">
             <h2>질문 3</h2>
-            <p class="question-text">인공지능 ⊃ 기계학습 ⊃ 딥러닝의 포함 관계를 배웠습니다. &#x27;인공지능이지만 기계학습은 아닌 것&#x27;의 예를 하나 떠올려 쓰세요.</p>
-            <input type="hidden" name="question3" value="인공지능 ⊃ 기계학습 ⊃ 딥러닝의 포함 관계를 배웠습니다. &#x27;인공지능이지만 기계학습은 아닌 것&#x27;의 예를 하나 떠올려 쓰세요.">
+            <p class="question-text">Spiral 데이터셋도 시도해 보았습니다. 앞의 데이터셋보다 어려웠나요, 쉬웠나요? 그렇게 느낀 이유와, 학습 횟수(Epochs)를 늘렸을 때 어떻게 달라졌는지 쓰세요.</p>
+            <input type="hidden" name="question3" value="Spiral 데이터셋도 시도해 보았습니다. 앞의 데이터셋보다 어려웠나요, 쉬웠나요? 그렇게 느낀 이유와, 학습 횟수(Epochs)를 늘렸을 때 어떻게 달라졌는지 쓰세요.">
             <label for="answer3">답변 3</label>
             <textarea id="answer3" name="answer3" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
           </section>
