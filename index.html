@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>인공지능 기초 질문폼</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Cpath d='M18 40h28v6H18zM18 18h28v6H18zM18 29h20v6H18z' fill='white'/%3E%3C/svg%3E">
   <style>
     :root { --bg:#f5f7fb; --card:#ffffff; --ink:#172033; --muted:#667085; --line:#d9e0ec; --accent:#2563eb; --soft:#eef4ff; }
     * { box-sizing:border-box; }
@@ -15,6 +16,8 @@
     .lead { max-width:760px; margin:16px 0 0; color:var(--muted); font-size:1.05rem; }
     .stats { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
     .stat { padding:9px 13px; border-radius:999px; background:var(--soft); color:#1e3a8a; font-weight:800; }
+    .hero-link { display:inline-block; margin-top:18px; padding:10px 14px; border-radius:999px; background:var(--accent); color:#fff; font-weight:800; text-decoration:none; }
+    .hero-link:hover { background:#1d4ed8; }
     .unit { margin-top:34px; }
     h2 { margin:0 0 14px; font-size:1.35rem; letter-spacing:-.03em; }
     .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
@@ -34,6 +37,7 @@
       <h1>소단원별 생기부 질문폼</h1>
       <p class="lead">코들 코스웨어와 강의용 PPT 수업을 마친 뒤, 해당 소단원 카드를 열어 반·학번·이름과 수업 연계 질문 답변을 제출합니다.</p>
       <div class="stats"><span class="stat">4개 단원</span><span class="stat">35개 질문폼</span><span class="stat">반: 인공지능C/F/G</span></div>
+      <a class="hero-link" href="summary-index.html">쉬운 설명 정리본 보기</a>
     </section>
     <section class="unit"><h2>Ⅰ. 인공지능의 이해</h2><div class="grid"><a class="task-card" href="forms/ai-01-1-1-1.html">
               <span class="task-order">01</span>
