@@ -18,6 +18,9 @@
     .stat { padding:9px 13px; border-radius:999px; background:var(--soft); color:#1e3a8a; font-weight:800; }
     .hero-link { display:inline-block; margin-top:18px; padding:10px 14px; border-radius:999px; background:var(--accent); color:#fff; font-weight:800; text-decoration:none; }
     .hero-link:hover { background:#1d4ed8; }
+    .hero-links { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+    .hero-link.ghost { background:var(--soft); color:#1d4ed8; border:1px solid #bfd4ff; }
+    .hero-link.ghost:hover { background:#e0ecff; }
     .unit { margin-top:34px; }
     h2 { margin:0 0 14px; font-size:1.35rem; letter-spacing:-.03em; }
     .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
@@ -36,8 +39,11 @@
       <p class="eyebrow">대성여자고등학교 · 인공지능 기초</p>
       <h1>소단원별 생기부 질문폼</h1>
       <p class="lead">코들 코스웨어와 강의용 PPT 수업을 마친 뒤, 해당 소단원 카드를 열어 반·학번·이름과 수업 연계 질문 답변을 제출합니다.</p>
-      <div class="stats"><span class="stat">4개 단원</span><span class="stat">35개 질문폼</span><span class="stat">반: 인공지능C/F/G</span></div>
-      <a class="hero-link" href="summary-index.html">쉬운 설명 정리본 보기</a>
+      <div class="stats"><span class="stat">4개 단원</span><span class="stat">49개 질문폼</span><span class="stat">반: 인공지능C/F/G</span><span class="stat">수행평가 2회 · 각 25%</span></div>
+      <div class="hero-links">
+      <a class="hero-link" href="assessment.html">수행평가 안내 보기</a>
+      <a class="hero-link ghost" href="summary-index.html">쉬운 설명 정리본 보기</a>
+    </div>
     </section>
     <section class="unit"><h2>Ⅰ. 인공지능의 이해</h2><div class="grid"><a class="task-card" href="forms/ai-01-1-1-1.html">
               <span class="task-order">01</span>

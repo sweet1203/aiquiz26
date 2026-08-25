@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>수행평가 안내 · 인공지능 기초</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Cpath d='M18 40h28v6H18zM18 18h28v6H18zM18 29h20v6H18z' fill='white'/%3E%3C/svg%3E">
+  <style>
+    :root { --bg:#f5f7fb; --card:#ffffff; --ink:#172033; --muted:#667085; --line:#d9e0ec; --accent:#2563eb; --soft:#eef4ff; --warn:#b45309; --warnbg:#fffbeb; --warnline:#fcd34d; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:linear-gradient(180deg,#eaf2ff 0%,var(--bg) 360px); color:var(--ink); font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; line-height:1.6; }
+    main { width:min(920px,calc(100% - 32px)); margin:42px auto 64px; }
+    .hero { background:rgba(255,255,255,.82); border:1px solid var(--line); border-radius:28px; padding:32px; box-shadow:0 24px 70px rgba(31,41,55,.12); }
+    .eyebrow { margin:0 0 8px; color:var(--accent); font-weight:800; }
+    h1 { margin:0; font-size:clamp(1.9rem,5vw,3rem); letter-spacing:-.05em; line-height:1.08; }
+    .lead { max-width:720px; margin:16px 0 0; color:var(--muted); font-size:1.05rem; }
+    .stats { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+    .stat { padding:9px 13px; border-radius:999px; background:var(--soft); color:#1e3a8a; font-weight:800; font-size:.95rem; }
+    .back { display:inline-block; margin-top:18px; padding:10px 14px; border-radius:999px; background:var(--accent); color:#fff; font-weight:800; text-decoration:none; }
+    .back:hover { background:#1d4ed8; }
+    section.blk { margin-top:30px; background:var(--card); border:1px solid var(--line); border-radius:22px; padding:26px; box-shadow:0 10px 28px rgba(31,41,55,.06); }
+    h2 { margin:0 0 6px; font-size:1.35rem; letter-spacing:-.03em; }
+    h2 .tag { display:inline-block; margin-left:8px; padding:3px 10px; border-radius:999px; background:var(--soft); color:#1d4ed8; font-size:.78rem; vertical-align:middle; }
+    h3 { margin:22px 0 8px; font-size:1.05rem; }
+    .sub { margin:0 0 16px; color:var(--muted); }
+    .tblwrap { overflow-x:auto; }
+    table { border-collapse:collapse; width:100%; min-width:420px; margin:10px 0; font-size:.95rem; }
+    th,td { border:1px solid var(--line); padding:9px 11px; text-align:left; }
+    th { background:var(--soft); font-weight:800; }
+    td.num, th.num { text-align:right; white-space:nowrap; }
+    tr.total td { background:#f8fafc; font-weight:800; }
+    .note { margin:16px 0 0; padding:14px 16px; border-radius:14px; background:var(--warnbg); border:1px solid var(--warnline); color:var(--warn); }
+    .note strong { color:#92400e; }
+    .ok { color:#166534; } .no { color:#b91c1c; }
+    ul { margin:8px 0; padding-left:20px; } li { margin:5px 0; }
+    code { background:#f1f5f9; padding:2px 6px; border-radius:6px; font-size:.9em; }
+    footer { margin-top:34px; color:var(--muted); font-size:.9rem; text-align:center; }
+    @media (max-width:760px){ main{margin-top:20px;} .hero{padding:22px;border-radius:22px;} section.blk{padding:18px;border-radius:18px;} }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <p class="eyebrow">대성여자고등학교 · 인공지능 기초</p>
+    <h1>2학기 수행평가 안내</h1>
+    <p class="lead">수행평가는 2회, 모두 <strong>개별수행</strong>입니다. 두 평가 모두 실습(또는 프로젝트) 40점과 서술·논술 60점으로 나뉘며, 서술은 <strong>자기 데이터의 실제 수치를 근거로</strong> 써야 점수를 받습니다.</p>
+    <div class="stats">
+      <span class="stat">수행평가 2회</span>
+      <span class="stat">각 25% · 합계 50%</span>
+      <span class="stat">개별수행</span>
+      <span class="stat">생성형 AI 조건부 허용</span>
+    </div>
+    <a class="back" href="index.html">← 질문폼 목록으로</a>
+  </section>
+
+  <section class="blk">
+    <h2>한눈에 보기</h2>
+    <div class="tblwrap">
+    <table>
+      <tr><th>구분</th><th>수행평가 ①</th><th>수행평가 ②</th></tr>
+      <tr><th>평가명</th><td>Orange3를 활용한 데이터 전처리 및 기계학습 모델 분석</td><td>Machine Learning for Kids를 활용한 인공지능 문제해결 프로젝트</td></tr>
+      <tr><th>시기</th><td>10월</td><td>11월</td></tr>
+      <tr><th>단원</th><td>Ⅱ. 인공지능과 학습</td><td>Ⅳ. 인공지능 프로젝트</td></tr>
+      <tr><th>도구</th><td>Orange3</td><td>ML4Kids + Scratch</td></tr>
+      <tr><th>반영비율</th><td>25%</td><td>25%</td></tr>
+      <tr><th>배점</th><td>실험·실습 40 + 서술·논술 60</td><td>프로젝트 40 + 서술·논술 60</td></tr>
+      <tr><th>성취기준</th><td>[12인기02-02] · [12인기02-04]</td><td>[12인기04-03] · [12인기04-04]</td></tr>
+    </table>
+    </div>
+    <div class="note">
+      <strong>공통 채점 원칙</strong> — 각 항목의 등급은 <strong>체크 항목을 몇 개 충족했는지</strong>로 정합니다.
+      글을 길게 썼는지가 아니라, <strong>확인할 수 있는 근거를 댔는지</strong>를 봅니다.
+    </div>
+  </section>
+
+  <section class="blk">
+    <h2>수행평가 ① Orange3 데이터 분석 <span class="tag">10월 · 25%</span></h2>
+    <p class="sub">학생마다 <strong>서로 다른 주제의 CSV</strong>를 받습니다. 주제는 다르지만 구조와 난이도는 같습니다.</p>
+
+    <h3>평가요소와 배점</h3>
+    <div class="tblwrap">
+    <table>
+      <tr><th>평가요소</th><th>유형</th><th class="num">배점</th></tr>
+      <tr><td>1. Orange3 분석 수행 <small>(.ows 제출)</small></td><td>실험·실습</td><td class="num">40</td></tr>
+      <tr><td>2. 결측치 분석 및 처리 근거</td><td>서술·논술</td><td class="num">12</td></tr>
+      <tr><td>3. 변수 설정 및 데이터 변환 해석</td><td>서술·논술</td><td class="num">8</td></tr>
+      <tr><td>4. 모델 성능 및 혼동행렬 분석</td><td>서술·논술</td><td class="num">12</td></tr>
+      <tr><td>5. 모델 활용 목적에 따른 판단</td><td>서술·논술</td><td class="num">8</td></tr>
+      <tr><td>6. 생성형 AI 답변 검증</td><td>서술·논술</td><td class="num">8</td></tr>
+      <tr><td>7. 현장 개별 서술 <small>(AI 사용 불가)</small></td><td>서술·논술</td><td class="num">12</td></tr>
+      <tr class="total"><td>합계</td><td></td><td class="num">100</td></tr>
+    </table>
+    </div>
+
+    <h3>Orange3 기본 흐름</h3>
+    <p><code>File → Data Table → Select Columns → Impute → Continuize → Test &amp; Score → Confusion Matrix</code></p>
+    <p class="sub">모델은 <strong>Decision Tree</strong>로 통일합니다. 위젯 구성은 알려주되 <strong>설정은 각자 판단</strong>합니다.</p>
+
+    <h3>제출물</h3>
+    <ul>
+      <li>Orange3 워크플로 파일 <code>.ows</code></li>
+      <li>분석 활동지 (1~6번)</li>
+      <li><strong>생성형 AI 대화 캡처</strong> — 프롬프트와 답변이 함께 보여야 함</li>
+      <li>현장 개별 서술 답안지</li>
+    </ul>
+  </section>
+
+  <section class="blk">
+    <h2>수행평가 ② ML4Kids 프로젝트 <span class="tag">11월 · 25%</span></h2>
+    <p class="sub">학습 데이터를 <strong>직접 수집·구성</strong>해서 모델을 만들고, 오류를 찾아 고친 뒤 전·후를 비교합니다. 텍스트·숫자·이미지·소리 중 자유롭게 고를 수 있습니다.</p>
+
+    <h3>평가요소와 배점</h3>
+    <div class="tblwrap">
+    <table>
+      <tr><th>평가요소</th><th>유형</th><th class="num">배점</th></tr>
+      <tr><td>1. 인공지능 모델 및 프로그램 구현</td><td>프로젝트</td><td class="num">40</td></tr>
+      <tr><td>2. 문제 정의 및 프로젝트 설계</td><td>서술·논술</td><td class="num">8</td></tr>
+      <tr><td>3. 학습 데이터 구성 및 선택 근거</td><td>서술·논술</td><td class="num">12</td></tr>
+      <tr><td>4. 모델 테스트 및 오류 분석</td><td>서술·논술</td><td class="num">12</td></tr>
+      <tr><td>5. 모델 개선 및 개선 전·후 비교</td><td>서술·논술</td><td class="num">12</td></tr>
+      <tr><td>6. 인공지능의 한계 및 사회적 영향 분석</td><td>서술·논술</td><td class="num">8</td></tr>
+      <tr><td>7. 현장 개별 서술 <small>(AI 사용 불가)</small></td><td>서술·논술</td><td class="num">8</td></tr>
+      <tr class="total"><td>합계</td><td></td><td class="num">100</td></tr>
+    </table>
+    </div>
+    <div class="note">
+      <strong>성능이 좋아지지 않아도 감점하지 않습니다.</strong> 무엇을 바꿨고 그 결과를 어떻게 읽었는지가 채점 대상입니다.
+      "데이터를 늘렸는데도 같은 오류가 났다 → 개수가 아니라 표현의 다양성이 문제였다" 같은 분석이 오히려 높은 점수를 받습니다.
+    </div>
+  </section>
+
+  <section class="blk">
+    <h2>가장 중요한 것 — 「수치 인용」</h2>
+    <p class="sub">서술 항목 대부분이 <strong>자기 결과의 실제 수치</strong>를 요구합니다. 인정되려면 <strong>이름(변수명·지표명) + 숫자</strong>가 함께 있어야 합니다.</p>
+    <div class="tblwrap">
+    <table>
+      <tr><th>판정</th><th>예시</th></tr>
+      <tr><td class="ok">인정 ○</td><td>"distance_km의 결측이 21건(11.1%)이었다"</td></tr>
+      <tr><td class="ok">인정 ○</td><td>"재현율 0.818로 정밀도 0.811보다 높았다"</td></tr>
+      <tr><td class="ok">인정 ○</td><td>"'칭찬' 클래스에 12개, '비난' 클래스에 28개를 넣어 2배 넘게 차이가 났다"</td></tr>
+      <tr><td class="no">인정 ✕</td><td>"결측치가 꽤 많았다"</td></tr>
+      <tr><td class="no">인정 ✕</td><td>"정확도가 높게 나왔다"</td></tr>
+      <tr><td class="no">인정 ✕</td><td>"데이터를 충분히 모았다"</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section class="blk">
+    <h2>생성형 AI 사용 규칙</h2>
+    <h3>써도 되는 곳</h3>
+    <ul>
+      <li>평가요소 <strong>1~6번</strong> — 개념 확인, 도구 사용법, 오류 해결, 결과 해석 보조, 문장 표현 보조</li>
+      <li>AI가 쓴 문장을 그대로 내는 것 자체는 감점하지 않습니다.</li>
+    </ul>
+    <h3>쓰면 안 되는 곳</h3>
+    <ul>
+      <li>평가요소 <strong>7번 현장 개별 서술</strong> — 인터넷·AI·휴대폰 모두 중단합니다. 자기 데이터와 분석 화면만 봅니다.</li>
+    </ul>
+    <div class="note">
+      <strong>AI를 써도 자기 결과를 모르면 점수를 받을 수 없습니다.</strong>
+      모든 체크 항목이 자기 데이터의 실제 수치를 요구하기 때문입니다.
+      <br><br>
+      <strong>AI 대화 캡처는 반드시 첨부하세요.</strong> 프롬프트와 답변이 함께 보여야 하며,
+      <strong>캡처가 없으면 6번은 5점을 넘을 수 없습니다.</strong>
+    </div>
+  </section>
+
+  <section class="blk">
+    <h2>현장 개별 서술</h2>
+    <p class="sub">각 수행평가 <strong>마지막 10~15분</strong>에 실시합니다. 문항은 <strong>당일에 지정</strong>되며, 아래 세 유형 중 하나입니다. 미리 준비할 수는 있지만 답은 자기 데이터에서만 나옵니다.</p>
+    <h3>수행평가 ①</h3>
+    <ul>
+      <li><strong>A.</strong> 결측 변수 하나를 골라, 다른 처리 방법을 썼다면 결과가 어떻게 달라질지 그 변수의 특성을 근거로 설명</li>
+      <li><strong>B.</strong> 자기 혼동행렬의 FP 또는 FN 하나를 골라, 실제 서비스에서 그 오류가 낳는 문제를 설명</li>
+      <li><strong>C.</strong> 정확도만으로 모델을 평가하는 것이 충분한지 자기 수치를 근거로 판단</li>
+    </ul>
+    <h3>수행평가 ②</h3>
+    <ul>
+      <li><strong>A.</strong> 한 클래스에 데이터를 10개 더 넣는다면 무엇을 넣겠는지, 오류 분석 결과와 연결해 설명</li>
+      <li><strong>B.</strong> 처음 보는 입력에서 잘못 판단할 가능성이 큰 경우를 학습 데이터 특성을 근거로 설명</li>
+      <li><strong>C.</strong> 다른 사람이 그대로 쓸 때 알려줘야 할 한계를 자기 테스트 결과를 근거로 설명</li>
+    </ul>
+  </section>
+
+  <section class="blk">
+    <h2>성적 처리</h2>
+    <div class="tblwrap">
+    <table>
+      <tr><th>항목</th><th>내용</th></tr>
+      <tr><td>기본점수</td><td><strong>23점</strong> — 수행평가에 참여한 학생이 받을 수 있는 최소 점수</td></tr>
+      <tr><td>분할점수</td><td>A 90 · B 80 · C 70 · D 60 · E 40</td></tr>
+      <tr><td>공결</td><td>취득점수의 <strong>100%</strong> 인정</td></tr>
+      <tr><td>공결 외 결시</td><td>취득점수의 <strong>80%</strong> 인정</td></tr>
+      <tr><td>자발적 미제출</td><td>해당 영역 <strong>최하점의 차하점</strong>, 기본점수 미부여</td></tr>
+    </table>
+    </div>
+    <p class="sub" style="margin-top:14px">결시의 종류와 상관없이 지속적으로 응시 기회를 부여합니다.</p>
+  </section>
+
+  <footer>
+    이 안내는 사전 공지용 요약입니다. 세부 채점 기준표는 수업 시간에 별도로 배부합니다.
+  </footer>
+</main>
+</body>
+</html>
