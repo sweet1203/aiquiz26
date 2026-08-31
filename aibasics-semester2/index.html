@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>인공지능 기초 차시별 추가 정리자료</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d8dee9;
+      --paper: #fbfcff;
+      --card: #ffffff;
+      --blue: #2563eb;
+      --green: #138a5e;
+      --amber: #b7791f;
+      --red: #b42318;
+      --soft-blue: #eef5ff;
+      --soft-green: #ecfdf3;
+      --soft-amber: #fff7e6;
+      --soft-red: #fff1f0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #f3f7ff 0%, #fbfcff 36%, #ffffff 100%);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+      line-height: 1.65;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 72px;
+    }
+
+    header {
+      padding: 34px;
+      border: 1px solid rgba(37, 99, 235, 0.18);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at top right, rgba(37, 99, 235, 0.16), transparent 34%),
+        linear-gradient(135deg, #ffffff 0%, #f6f9ff 100%);
+      box-shadow: 0 24px 70px rgba(28, 44, 84, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      line-height: 1.08;
+      letter-spacing: -0.055em;
+    }
+
+    h2 {
+      margin: 46px 0 14px;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      letter-spacing: -0.035em;
+    }
+
+    h3 {
+      margin: 28px 0 12px;
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    p { margin: 0; }
+
+    a {
+      color: var(--blue);
+      font-weight: 720;
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: var(--soft-blue);
+      color: #1d4ed8;
+      font-size: 0.86rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin-bottom: 18px;
+    }
+
+    .lead {
+      max-width: 820px;
+      color: #43506a;
+      font-size: 1.08rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .metric {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.8rem;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .notice {
+      padding: 18px 20px;
+      border: 1px solid #f3d28f;
+      border-radius: 18px;
+      background: var(--soft-amber);
+      color: #664700;
+      margin: 22px 0;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 18px 0 20px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #4b5565;
+      font-size: 0.82rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .exact { border-color: #a7f3d0; background: var(--soft-green); color: var(--green); }
+    .partial { border-color: #f6d89a; background: var(--soft-amber); color: var(--amber); }
+    .review { border-color: #fecaca; background: var(--soft-red); color: var(--red); }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--card);
+      box-shadow: 0 18px 44px rgba(28, 44, 84, 0.06);
+    }
+
+    table {
+      width: 100%;
+      min-width: 1040px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #edf0f5;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.94rem;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f8fbff;
+      color: #344054;
+      font-size: 0.82rem;
+      letter-spacing: -0.01em;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .unit-row td {
+      background: #111827;
+      color: #fff;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      border-bottom: 0;
+    }
+
+    .lesson-title {
+      display: block;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .links {
+      display: grid;
+      gap: 6px;
+    }
+
+    .note { color: #475467; }
+
+    .source-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .source-card {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+    }
+
+    footer {
+      margin-top: 44px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 760px) {
+      main { width: min(100% - 20px, 1180px); padding-top: 24px; }
+      header { padding: 24px; border-radius: 22px; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .source-list { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      main { width: 100%; padding: 0; }
+      header, .table-wrap, .source-card { box-shadow: none; }
+      th { position: static; }
+      a { color: #000; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">2026학년도 2학기 · 인공지능 기초 추가자료</div>
+      <h1>질문폼 차시대응표 기준<br>원본 HTML 정리자료</h1>
+      <p class="lead">이 문서는 <strong>06_질문폼_차시대응표.md</strong>의 49개 대응 행을 기준으로, <strong>22개정 정보과목/인공지능기초</strong> 폴더의 원본 HTML 수업자료를 연결한 교사용 보충자료 색인입니다. 수업 운영은 2026 폴더 문서를 기준으로 하고, 설명·보충·시각화가 필요할 때 아래 원본 자료를 빠르게 여는 용도입니다.</p>
+      <div class="grid" aria-label="자료 요약">
+        <div class="metric"><strong>49</strong><span>질문폼 대응 행</span></div>
+        <div class="metric"><strong>26</strong><span>원본 핵심 HTML</span></div>
+        <div class="metric"><strong>7</strong><span>원본 실습 HTML</span></div>
+        <div class="metric"><strong>48</strong><span>2학기 차시 계획</span></div>
+      </div>
+    </header>
+
+    <section class="notice">
+      <strong>읽는 기준</strong>: <span class="pill exact">직접 대응</span>은 제목·내용이 거의 같은 원본 HTML이 있는 경우, <span class="pill partial">부분 대응</span>은 원본 한 자료를 2026 질문폼에서 더 잘게 나눈 경우, <span class="pill review">별도 제작/검토</span>는 질문폼·정리·프로젝트·평가용으로 원본에 1:1 자료가 없는 경우입니다.
+    </section>
+
+    <div class="toolbar" aria-label="바로가기">
+      <a class="pill" href="../06_질문폼_차시대응표.md">질문폼 차시대응표</a>
+      <a class="pill" href="../02_차시별_수업계획.md">48차시 수업계획</a>
+      <a class="pill" href="../../../22개정 정보과목/인공지능기초/">원본 인공지능기초 폴더</a>
+      <a class="pill" href="../질문폼_HTML/dist/index.html">질문폼 목록</a>
+    </div>
+
+    <h2>차시별 대응표</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 13%">폼</th>
+            <th style="width: 24%">질문폼 제목 / 쪽수</th>
+            <th style="width: 27%">연결할 원본 HTML</th>
+            <th style="width: 10%">상태</th>
+            <th>수업 활용 메모</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="unit-row"><td colspan="5">Ⅰ. 인공지능의 이해</td></tr>
+          <tr data-row="1">
+            <td><a href="../질문폼_HTML/dist/forms/ai-01-1-1-1.html">ai-01</a></td>
+            <td><span class="lesson-title">인공지능의 개념과 특성</span><span class="meta">16~19쪽 · 1.5차시</span></td>
+            <td class="links"><a href="../../../22개정 정보과목/인공지능기초/1-1-1.인공지능의-개념과-특성.html">1-1-1. 인공지능의 개념과 특성</a></td>
+            <td><span class="pill exact">직접 대응</span></td>
+            <td class="note">오리엔테이션 뒤 개념·특성 설명용으로 바로 연결.</td>
+          </tr>
+          <tr data-row="2">
+            <td><a href="../질문폼_HTML/dist/forms/ai-02-1-1-2.html">ai-02</a></td>
+            <td><span class="lesson-title">인공지능의 원리</span><span class="meta">20~23쪽 · 1차시</span></td>
+            <td class="links"><a href="../../../22개정 정보과목/인공지능기초/1-1-2.인공지능의-원리.html">1-1-2. 인공지능의 원리</a></td>
+            <td><span class="pill exact">직접 대응</span></td>
+            <td class="note">인식·판단·행동 구조와 기계학습 포함 관계 설명에 사용.</td>
+          </tr>
+          <tr data-row="3">
+            <td><a href="../질문폼_HTML/dist/forms/ai-02-1-1-2-1.html">ai-02-1</a></td>
+            <td><span class="lesson-title">인공지능의 문제 해결</span><span class="meta">24~25쪽 · 0.5차시</span></td>
+            <td class="links"><a href="../../../22개정 정보과목/인공지능기초/1-1-2.인공지능의-원리.html">1-1-2. 인공지능의 원리</a></td>
+            <td><span class="pill partial">부분 대응</span></td>
+            <td class="note">2026 질문폼에서 24~25쪽을 별도 분리. 원본은 원리 HTML 안에서 함께 다룸.</td>
+          </tr>
+          <tr data-row="4">
+            <td><a href="../질문폼_HTML/dist/forms/ai-03-1-1-3.html">ai-03</a></td>
+            <td><span class="lesson-title">AI 역량기르기</span><span class="meta">26~27쪽 · 1차시</span></td>
+            <td class="links"><a href="../../../22개정 정보과목/인공지능기초/1-1-2.인공지능의-원리.html">1-1-2. 인공지능의 원리</a></td>
+            <td><span class="pill review">별도 제작/검토</span></td>
+            <td class="note">원본에 역량기르기 전용 HTML 없음. 앞 차시 원리 자료로 보충.</td>
+          </tr>
+          <tr data-row="5">
+            <td><a href="../질문폼_HTML/dist/forms/ai-04-1-2-1.html">ai-04</a></td>
+            <td><span class="lesson-title">탐색을 활용한 문제 해결 ① 맹목적 탐색</span><span class="meta">28~35쪽 · 1.5차시</span></td>
+            <td class="links"><a href="../../../22개정 정보과목/인공지능기초/1-2-1.탐색과-문제-해결.html">1-2-1. 탐색과 문제 해결</a></td>
+            <td><span class="pill partial">부분 대응</span></td>
+            <td class="note">탐색 트리·DFS·BFS 도입 자료. 질문폼은 맹목적 탐색 중심으로 분리.</td>
+          </tr>
+          <tr data-row="6">
+            <td><a href="../질문폼_HTML/dist/forms/ai-04-1-2-1-1.html">ai-04-1</a></td>
+            <td><span class="lesson-title">탐색을 활용한 문제 해결 ② 정보 이용 탐색</span><span class="meta">36~41쪽 · 1.5차시</span></td>
+            <td class="links"><a href="../../../22개정 정보과목/인공지능기초/1-2-2.지능적-탐색.html">1-2-2. 지능적 탐색</a><a href="../수업자료_HTML/정보이용탐색_수업자료.html">2026 정보이용탐색 수업자료</a></td>
+            <td><span class="pill exact">직접 대응</span></td>
+            <td class="note">A*, 최상 우선, 언덕 등반 설명은 원본과 2026 전용 자료를 함께 사용.</td>
+          </tr>
+          <tr data-row="7">
+            <td><a href="../질문폼_HTML/dist/forms/ai-05-1-2-2.html">ai-05</a></td>
+            <td><span class="lesson-title">지식의 표현과 명제 논리</span><span class="meta">42~44쪽 · 1차시</span></td>
+            <td class="links"><a href="../../../22개정 정보과목/인공지능기초/1-2-4.지식의-표현과-논리-추론.html">1-2-4. 지식의 표현과 논리 추론</a></td>
+            <td><span class="pill partial">부분 대응</span></td>
+            <td class="note">원본 한 파일에서 명제 논리와 술어 논리를 함께 다룸.</td>
+          </tr>
+          <tr data-row="8">
+            <td><a href="../질문폼_HTML/dist/forms/ai-05-1-2-2-1.html">ai-05-1</a></td>
+            <td><span class="lesson-title">술어 논리와 규칙 기반 구현</span><span class="meta">45~47쪽 · 1차시</span></td>
+            <td class="links"><a href="../../../22개정 정보과목/인공지능기초/1-2-4.지식의-표현과-논리-추론.html">1-2-4. 지식의 표현과 논리 추론</a></td>
+            <td><span class="pill partial">부분 대응</span></td>
+            <td class="note">규칙 기반 사고와 추론 활동은 같은 원본에서 필요한 부분만 사용.</td>
+          </tr>
+          <tr data-row="9">
+            <td><a href="../질문폼_HTML/dist/forms/ai-06-1-2-3.html">ai-06</a></td>
+            <td><span class="lesson-title">AI 역량기르기</span><span class="meta">48~49쪽 · 1차시</span></td>
+            <td class="links"><a href="../../../22개정 정보과목/인공지능기초/1-2-3.탐색을-활용한-문제-해결.html">1-2-3. 탐색을 활용한 문제 해결</a></td>
+            <td><span class="pill review">별도 제작/검토</span></td>
+            <td class="note">역량기르기 전용은 없고 탐색 적용 활동 자료가 가장 가까움.</td>
+          </tr>
+          <tr data-row="10">
+            <td><a href="../질문폼_HTML/dist/forms/ai-07-u1-project.html">ai-07</a></td>
+            <td><span class="lesson-title">창의융합프로젝트</span><span class="meta">50~51쪽 · 0.5차시</span></td>
+            <td class="links"><a href="../../../22개정 정보과목/인공지능기초/1-2-3.탐색을-활용한-문제-해결.html">1-2-3. 탐색을 활용한 문제 해결</a></td>
+            <td><span class="pill partial">부분 대응</span></td>
+            <td class="note">주차장 탈출·탐색 트리 프로젝트 도입 보충으로 사용.</td>
+          </tr>
+          <tr data-row="11">
+            <td><a href="../질문폼_HTML/dist/forms/ai-08-u1-summary.html">ai-08</a></td>
+            <td><span class="lesson-title">직업소개, 단원정리</span><span class="meta">52~53쪽 · 0.5차시</span></td>
+            <td class="links"><a href="../../../22개정 정보과목/인공지능기초/1-2-3.탐색을-활용한-문제-해결.html">1-2-3. 탐색을 활용한 문제 해결</a></td>
+            <td><span class="pill review">별도 제작/검토</span></td>
+            <td class="note">정리/직업소개 전용 원본 없음. 단원 마무리용으로 앞 활동 자료 활용.</td>
+          </tr>
+
+          <tr class="unit-row"><td colspan="5">Ⅱ. 인공지능과 학습</td></tr>
+          <tr data-row="12"><td><a href="../질문폼_HTML/dist/forms/ai-09-2-1-1.html">ai-09</a></td><td><span class="lesson-title">기계학습과 문제 해결 과정</span><span class="meta">58~61쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-1.기계학습과-문제-해결-과정.html">2-1-1. 기계학습과 문제 해결 과정</a></td><td><span class="pill exact">직접 대응</span></td><td class="note">전통적 프로그래밍과 기계학습 비교 도입.</td></tr>
+          <tr data-row="13"><td><a href="../질문폼_HTML/dist/forms/ai-10-2-1-2.html">ai-10</a></td><td><span class="lesson-title">데이터 수집 방법</span><span class="meta">62~63쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-2.데이터-수집과-정형-비정형-데이터.html">2-1-2. 데이터 수집과 정형·비정형 데이터</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">원본은 수집 방법과 데이터 유형을 함께 다룸.</td></tr>
+          <tr data-row="14"><td><a href="../질문폼_HTML/dist/forms/ai-10-2-1-2-1.html">ai-10-1</a></td><td><span class="lesson-title">데이터 편향성</span><span class="meta">64쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/3-2-2.데이터-편향성.html">3-2-2. 데이터 편향성</a><a href="../../../22개정 정보과목/인공지능기초/2-1-2.데이터-수집과-정형-비정형-데이터.html">2-1-2. 데이터 수집</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">64쪽 편향은 Ⅲ단원 편향 자료와 연계해 보충하면 좋음.</td></tr>
+          <tr data-row="15"><td><a href="../질문폼_HTML/dist/forms/ai-10-2-1-2-2.html">ai-10-2</a></td><td><span class="lesson-title">붓꽃 데이터 수집 실습</span><span class="meta">65쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-2.데이터-수집과-정형-비정형-데이터.html">2-1-2. 데이터 수집</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">캐글 접속·Iris 데이터 확인 보조 자료로 활용.</td></tr>
+          <tr data-row="16"><td><a href="../질문폼_HTML/dist/forms/ai-11-2-1-3.html">ai-11</a></td><td><span class="lesson-title">데이터 속성 구분과 통합</span><span class="meta">66~67쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-3.데이터의-속성.html">2-1-3. 데이터의 속성</a></td><td><span class="pill exact">직접 대응</span></td><td class="note">속성 유형·역할 구분 설명.</td></tr>
+          <tr data-row="17"><td><a href="../질문폼_HTML/dist/forms/ai-11-2-1-3-1.html">ai-11-1</a></td><td><span class="lesson-title">결측치와 이상치 처리</span><span class="meta">68~71쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-5.데이터-전처리.html">2-1-5. 데이터 전처리</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">원본 전처리 자료에서 결측치·이상치 처리 부분 중심.</td></tr>
+          <tr data-row="18"><td><a href="../질문폼_HTML/dist/forms/ai-11-2-1-3-2.html">ai-11-2</a></td><td><span class="lesson-title">핵심 속성 추출</span><span class="meta">72~73쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-4.데이터-탐색과-시각화.html">2-1-4. 데이터 탐색과 시각화</a><a href="../../../22개정 정보과목/인공지능기초/2-1-5.데이터-전처리.html">2-1-5. 데이터 전처리</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">상관관계·시각화 기반 핵심 속성 선택 보충.</td></tr>
+          <tr data-row="19"><td><a href="../질문폼_HTML/dist/forms/ai-12-2-1-4.html">ai-12</a></td><td><span class="lesson-title">기계학습의 3가지 유형</span><span class="meta">74쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-6.기계학습-유형과-알고리즘-선정.html">2-1-6. 기계학습 유형과 알고리즘 선정</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">원본 한 파일에서 유형과 알고리즘 선택을 함께 설명.</td></tr>
+          <tr data-row="20"><td><a href="../질문폼_HTML/dist/forms/ai-12-2-1-4-1.html">ai-12-1</a></td><td><span class="lesson-title">k-최근접 이웃 알고리즘</span><span class="meta">75쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-6.기계학습-유형과-알고리즘-선정.html">2-1-6. 기계학습 유형과 알고리즘 선정</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">k-NN만 따로 분리한 질문폼. 원본의 알고리즘 파트에서 사용.</td></tr>
+          <tr data-row="21"><td><a href="../질문폼_HTML/dist/forms/ai-13-2-1-5.html">ai-13</a></td><td><span class="lesson-title">모델 학습과 성능 평가</span><span class="meta">76~81쪽 · 2차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-7.모델-생성과-성능-평가.html">2-1-7. 모델 생성과 성능 평가</a></td><td><span class="pill exact">직접 대응</span></td><td class="note">혼동행렬·정확도·정밀도·재현율 설명의 핵심 보충.</td></tr>
+          <tr data-row="22"><td><a href="../질문폼_HTML/dist/forms/ai-13-2-1-5-1.html">ai-13-1</a></td><td><span class="lesson-title">기계학습 알고리즘</span><span class="meta">82~85쪽 · 0차시 · 미실시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-6.기계학습-유형과-알고리즘-선정.html">2-1-6. 기계학습 유형과 알고리즘 선정</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">수행평가①로 대체되어 미실시. 보충·과제용일 때만 사용.</td></tr>
+          <tr data-row="23"><td><a href="../질문폼_HTML/dist/forms/ai-13-2-1-5-2.html">ai-13-2</a></td><td><span class="lesson-title">선형 회귀 알고리즘 실습</span><span class="meta">86~87쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-7.모델-생성과-성능-평가.html">2-1-7. 모델 생성과 성능 평가</a><a href="../../../22개정 정보과목/인공지능기초/실습/exercise-calories.html">실습. 운동 시간과 소모 칼로리 예측</a><a href="../../../22개정 정보과목/인공지능기초/실습/temp-electricity.html">실습. 하루 최고기온과 전력 소비량 예측</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">원-핫 인코딩과 회귀 실습 보충. 수행평가 전 예시로 적합.</td></tr>
+          <tr data-row="24"><td><a href="../질문폼_HTML/dist/forms/ai-14-2-1-6.html">ai-14</a></td><td><span class="lesson-title">AI 역량기르기</span><span class="meta">88~89쪽 · 0차시 · 미실시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-7.모델-생성과-성능-평가.html">2-1-7. 모델 생성과 성능 평가</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">수행평가①로 대체되어 미실시. 정리·보충용으로만 표시.</td></tr>
+          <tr data-row="25"><td><a href="../질문폼_HTML/dist/forms/ai-15-2-2-1.html">ai-15</a></td><td><span class="lesson-title">퍼셉트론과 딥러닝의 구조</span><span class="meta">90~92쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-2-1.인공신경망과-딥러닝.html">2-2-1. 인공신경망과 딥러닝</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">원본 한 파일에서 구조·학습·MNIST 전반을 다룸.</td></tr>
+          <tr data-row="26"><td><a href="../질문폼_HTML/dist/forms/ai-15-2-2-1-1.html">ai-15-1</a></td><td><span class="lesson-title">딥러닝의 학습</span><span class="meta">93~95쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-2-1.인공신경망과-딥러닝.html">2-2-1. 인공신경망과 딥러닝</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">순전파·역전파·손실함수 보충.</td></tr>
+          <tr data-row="27"><td><a href="../질문폼_HTML/dist/forms/ai-15-2-2-1-2.html">ai-15-2</a></td><td><span class="lesson-title">MNIST 손글씨 분류 실습</span><span class="meta">96~101쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-2-1.인공신경망과-딥러닝.html">2-2-1. 인공신경망과 딥러닝</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">원본에서 딥러닝 실습과 비교 설명 부분 활용.</td></tr>
+          <tr data-row="28"><td><a href="../질문폼_HTML/dist/forms/ai-16-2-2-2.html">ai-16</a></td><td><span class="lesson-title">컴퓨터 비전</span><span class="meta">102~109쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-2-2.컴퓨터-비전.html">2-2-2. 컴퓨터 비전</a><a href="../../../22개정 정보과목/인공지능기초/실습/mask-detection.html">실습. 마스크 착용 여부 자동 분류</a><a href="../../../22개정 정보과목/인공지능기초/실습/recycling-sort.html">실습. 분리수거 자동 분류</a></td><td><span class="pill exact">직접 대응</span></td><td class="note">CNN·이미지 분류·객체 탐지 설명 뒤 이미지 프로젝트 예시 연결.</td></tr>
+          <tr data-row="29"><td><a href="../질문폼_HTML/dist/forms/ai-17-2-2-3.html">ai-17</a></td><td><span class="lesson-title">음성 인식</span><span class="meta">110~113쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-2-3.음성-인식과-언어-이해.html">2-2-3. 음성 인식과 언어 이해</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">원본은 음성 인식과 자연어 처리를 한 파일에서 다룸.</td></tr>
+          <tr data-row="30"><td><a href="../질문폼_HTML/dist/forms/ai-18-2-2-4.html">ai-18</a></td><td><span class="lesson-title">자연어 처리</span><span class="meta">114~119쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-2-3.음성-인식과-언어-이해.html">2-2-3. 음성 인식과 언어 이해</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">언어 이해·생성·임베딩·Transformer 흐름 보충.</td></tr>
+          <tr data-row="31"><td><a href="../질문폼_HTML/dist/forms/ai-19-2-2-5.html">ai-19</a></td><td><span class="lesson-title">AI 역량기르기</span><span class="meta">120~121쪽 · 정리 중</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-2-3.음성-인식과-언어-이해.html">2-2-3. 음성 인식과 언어 이해</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">역량기르기 전용 원본 없음. 자연어 처리 정리와 연결.</td></tr>
+          <tr data-row="32"><td><a href="../질문폼_HTML/dist/forms/ai-20-u2-project.html">ai-20</a></td><td><span class="lesson-title">창의융합프로젝트</span><span class="meta">122~125쪽 · 수행평가 대체</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/실습/loan-approval.html">실습. 대출 승인 여부 분류</a><a href="../../../22개정 정보과목/인공지능기초/실습/music-cluster.html">실습. 음악 취향 군집화</a><a href="../../../22개정 정보과목/인공지능기초/실습/fraud-detection.html">실습. 이상거래 탐지</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">원본 교과 소단원보다 프로젝트 예시 HTML이 수행평가 안내에 더 직접적.</td></tr>
+          <tr data-row="33"><td><a href="../질문폼_HTML/dist/forms/ai-21-u2-summary.html">ai-21</a></td><td><span class="lesson-title">마무리(직업소개, 단원정리)</span><span class="meta">126~127쪽 · 정리 중</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-2-3.음성-인식과-언어-이해.html">2-2-3. 음성 인식과 언어 이해</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">단원정리 전용 원본 없음. Ⅱ단원 후반 정리로 연결.</td></tr>
+
+          <tr class="unit-row"><td colspan="5">Ⅲ. 인공지능의 사회적 영향</td></tr>
+          <tr data-row="34"><td><a href="../질문폼_HTML/dist/forms/ai-22-3-1-1.html">ai-22</a></td><td><span class="lesson-title">인공지능의 발전과 사회 변화</span><span class="meta">132~139쪽 · 1.5차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/3-1-1.인공지능의-발전과-사회-변화.html">3-1-1. 인공지능의 발전과 사회 변화</a><a href="../../../22개정 정보과목/인공지능기초/3-1-2.사회적-문제-해결.html">3-1-2. 사회적 문제 해결</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">질문폼이 132~139쪽을 묶으므로 사회 변화와 문제 해결 자료를 함께 연결.</td></tr>
+          <tr data-row="35"><td><a href="../질문폼_HTML/dist/forms/ai-23-3-1-2.html">ai-23</a></td><td><span class="lesson-title">인공지능과 진로</span><span class="meta">140~143쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/3-1-3.인공지능과-진로.html">3-1-3. 인공지능과 진로</a></td><td><span class="pill exact">직접 대응</span></td><td class="note">생기부 진로 활동과 연결하기 좋은 보충자료.</td></tr>
+          <tr data-row="36"><td><a href="../질문폼_HTML/dist/forms/ai-24-3-1-3.html">ai-24</a></td><td><span class="lesson-title">AI 역량기르기</span><span class="meta">144~145쪽 · 0.5차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/3-1-3.인공지능과-진로.html">3-1-3. 인공지능과 진로</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">역량기르기 전용 원본 없음. 진로 자료로 보충.</td></tr>
+          <tr data-row="37"><td><a href="../질문폼_HTML/dist/forms/ai-25-3-2-1.html">ai-25</a></td><td><span class="lesson-title">인간과 인공지능의 공존</span><span class="meta">146~149쪽 · 1.5차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/3-2-1.인공지능과-인간의-공존.html">3-2-1. 인공지능과 인간의 공존</a></td><td><span class="pill exact">직접 대응</span></td><td class="note">공존 방식·긍정/부정 측면 토의용.</td></tr>
+          <tr data-row="38"><td><a href="../질문폼_HTML/dist/forms/ai-26-3-2-2.html">ai-26</a></td><td><span class="lesson-title">인공지능의 편향과 딜레마</span><span class="meta">150~155쪽 · 1.5차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/3-2-2.데이터-편향성.html">3-2-2. 데이터 편향성</a><a href="../../../22개정 정보과목/인공지능기초/3-2-3.윤리적-딜레마.html">3-2-3. 윤리적 딜레마</a></td><td><span class="pill exact">직접 대응</span></td><td class="note">편향 설명 후 딜레마 토론으로 이어지는 묶음.</td></tr>
+          <tr data-row="39"><td><a href="../질문폼_HTML/dist/forms/ai-27-3-2-3.html">ai-27</a></td><td><span class="lesson-title">사회적 책임</span><span class="meta">156~159쪽 · 2차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/3-2-4.사회적-책임과-공정성.html">3-2-4. 사회적 책임과 공정성</a></td><td><span class="pill exact">직접 대응</span></td><td class="note">책임성·공정성·투명성 서술형 평가 보충.</td></tr>
+          <tr data-row="40"><td><a href="../질문폼_HTML/dist/forms/ai-28-3-2-5.html">ai-28</a></td><td><span class="lesson-title">AI 역량기르기</span><span class="meta">160~161쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/3-2-4.사회적-책임과-공정성.html">3-2-4. 사회적 책임과 공정성</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">역량기르기 전용 원본 없음. 윤리 가치 적용 활동으로 보충.</td></tr>
+          <tr data-row="41"><td><a href="../질문폼_HTML/dist/forms/ai-29-u3-project.html">ai-29</a></td><td><span class="lesson-title">창의융합프로젝트</span><span class="meta">162~163쪽 · 수행평가 대체</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/3-2-4.사회적-책임과-공정성.html">3-2-4. 사회적 책임과 공정성</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">윤리 탐색 프로젝트는 2026 질문폼/평가 자료 중심으로 운영.</td></tr>
+          <tr data-row="42"><td><a href="../질문폼_HTML/dist/forms/ai-30-u3-summary.html">ai-30</a></td><td><span class="lesson-title">마무리 (직업소개, 단원정리)</span><span class="meta">164~165쪽 · 정리 중</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/3-2-4.사회적-책임과-공정성.html">3-2-4. 사회적 책임과 공정성</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">단원정리 전용 원본 없음. Ⅲ단원 윤리 정리로 연결.</td></tr>
+
+          <tr class="unit-row"><td colspan="5">Ⅳ. 인공지능 프로젝트</td></tr>
+          <tr data-row="43"><td><a href="../질문폼_HTML/dist/forms/ai-31-4-1-1.html">ai-31</a></td><td><span class="lesson-title">인공지능과 지속가능발전목표</span><span class="meta">170~177쪽 · 1.5차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/4-1-1.인공지능-프로젝트-주제-선정.html">4-1-1. 인공지능 프로젝트 주제 선정</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">SDGs를 프로젝트 주제로 좁히는 활동 보충.</td></tr>
+          <tr data-row="44"><td><a href="../질문폼_HTML/dist/forms/ai-32-4-1-2.html">ai-32</a></td><td><span class="lesson-title">인공지능 프로젝트 수행과정</span><span class="meta">178~189쪽 · 1.5차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/4-1-2.인공지능으로-해결할-수-있는-문제.html">4-1-2. 인공지능으로 해결할 수 있는 문제</a><a href="../../../22개정 정보과목/인공지능기초/4-1-3.인공지능-프로젝트-계획-세우기.html">4-1-3. 인공지능 프로젝트 계획 세우기</a></td><td><span class="pill partial">부분 대응</span></td><td class="note">수행 과정·역할분담·계획서 작성 보충.</td></tr>
+          <tr data-row="45"><td><a href="../질문폼_HTML/dist/forms/ai-33-4-2.html">ai-33</a></td><td><span class="lesson-title">정형 데이터 프로젝트 ① 문제 정의와 데이터 준비</span><span class="meta">190~195쪽 · 1.5차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/실습/temp-electricity.html">실습. 하루 최고기온과 전력 소비량 예측</a><a href="../../../22개정 정보과목/인공지능기초/실습/exercise-calories.html">실습. 운동 시간과 소모 칼로리 예측</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">기대 수명 예측 전용 원본 HTML은 없음. 정형 회귀 예시로 대체 보충.</td></tr>
+          <tr data-row="46"><td><a href="../질문폼_HTML/dist/forms/ai-33-4-2-1.html">ai-33-1</a></td><td><span class="lesson-title">정형 데이터 프로젝트 ② 모델 학습과 성능 개선</span><span class="meta">196~201쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-1-7.모델-생성과-성능-평가.html">2-1-7. 모델 생성과 성능 평가</a><a href="../../../22개정 정보과목/인공지능기초/실습/temp-electricity.html">실습. 전력 소비량 예측</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">회귀 모델 학습·R² 설명 보충. 프로젝트 전용 자료는 2026 쪽 기준.</td></tr>
+          <tr data-row="47"><td><a href="../질문폼_HTML/dist/forms/ai-34-4-3.html">ai-34</a></td><td><span class="lesson-title">비정형 데이터 프로젝트 ① 산불 이미지 분류</span><span class="meta">202~213쪽 · 1.5차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/2-2-2.컴퓨터-비전.html">2-2-2. 컴퓨터 비전</a><a href="../../../22개정 정보과목/인공지능기초/실습/mask-detection.html">실습. 마스크 착용 여부 분류</a><a href="../../../22개정 정보과목/인공지능기초/실습/recycling-sort.html">실습. 분리수거 자동 분류</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">산불 전용 원본은 없지만 이미지 분류와 CNN 흐름 보충 가능.</td></tr>
+          <tr data-row="48"><td><a href="../질문폼_HTML/dist/forms/ai-34-4-3-1.html">ai-34-1</a></td><td><span class="lesson-title">비정형 데이터 프로젝트 ② 데이터 편향성 해결</span><span class="meta">214~217쪽 · 1차시</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/3-2-2.데이터-편향성.html">3-2-2. 데이터 편향성</a><a href="../../../22개정 정보과목/인공지능기초/2-2-2.컴퓨터-비전.html">2-2-2. 컴퓨터 비전</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">편향 데이터 확인·개선 전후 비교 활동에 편향성 자료를 재사용.</td></tr>
+          <tr data-row="49"><td><a href="../질문폼_HTML/dist/forms/ai-35-u4-summary.html">ai-35</a></td><td><span class="lesson-title">마무리 (직업소개, 단원정리)</span><span class="meta">218~219쪽 · 정리 중</span></td><td class="links"><a href="../../../22개정 정보과목/인공지능기초/4-1-3.인공지능-프로젝트-계획-세우기.html">4-1-3. 인공지능 프로젝트 계획 세우기</a></td><td><span class="pill review">별도 제작/검토</span></td><td class="note">발표·성찰·포트폴리오 정리용. 프로젝트 계획 자료를 되짚는 용도.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>원본 실습 HTML 활용 묶음</h2>
+    <div class="source-list">
+      <div class="source-card"><h3>정형 데이터·회귀</h3><p><a href="../../../22개정 정보과목/인공지능기초/실습/temp-electricity.html">전력 소비량 예측</a>, <a href="../../../22개정 정보과목/인공지능기초/실습/exercise-calories.html">운동 칼로리 예측</a></p></div>
+      <div class="source-card"><h3>분류 모델</h3><p><a href="../../../22개정 정보과목/인공지능기초/실습/loan-approval.html">대출 승인 분류</a>, <a href="../../../22개정 정보과목/인공지능기초/실습/fraud-detection.html">이상거래 탐지</a></p></div>
+      <div class="source-card"><h3>이미지 프로젝트</h3><p><a href="../../../22개정 정보과목/인공지능기초/실습/mask-detection.html">마스크 착용 분류</a>, <a href="../../../22개정 정보과목/인공지능기초/실습/recycling-sort.html">분리수거 분류</a></p></div>
+      <div class="source-card"><h3>군집 모델</h3><p><a href="../../../22개정 정보과목/인공지능기초/실습/music-cluster.html">음악 취향 군집화</a></p></div>
+    </div>
+
+    <footer>
+      <p>작성 위치: <code>2026-ai-basics-semester2/추가자료/차시별_정리자료.html</code></p>
+      <p>기준 문서: <code>06_질문폼_차시대응표.md</code>. 원본 자료: <code>22개정 정보과목/인공지능기초</code>.</p>
+    </footer>
+  </main>
+</body>
+</html>
