@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인공지능의 원리</title>
+    <style>
+        code, kbd, samp, pre,
+        body .font-mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+            "Courier New", "Pretendard Variable", Pretendard, "Apple SD Gothic Neo",
+            "Malgun Gothic", monospace;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto,
+            "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+            "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 60%, #0f766e 100%);
+        }
+
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background-color: rgba(255,255,255,0.9);
+            border-bottom: 1px solid rgba(226,232,240,0.8);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .section-card {
+            background: white;
+            padding: clamp(1.25rem, 4vw, 2.5rem);
+            border-radius: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-btn {
+            width: 100%;
+            padding: 1.25rem;
+            text-align: left;
+            border-radius: 1rem;
+            border: 2px solid #e2e8f0;
+            background-color: #f8fafc;
+            font-weight: 500;
+            color: #374151;
+            font-size: 1rem;
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+        .quiz-btn:hover { background: #f0fdfa; border-color: #5eead4; }
+        .quiz-btn.correct { background: #0d9488; color: white; border-color: #0d9488; }
+        .quiz-btn.wrong   { background: #f43f5e; color: white; border-color: #f43f5e; }
+        .quiz-btn.disabled { opacity: 0.5; pointer-events: none; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        table { border-collapse: collapse; width: 100%; }
+
+        /* 본문이 긴 셀이 있거나 열이 많은 표는 좁은 화면에서 눌리는 대신
+           overflow-x-auto 래퍼 안에서 가로 스크롤되게 한다. */
+        table.table-prose { min-width: 32rem; }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 1rem;
+        }
+        thead th { background-color: #f1f5f9; font-weight: 700; color: #334155; }
+        tbody tr:nth-child(even) { background-color: #f8fafc; }
+        tbody tr:hover { background-color: #ede9fe; }
+
+        .arrow-pulse {
+            animation: pulse-arrow 2s infinite;
+        }
+        @keyframes pulse-arrow {
+            0%   { transform: translateX(0); opacity: 0.5; }
+            50%  { transform: translateX(5px); opacity: 1; }
+            100% { transform: translateX(0); opacity: 0.5; }
+        }
+
+        /* 링크 카드 (판단 방법 절) */
+        .next-card {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            padding: 1.25rem 1.5rem;
+            border-radius: 1.25rem;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+        }
+        .next-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .next-card-icon {
+            width: 3.25rem;
+            height: 3.25rem;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.375rem;
+            flex-shrink: 0;
+        }
+    
+        /* 코드 블록이 좁은 화면에서 화면 밖으로 넘치는 것을 막는다.
+           white-space:pre 를 유지해 들여쓰기 원형을 보존하고, 넘치는 줄은
+           코드 블록 안에서만 가로로 스크롤된다. flex 자식일 때 정상적으로
+           줄어들도록 min-width:0 을 함께 준다. */
+        body pre {
+            overflow-x: auto;
+            max-width: 100%;
+            min-width: 0;
+        }
+    </style>
+  <link rel="stylesheet" href="../assets/ai-basics-ZHMNdnwA.css">
+</head>
+<body class="text-slate-900">
+
+<!-- ── Hero ── -->
+<header id="top" class="hero-gradient text-white py-32 px-6 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+        <i class="fa-solid fa-brain absolute top-10 left-10 text-8xl transform -rotate-12"></i>
+        <i class="fa-solid fa-robot absolute bottom-10 right-10 text-9xl"></i>
+    </div>
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+        <span class="inline-block px-4 py-1.5 bg-white/20 rounded-full font-bold mb-6 backdrop-blur-sm border border-white/30 text-base">인공지능 기초</span>
+        <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight break-keep">
+            인공지능의 원리
+        </h1>
+        <p class="text-lg md:text-xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed">
+            인공지능은 <strong>인식 → 판단 → 행동</strong>의 순서로 세상과 상호작용합니다.<br>
+            각 단계가 어떻게 이루어지는지 차례로 살펴봅니다.
+        </p>
+    </div>
+</header>
+
+<!-- ── 학습 목표 배너 ── -->
+<div class="bg-white border-b border-slate-200 px-6 py-6">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex items-start gap-4">
+            <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-bullseye text-indigo-600 text-lg"></i>
+            </div>
+            <div>
+                <p class="font-black text-base text-slate-500 mb-2 uppercase tracking-widest">학습 목표</p>
+                <ol class="space-y-1 text-base font-medium text-slate-800 list-decimal list-outside pl-5">
+                    <li>인공지능이 인식→판단→행동의 순서로 동작한다는 것을 설명할 수 있다.</li>
+                    <li>센서와 A/D 변환(샘플링·양자화·부호화)이 인식 단계에서 하는 역할을 설명할 수 있다.</li>
+                    <li>지능 에이전트를 이루는 세 부분(센서·지능·액추에이터)과 다섯 가지 특성(자율성·능동성·사회성·시간 연속성·반응성)을 설명할 수 있다.</li>
+                    <li>판단을 실제로 수행하는 방법(탐색, 지식 표현과 추론, 기계학습)의 차이를 구별할 수 있다.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── 네비게이션 ── -->
+<nav class="sticky-nav px-6 py-4">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-md">
+                <i class="fa-solid fa-brain text-base"></i>
+            </div>
+            <span class="font-black text-xl tracking-tight text-slate-800">인공지능의 원리</span>
+        </div>
+        <div class="hidden md:flex space-x-5 font-bold text-slate-500 text-base">
+            <a href="#overview"  class="hover:text-indigo-600 transition">원리 개요</a>
+            <a href="#perception" class="hover:text-teal-600 transition">인식</a>
+            <a href="#reasoning"  class="hover:text-indigo-600 transition">판단</a>
+            <a href="#action"     class="hover:text-rose-500 transition">행동</a>
+            <a href="#usecase"    class="hover:text-orange-500 transition">활용</a>
+            <a href="#howjudge"   class="hover:text-violet-600 transition">판단의 방법</a>
+            <a href="#quiz"       class="hover:text-teal-600 transition">퀴즈</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ── 메인 콘텐츠 ── -->
+<main class="max-w-6xl mx-auto px-4 sm:px-6 py-20 space-y-24">
+
+    <!-- ===== 인식 → 판단 → 행동 개요 ===== -->
+    <section id="overview" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">인공지능이 일하는 순서 — 인식 → 판단 → 행동</h2>
+            <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-semibold">인공지능은 어떤 순서로 일을 처리할까?</p>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                인공지능은 세상과 상호작용하기 위해 항상 이 세 단계를 거칩니다.<br>
+                이 강의는 각 단계를 하나씩 풀어나갑니다.
+            </p>
+        </div>
+
+        <div class="section-card overflow-x-auto">
+            <!-- SVG 흐름도: 인식 → 판단 → 행동 (모든 font-size ≥ 16) -->
+            <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg"
+                 role="img" aria-label="인식 판단 행동 흐름도"
+                 style="width:100%;max-width:720px;display:block;margin:0 auto;min-width:720px">
+                <!-- 인식 박스 -->
+                <rect x="8" y="30" width="196" height="200" rx="18" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+                <text x="106" y="76" text-anchor="middle" font-size="20" font-weight="800" fill="#3730a3">1. 인식</text>
+                <text x="106" y="100" text-anchor="middle" font-size="16" fill="#4338ca">(Perception)</text>
+                <rect x="26" y="116" width="160" height="30" rx="8" fill="#c7d2fe"/>
+                <text x="106" y="137" text-anchor="middle" font-size="16" fill="#3730a3">센서</text>
+                <rect x="26" y="154" width="160" height="30" rx="8" fill="#c7d2fe"/>
+                <text x="106" y="175" text-anchor="middle" font-size="16" fill="#3730a3">A/D 변환</text>
+                <rect x="26" y="192" width="160" height="28" rx="8" fill="#c7d2fe"/>
+                <text x="106" y="211" text-anchor="middle" font-size="16" fill="#3730a3">디지털 신호</text>
+
+                <!-- 화살표 1 -->
+                <line x1="208" y1="130" x2="250" y2="130" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+                <polygon points="250,124 266,130 250,136" fill="#94a3b8"/>
+
+                <!-- 판단 박스 (강조) -->
+                <rect x="266" y="8" width="188" height="244" rx="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="3"/>
+                <rect x="266" y="8" width="188" height="244" rx="18" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="6 4"/>
+                <text x="360" y="40" text-anchor="middle" font-size="16" font-weight="700" fill="#7c3aed">★ 핵심 단계</text>
+                <text x="360" y="76" text-anchor="middle" font-size="20" font-weight="800" fill="#5b21b6">2. 판단</text>
+                <text x="360" y="100" text-anchor="middle" font-size="16" fill="#6d28d9">(Reasoning)</text>
+                <rect x="284" y="116" width="152" height="30" rx="8" fill="#ddd6fe"/>
+                <text x="360" y="137" text-anchor="middle" font-size="16" fill="#5b21b6">지능 에이전트</text>
+                <rect x="284" y="154" width="152" height="30" rx="8" fill="#ddd6fe"/>
+                <text x="360" y="175" text-anchor="middle" font-size="16" fill="#5b21b6">탐색 · 지식 표현</text>
+                <rect x="284" y="192" width="152" height="30" rx="8" fill="#ddd6fe"/>
+                <text x="360" y="213" text-anchor="middle" font-size="16" fill="#5b21b6">기계학습</text>
+
+                <!-- 화살표 2 -->
+                <line x1="458" y1="130" x2="500" y2="130" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+                <polygon points="500,124 516,130 500,136" fill="#94a3b8"/>
+
+                <!-- 행동 박스 -->
+                <rect x="516" y="30" width="196" height="200" rx="18" fill="#ffe4e6" stroke="#f43f5e" stroke-width="2"/>
+                <text x="614" y="76" text-anchor="middle" font-size="20" font-weight="800" fill="#9f1239">3. 행동</text>
+                <text x="614" y="100" text-anchor="middle" font-size="16" fill="#be123c">(Action)</text>
+                <rect x="534" y="116" width="160" height="30" rx="8" fill="#fecdd3"/>
+                <text x="614" y="137" text-anchor="middle" font-size="16" fill="#9f1239">액추에이터</text>
+                <rect x="534" y="154" width="160" height="30" rx="8" fill="#fecdd3"/>
+                <text x="614" y="175" text-anchor="middle" font-size="16" fill="#9f1239">환경 변화</text>
+                <rect x="534" y="192" width="160" height="28" rx="8" fill="#fecdd3"/>
+                <text x="614" y="211" text-anchor="middle" font-size="16" fill="#9f1239">행동 실행</text>
+            </svg>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-5 text-center">
+                <div class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-xl"><i class="fa-solid fa-eye"></i></div>
+                <h3 class="font-black text-indigo-800 text-base mb-1">인식 (Perception)</h3>
+                <p class="text-slate-600 text-base">센서로 주변을 느끼고<br>0과 1의 데이터로 변환</p>
+            </div>
+            <div class="bg-violet-50 border-2 border-violet-400 rounded-2xl p-5 text-center relative">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-violet-600 text-white font-bold px-3 py-0.5 rounded-full text-base whitespace-nowrap">핵심 단계</div>
+                <div class="w-12 h-12 bg-violet-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-xl"><i class="fa-solid fa-brain"></i></div>
+                <h3 class="font-black text-violet-800 text-base mb-1">판단 (Reasoning)</h3>
+                <p class="text-slate-600 text-base">수집한 정보를 바탕으로<br>무엇을 할지 결정</p>
+            </div>
+            <div class="bg-rose-50 border border-rose-200 rounded-2xl p-5 text-center">
+                <div class="w-12 h-12 bg-rose-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-xl"><i class="fa-solid fa-hand"></i></div>
+                <h3 class="font-black text-rose-800 text-base mb-1">행동 (Action)</h3>
+                <p class="text-slate-600 text-base">결정된 내용을 실행해<br>세상에 변화를 만듦</p>
+            </div>
+        </div>
+
+        <!-- 지난 시간의 4가지 특성과 이번 시간의 3단계는 어떤 관계인가 -->
+        <div class="section-card space-y-5 border-t-4 border-t-indigo-500">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-code-branch text-indigo-500"></i>
+                지난 시간의 '4가지 특성'과 이번 시간의 '3단계'는 어떤 관계일까?
+            </h3>
+            <p class="text-base text-slate-700 leading-relaxed">
+                지난 시간에 인공지능의 특성을 <strong>지각·학습·추론·예측·문제 해결</strong>의 네 가지로 배웠습니다.
+                그런데 이번 시간에는 단계가 <strong>인식·판단·행동</strong>의 세 가지라고 합니다.
+                <strong>둘 중 하나가 틀린 것이 아닙니다.</strong> 두 가지는 <strong>서로 다른 것을 묻고 있습니다.</strong>
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-1">
+                    <p class="font-bold text-base text-slate-800">4가지 특성 — <span class="text-slate-500">무엇을 할 수 있는가</span></p>
+                    <p class="text-base text-slate-600 leading-relaxed">
+                        인공지능이 갖춘 <strong>능력의 목록</strong>입니다. 순서가 있는 것이 아니라, 어떤 제품이
+                        어떤 능력을 가졌는지 <strong>따져 보기 위한 항목</strong>입니다.
+                    </p>
+                </div>
+                <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-5 space-y-1">
+                    <p class="font-bold text-base text-indigo-900">3단계 — <span class="text-indigo-500">어떤 순서로 일하는가</span></p>
+                    <p class="text-base text-slate-700 leading-relaxed">
+                        인공지능이 실제로 움직일 때 거치는 <strong>일의 흐름</strong>입니다.
+                        앞 단계가 끝나야 뒤 단계로 넘어가는 <strong>순서가 있습니다.</strong>
+                    </p>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <svg viewBox="0 0 700 310" xmlns="http://www.w3.org/2000/svg"
+                     role="img" aria-label="4가지 특성과 인식·판단·행동 3단계의 대응 관계"
+                     style="width:100%;max-width:700px;display:block;margin:0 auto;min-width:700px">
+                    <text x="130" y="22" text-anchor="middle" font-size="16" font-weight="700" fill="#475569">4가지 특성 — 할 수 있는 일</text>
+                    <text x="565" y="22" text-anchor="middle" font-size="16" font-weight="700" fill="#4338ca">3단계 — 일하는 순서</text>
+
+                    <!-- 왼쪽: 4가지 특성 -->
+                    <rect x="10" y="40" width="240" height="52" rx="12" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+                    <text x="130" y="72" text-anchor="middle" font-size="17" font-weight="700" fill="#9d174d">지각</text>
+                    <rect x="10" y="105" width="240" height="52" rx="12" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+                    <text x="130" y="137" text-anchor="middle" font-size="17" font-weight="700" fill="#1e40af">학습</text>
+                    <rect x="10" y="170" width="240" height="52" rx="12" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+                    <text x="130" y="202" text-anchor="middle" font-size="17" font-weight="700" fill="#5b21b6">추론 · 예측</text>
+                    <rect x="10" y="235" width="240" height="52" rx="12" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+                    <text x="130" y="267" text-anchor="middle" font-size="17" font-weight="700" fill="#065f46">문제 해결</text>
+
+                    <!-- 연결선 -->
+                    <line x1="250" y1="66" x2="440" y2="66" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+                    <polygon points="440,60 456,66 440,72" fill="#94a3b8"/>
+                    <path d="M250 131 C 350 131, 350 140, 440 140" stroke="#94a3b8" stroke-width="2.5" fill="none"/>
+                    <polygon points="440,134 456,140 440,146" fill="#94a3b8"/>
+                    <path d="M250 196 C 350 196, 350 166, 440 166" stroke="#94a3b8" stroke-width="2.5" fill="none"/>
+                    <polygon points="440,160 456,166 440,172" fill="#94a3b8"/>
+                    <path d="M250 261 C 350 261, 350 192, 440 192" stroke="#94a3b8" stroke-width="2.5" fill="none"/>
+                    <polygon points="440,186 456,192 440,198" fill="#94a3b8"/>
+
+                    <!-- 오른쪽: 3단계 -->
+                    <rect x="456" y="40" width="234" height="52" rx="12" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+                    <text x="573" y="72" text-anchor="middle" font-size="17" font-weight="700" fill="#3730a3">1. 인식</text>
+                    <rect x="456" y="110" width="234" height="112" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="3"/>
+                    <text x="573" y="150" text-anchor="middle" font-size="17" font-weight="700" fill="#5b21b6">2. 판단</text>
+                    <text x="573" y="177" text-anchor="middle" font-size="16" fill="#6d28d9">세 가지 능력이</text>
+                    <text x="573" y="199" text-anchor="middle" font-size="16" fill="#6d28d9">모두 여기서 쓰인다</text>
+                    <rect x="456" y="235" width="234" height="52" rx="12" fill="#ffe4e6" stroke="#f43f5e" stroke-width="2"/>
+                    <text x="573" y="267" text-anchor="middle" font-size="17" font-weight="700" fill="#9f1239">3. 행동</text>
+
+                    <!-- 행동 단계에 대한 주석 -->
+                    <text x="345" y="252" text-anchor="middle" font-size="16" fill="#94a3b8">특성 목록에는</text>
+                    <text x="345" y="274" text-anchor="middle" font-size="16" fill="#94a3b8">없던 단계</text>
+                </svg>
+            </div>
+            <p class="text-base text-slate-700 leading-relaxed bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3">
+                <i class="fa-solid fa-key text-indigo-500 mr-1"></i>
+                <strong>정리하면</strong> — 「인식」은 두 틀에서 같은 것을 가리킵니다.
+                「학습」·「추론·예측」·「문제 해결」은 <strong>모두 판단 단계 안에서 쓰이는 능력</strong>입니다.
+                그리고 「행동」은 <strong>특성 목록에는 없던 단계</strong>입니다. 능력을 따질 때는 굳이 셀 필요가 없었지만,
+                실제로 일을 시키려면 <strong>생각한 것을 세상에 내놓는 단계가 반드시 있어야</strong> 하기 때문입니다.
+            </p>
+        </div>
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                '자율주행차가 신호등 색을 알아보는 것'은 인식·판단·행동 중 어느 단계일까요? 위 세 단계 설명을 다시 확인해 보세요.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== 인식: 센서와 A/D 변환 ===== -->
+    <section id="perception" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">인식(Perception): 센서와 A/D 변환</h2>
+            <div class="w-20 h-1.5 bg-teal-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">컴퓨터는 어떻게 우리가 사는 세상의 빛과 소리를 알아들을까요?</p>
+        </div>
+
+        <!-- 센서 개념 -->
+        <div class="section-card space-y-8">
+            <h3 class="text-xl font-bold text-slate-800">컴퓨터의 감각 기관, '센서'</h3>
+            <p class="text-base text-slate-700 leading-relaxed">
+                사람이 눈, 귀, 피부로 세상을 느끼듯, 인공지능은 <strong>'센서(Sensor)'</strong>를 통해 세상을 느낍니다.
+                (인공지능에 센서와 움직이는 장치까지 갖춰 붙인 시스템 전체를 <strong>지능 에이전트</strong>라고 부르는데,
+                이 말은 뒤의 '판단' 단원에서 자세히 다룹니다.)<br>
+                우리 주변의 빛, 소리, 온도처럼 끊임없이 변하는 자연의 정보를 <strong>'아날로그 신호'</strong>라고 부릅니다.
+                센서는 이 아날로그 신호를 기계가 다룰 수 있는 <strong>'전기적 신호'</strong>로 바꿔주는 역할을 합니다.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                <div class="bg-teal-50 border border-teal-200 rounded-2xl p-6 flex flex-col items-center text-center gap-3">
+                    <div class="w-14 h-14 bg-teal-600 text-white rounded-full flex items-center justify-center text-2xl"><i class="fa-solid fa-camera"></i></div>
+                    <div>
+                        <span class="block font-black text-slate-900 text-base">카메라 센서</span>
+                        <span class="text-slate-600 text-base">빛(시각) 정보를 수집<br>자율주행, 얼굴 인식</span>
+                    </div>
+                </div>
+                <div class="bg-teal-50 border border-teal-200 rounded-2xl p-6 flex flex-col items-center text-center gap-3">
+                    <div class="w-14 h-14 bg-teal-600 text-white rounded-full flex items-center justify-center text-2xl"><i class="fa-solid fa-microphone"></i></div>
+                    <div>
+                        <span class="block font-black text-slate-900 text-base">마이크 센서</span>
+                        <span class="text-slate-600 text-base">소리(청각) 정보를 수집<br>인공지능 스피커</span>
+                    </div>
+                </div>
+                <div class="bg-teal-50 border border-teal-200 rounded-2xl p-6 flex flex-col items-center text-center gap-3">
+                    <div class="w-14 h-14 bg-teal-600 text-white rounded-full flex items-center justify-center text-2xl"><i class="fa-solid fa-fingerprint"></i></div>
+                    <div>
+                        <span class="block font-black text-slate-900 text-base">지문 센서</span>
+                        <span class="text-slate-600 text-base">표면의 굴곡을 수집<br>스마트폰 잠금 해제</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- A/D 변환 흐름 -->
+        <div class="section-card">
+            <h3 class="text-xl font-bold text-slate-800 mb-6">세상을 컴퓨터의 언어로 번역하기 (A/D 변환)</h3>
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 w-full">
+                <div class="flex-1 text-center w-full">
+                    <div class="w-20 h-20 mx-auto bg-amber-100 rounded-full flex items-center justify-center mb-4 border-4 border-white shadow-md">
+                        <i class="fa-solid fa-cloud-sun text-3xl text-amber-500"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-1 text-base">환경 정보</h4>
+                    <p class="text-base text-slate-500 font-bold bg-slate-100 inline-block px-2 py-1 rounded">아날로그 신호</p>
+                </div>
+                <i class="fa-solid fa-chevron-right text-2xl text-slate-300 hidden md:block arrow-pulse"></i>
+                <i class="fa-solid fa-chevron-down text-2xl text-slate-300 block md:hidden my-2"></i>
+                <div class="flex-1 text-center w-full">
+                    <div class="w-20 h-20 mx-auto bg-slate-100 rounded-full flex items-center justify-center mb-4 border-4 border-white shadow-md">
+                        <i class="fa-solid fa-satellite-dish text-3xl text-slate-600"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-1 text-base">센서</h4>
+                    <p class="text-base text-slate-500 font-bold bg-slate-100 inline-block px-2 py-1 rounded">전기적 신호</p>
+                </div>
+                <i class="fa-solid fa-chevron-right text-2xl text-teal-300 hidden md:block arrow-pulse"></i>
+                <i class="fa-solid fa-chevron-down text-2xl text-teal-300 block md:hidden my-2"></i>
+                <div class="flex-1 text-center w-full relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-rose-500 text-white font-black px-3 py-1 rounded-full shadow-lg z-20 whitespace-nowrap text-base">컴퓨터의 통역사!</div>
+                    <div class="w-24 h-24 mx-auto bg-teal-600 rounded-2xl flex items-center justify-center mb-4 border-4 border-white shadow-xl transform md:-translate-y-2">
+                        <i class="fa-solid fa-microchip text-4xl text-white"></i>
+                    </div>
+                    <h4 class="font-bold text-teal-700 mb-1 text-base">A/D 변환기</h4>
+                    <p class="text-base text-teal-600 font-bold bg-teal-50 inline-block px-2 py-1 rounded">디지털 정보 변환</p>
+                </div>
+                <i class="fa-solid fa-chevron-right text-2xl text-slate-300 hidden md:block arrow-pulse"></i>
+                <i class="fa-solid fa-chevron-down text-2xl text-slate-300 block md:hidden my-2"></i>
+                <div class="flex-1 text-center w-full">
+                    <div class="w-20 h-20 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-4 border-4 border-white shadow-md">
+                        <i class="fa-solid fa-brain text-3xl text-blue-600"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-1 text-base">에이전트</h4>
+                    <p class="text-base text-slate-500 font-bold bg-slate-100 inline-block px-2 py-1 rounded">상황 인식 완료</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- A/D 변환 3단계 -->
+        <div class="section-card space-y-6">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                A/D 변환기는 어떻게 통역할까? (3단계)
+            </h3>
+            <p class="text-base text-slate-700 leading-relaxed">
+                A/D(Analog to Digital) 변환기는 끊어지지 않고 이어지는 아날로그 신호를 0과 1로 바꾸기 위해 세 가지 과정을 거칩니다.
+            </p>
+            <div class="grid md:grid-cols-3 gap-5">
+                <div class="bg-teal-50 border border-teal-200 rounded-2xl p-5">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-9 h-9 bg-teal-600 text-white rounded-full flex items-center justify-center font-black text-base shrink-0">1</div>
+                        <h4 class="font-black text-base text-teal-800">샘플링 (Sampling)</h4>
+                    </div>
+                    <p class="text-base text-teal-900 font-bold mb-2">"잘게 쪼개기"</p>
+                    <p class="text-base text-slate-600 leading-relaxed">이어지는 신호를 일정한 시간 간격으로 끊어서 조각냅니다.<br>예) 긴 가래떡을 일정한 크기로 썰기</p>
+                </div>
+                <div class="bg-violet-50 border border-violet-200 rounded-2xl p-5">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-9 h-9 bg-violet-600 text-white rounded-full flex items-center justify-center font-black text-base shrink-0">2</div>
+                        <h4 class="font-black text-base text-violet-800">양자화 (Quantization)</h4>
+                    </div>
+                    <p class="text-base text-violet-900 font-bold mb-2">"숫자 매기기"</p>
+                    <p class="text-base text-slate-600 leading-relaxed">쪼갠 조각들의 크기를 측정해서 가까운 정수(숫자)로 값을 매깁니다.<br>예) 썰어둔 떡의 무게를 저울로 달아 적기</p>
+                </div>
+                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-5">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-base shrink-0">3</div>
+                        <h4 class="font-black text-base text-blue-800">부호화 (Encoding)</h4>
+                    </div>
+                    <p class="text-base text-blue-900 font-bold mb-2">"0과 1로 쓰기"</p>
+                    <p class="text-base text-slate-600 leading-relaxed">숫자로 매긴 값을 컴퓨터만 읽을 수 있는 0과 1의 이진수로 최종 번역합니다.<br>예) 무게를 컴퓨터 문서로 타자 치기</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 양자화 Deep Dive -->
+        <details class="bg-slate-50 border border-slate-200 rounded-xl p-4 mt-4">
+            <summary class="font-bold text-base text-slate-700 cursor-pointer">
+                더 알아보기: 양자화 오차와 비트 수의 관계
+            </summary>
+            <div class="mt-3 text-base text-slate-600 space-y-2">
+        <div class="bg-slate-900 text-white rounded-3xl p-8 md:p-10 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-12 opacity-10 text-9xl pointer-events-none">
+                <i class="fa-solid fa-wave-square"></i>
+            </div>
+            <div class="relative z-10">
+                <div class="flex flex-col md:flex-row gap-10 items-center">
+                    <div class="flex-1 space-y-5">
+                        <span class="bg-orange-500 text-white px-4 py-1 rounded-full font-bold text-base uppercase">Deep Dive</span>
+                        <h3 class="text-2xl font-black">왜 양자화가 중요한가요?</h3>
+                        <p class="text-slate-300 text-base leading-relaxed">
+                            아날로그 신호는 무한한 정밀도를 갖지만, 컴퓨터는 이를 저장하기 위해 <strong>유한한 눈금</strong>을 사용해야 합니다.
+                            이때 실제 값과 눈금의 차이인 <span class="text-orange-400 font-bold">양자화 오차</span>가 발생합니다.
+                        </p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-white/10 p-4 rounded-2xl border border-white/10">
+                                <h5 class="font-bold text-orange-400 mb-1 text-base">비트(Bit) 수 ↑</h5>
+                                <p class="text-slate-400 text-base">눈금이 촘촘해짐, 오차 감소, 원본에 가까움 (고음질/고화질)</p>
+                            </div>
+                            <div class="bg-white/10 p-4 rounded-2xl border border-white/10">
+                                <h5 class="font-bold text-indigo-400 mb-1 text-base">비트(Bit) 수 ↓</h5>
+                                <p class="text-slate-400 text-base">눈금이 듬성듬성함, 오차 증가, 데이터 용량 작음</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 w-full bg-white/5 p-6 rounded-3xl border border-white/10">
+                        <p class="text-center font-bold text-slate-500 mb-5 text-base">양자화 비트 수에 따른 차이 시각화</p>
+                        <div class="space-y-8">
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-base font-mono">
+                                    <span>2-bit (4단계 눈금)</span>
+                                    <span class="text-rose-400 font-bold">오차 큼</span>
+                                </div>
+                                <div class="h-12 w-full flex items-end gap-1">
+                                    <div class="flex-1 bg-slate-700 h-1/4"></div>
+                                    <div class="flex-1 bg-slate-700 h-2/4"></div>
+                                    <div class="flex-1 bg-slate-700 h-2/4"></div>
+                                    <div class="flex-1 bg-slate-700 h-full"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-base font-mono">
+                                    <span>4-bit (16단계 눈금)</span>
+                                    <span class="text-emerald-400 font-bold">오차 작음</span>
+                                </div>
+                                <div class="h-12 w-full flex items-end gap-[2px]">
+                                    <div class="flex-1 bg-teal-500 h-1/6"></div>
+                                    <div class="flex-1 bg-teal-500 h-2/6"></div>
+                                    <div class="flex-1 bg-teal-500 h-3/6"></div>
+                                    <div class="flex-1 bg-teal-500 h-4/6"></div>
+                                    <div class="flex-1 bg-teal-500 h-5/6"></div>
+                                    <div class="flex-1 bg-teal-500 h-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+        </details>
+
+        <!-- 센서의 한계 -->
+        <div class="space-y-4">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                센서를 100% 믿어도 될까?
+            </h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="section-card space-y-4">
+                    <span class="bg-rose-500 text-white font-bold px-3 py-1 rounded-full text-base">자주 하는 오해</span>
+                    <p class="text-base font-bold text-slate-800">"카메라 센서는 사람의 눈처럼 사물을 완벽하게 알아본다?"</p>
+                    <p class="text-base text-slate-600 leading-relaxed">
+                        <strong>정답은 '아니요' 입니다!</strong> 사람은 빛이 강하든 그림자가 지든 사과를 사과로 알아봅니다.
+                        하지만 센서는 '빛의 변화'에 매우 취약합니다. 빛이 조금만 반사되거나 역광이 비치면
+                        아예 다른 물체로 착각하거나 인식하지 못하는 <strong>'인식 오류'</strong>가 발생할 수 있습니다.
+                    </p>
+                </div>
+                <div class="bg-slate-800 rounded-3xl p-8 text-white flex flex-col justify-center items-center text-center">
+                    <i class="fa-solid fa-sun text-5xl text-amber-400 mb-5 drop-shadow-md"></i>
+                    <h4 class="font-bold text-xl mb-3">빛의 마술과 자율주행차</h4>
+                    <p class="text-slate-300 text-base leading-relaxed mb-5">
+                        앞에 트럭이 있어도, 강한 햇빛이 하얗게 반사되면 카메라 센서는 눈이 부셔서
+                        트럭을 빈 공간으로 인식할 수 있습니다. 그래서 자율주행 자동차는 카메라 하나만 믿지 않고
+                        레이더, 라이다 등 여러 센서를 동시에 사용합니다.
+                    </p>
+                    <div class="bg-white/20 px-4 py-2 rounded-lg backdrop-blur-sm">
+                        <span class="text-teal-300 font-bold text-base">핵심: 센서에만 100% 의존할 수는 없다!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 코드로 보는 인식의 흐름 -->
+        <div class="space-y-4">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-code text-teal-600"></i>
+                코드로 보는 인식의 흐름
+            </h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="section-card space-y-4">
+                    <span class="bg-teal-500 text-white font-bold px-3 py-1 rounded-full text-base">Under the hood</span>
+                    <p class="text-base font-bold text-slate-800">컴퓨터 프로그램 속에서는 인식 과정이 어떻게 진행될까?</p>
+                    <p class="text-base text-slate-600 leading-relaxed">
+                        지금까지 배운 <strong>환경 정보 → 센서 → A/D 변환 → 인식</strong> 과정은 실제 프로그램에서도 비슷한 순서로 처리됩니다.
+                    </p>
+                    <p class="text-base text-slate-500 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <i class="fa-solid fa-code text-slate-400 mr-2"></i>
+                        오른쪽 코드를 보며 아날로그 소리 데이터가 0과 1의 디지털 데이터로 변환되는 과정을 단계별로 확인해 보세요.
+                    </p>
+                </div>
+                <div class="bg-[#282c34] rounded-xl overflow-hidden shadow-lg border border-slate-700">
+                    <div class="flex items-center px-4 py-3 bg-[#1e2227] border-b border-[#111]">
+                        <div class="flex space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                        </div>
+                        <span class="ml-4 font-mono text-slate-400 text-base">sensor_process.c</span>
+                    </div>
+                    <div class="code-block"><button class="code-copy" type="button" data-copy aria-label="코드 복사"><i class="fa-solid fa-copy" aria-hidden="true"></i><span>복사</span></button><pre class="p-6 font-mono text-base overflow-x-auto leading-relaxed text-[#abb2bf]"><code><span class="text-[#5c6370] italic">// 에이전트가 소리를 듣고 인식하는 과정</span>
+
+<span class="text-[#c678dd]">void</span> <span class="text-[#61afef]">agentPerception</span>() {
+    <span class="text-[#5c6370] italic">// [1단계: 환경 정보] 자연의 소리(아날로그) 발생</span>
+    AnalogSignal soundWave = environment.<span class="text-[#61afef]">getSound</span>();
+
+    <span class="text-[#5c6370] italic">// [2단계: 센서] 마이크가 소리를 전기 신호로 바꿈</span>
+    ElectricSignal rawSignal = micSensor.<span class="text-[#61afef]">detect</span>(soundWave);
+
+    <span class="text-[#5c6370] italic">// [3단계: A/D 변환기] 컴퓨터의 통역사 등장!</span>
+    DigitalData dData = adConverter.<span class="text-[#61afef]">transform</span>(rawSignal);
+
+    <span class="text-[#5c6370] italic">// [4단계: 인식] 에이전트의 두뇌가 디지털 데이터를 분석함</span>
+    <span class="text-[#c678dd]">if</span> (aiBrain.<span class="text-[#61afef]">recognizeVoice</span>(dData) == <span class="text-[#98c379]">"도와줘"</span>) {
+        actuator.<span class="text-[#61afef]">moveTowardUser</span>();
+    }
+}</code></pre></div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                아날로그 신호를 디지털로 바꾸는 세 단계를 순서대로 말할 수 있나요? 위 A/D 변환 설명을 다시 따라가 보세요.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== 판단: 지능 에이전트 ===== -->
+    <section id="reasoning" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">판단(Reasoning): 지능 에이전트</h2>
+            <div class="w-20 h-1.5 bg-violet-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-semibold">인식한 정보로 무엇을 할지는 누가 정할까?</p>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                인식한 정보를 바탕으로 무엇을 할지 결정하는 것이 판단입니다.<br>이 판단을 해내는 부분을 갖춘 시스템을 <strong>지능 에이전트</strong>라고 부릅니다.
+            </p>
+        </div>
+
+        <!-- 지능 에이전트의 정의와 3요소 -->
+        <div class="section-card space-y-4">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-robot text-violet-600"></i> 지능 에이전트란 무엇인가
+            </h3>
+            <p class="text-slate-700 leading-relaxed text-base">
+                <strong>지능 에이전트(Intelligent Agent)</strong>란
+                <strong>에이전트에 인공지능을 결합해, 주변을 인식하고 쌓인 데이터로 학습해 스스로 판단하며 행동하는 것</strong>을
+                말합니다. 주어진 일을 사람 대신 해 주는 것까지가 <strong>에이전트</strong>이고,
+                거기에 <strong>학습과 추론</strong>이 더해진 것이 지능 에이전트입니다.
+                정해 준 규칙대로만 움직인다면 아무리 정교해도 에이전트에 머무릅니다 &mdash;
+                <strong>겪은 것으로 나아지는가, 정해 두지 않은 상황을 넘길 수 있는가</strong>가 가르는 자리입니다.
+                앞에서 본 <strong>판단</strong>은 이 <strong>학습과 추론을 함께 부르는 말</strong>입니다.
+            </p>
+            <p class="text-slate-700 leading-relaxed text-base">
+                그래서 지능 에이전트는 <strong>세 부분</strong>으로 이루어집니다.
+                환경을 받아들이는 <strong class="text-teal-700">센서</strong>,
+                무엇을 할지 정하는 <strong class="text-violet-700">지능(소프트웨어)</strong>,
+                그리고 실제로 움직이는 <strong class="text-rose-700">액추에이터</strong>입니다.
+                이 셋이 앞에서 본 <strong>인식 → 판단 → 행동</strong>의 세 단계를 하나씩 맡습니다.
+            </p>
+            <div class="overflow-x-auto">
+                <svg viewBox="0 0 704 320" xmlns="http://www.w3.org/2000/svg"
+                     role="img" aria-label="지능 에이전트의 세 부분과 환경 사이의 순환"
+                     style="width:100%;max-width:704px;display:block;margin:0 auto;min-width:704px">
+                    <!-- 에이전트 경계 -->
+                    <rect x="76" y="55" width="552" height="180" rx="18" fill="#faf5ff" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="8 5"/>
+                    <text x="352" y="84" text-anchor="middle" font-size="18" font-weight="800" fill="#5b21b6">지능 에이전트</text>
+
+                    <!-- 환경 (좌·우) -->
+                    <rect x="6" y="110" width="52" height="80" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+                    <text x="32" y="157" text-anchor="middle" font-size="17" font-weight="700" fill="#475569">환경</text>
+                    <rect x="646" y="110" width="52" height="80" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+                    <text x="672" y="157" text-anchor="middle" font-size="17" font-weight="700" fill="#475569">환경</text>
+
+                    <!-- 세 부분 -->
+                    <rect x="96" y="110" width="140" height="80" rx="12" fill="#ccfbf1" stroke="#0d9488" stroke-width="2"/>
+                    <text x="166" y="146" text-anchor="middle" font-size="17" font-weight="700" fill="#115e59">센서</text>
+                    <text x="166" y="171" text-anchor="middle" font-size="16" fill="#0f766e">인식</text>
+
+                    <rect x="280" y="110" width="140" height="80" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
+                    <text x="350" y="146" text-anchor="middle" font-size="17" font-weight="700" fill="#5b21b6">지능</text>
+                    <text x="350" y="171" text-anchor="middle" font-size="16" fill="#6d28d9">판단</text>
+
+                    <rect x="464" y="110" width="140" height="80" rx="12" fill="#ffe4e6" stroke="#f43f5e" stroke-width="2"/>
+                    <text x="534" y="146" text-anchor="middle" font-size="17" font-weight="700" fill="#9f1239">액추에이터</text>
+                    <text x="534" y="171" text-anchor="middle" font-size="16" fill="#be123c">행동</text>
+
+                    <!-- 화살표 -->
+                    <line x1="58" y1="150" x2="80" y2="150" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+                    <polygon points="80,143 96,150 80,157" fill="#94a3b8"/>
+                    <line x1="236" y1="150" x2="264" y2="150" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+                    <polygon points="264,143 280,150 264,157" fill="#94a3b8"/>
+                    <line x1="420" y1="150" x2="448" y2="150" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+                    <polygon points="448,143 464,150 448,157" fill="#94a3b8"/>
+                    <line x1="604" y1="150" x2="630" y2="150" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+                    <polygon points="630,143 646,150 630,157" fill="#94a3b8"/>
+
+                    <!-- 되돌아오는 순환 -->
+                    <path d="M672 190 L672 300 L32 300 L32 196" stroke="#a78bfa" stroke-width="2.5" fill="none" stroke-dasharray="7 5"/>
+                    <polygon points="26,196 32,182 38,196" fill="#a78bfa"/>
+                    <text x="352" y="286" text-anchor="middle" font-size="16" fill="#7c3aed">행동이 환경을 바꾸면, 바뀐 환경을 다시 인식한다</text>
+                </svg>
+            </div>
+            <p class="text-slate-700 leading-relaxed text-base bg-violet-50 border border-violet-200 rounded-xl px-4 py-3">
+                <i class="fa-solid fa-user text-violet-500 mr-1"></i>
+                <strong>사람에 빗대어 보면</strong> — <strong>지능 에이전트가 「사람 한 명 전체」</strong>입니다.
+                센서는 눈·귀 같은 <strong>감각 기관</strong>, 지능은 <strong>두뇌</strong>, 액추에이터는 <strong>팔과 다리</strong>에 해당합니다.
+                여기서 <strong>인공지능은 두뇌에 해당하는 부분</strong>, 곧 에이전트 안에서 <strong>판단을 맡는 소프트웨어</strong>입니다.
+            </p>
+            <div class="bg-rose-50 border border-rose-300 border-l-4 border-l-rose-500 rounded-2xl px-5 py-4 space-y-1">
+                <p class="font-bold text-base text-rose-900">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-500 mr-1"></i> 자주 헷갈리는 점
+                </p>
+                <p class="text-slate-700 text-base leading-relaxed">
+                    <strong>인공지능과 지능 에이전트는 나란히 놓고 비교할 짝이 아닙니다.</strong>
+                    「두뇌 대 몸」처럼 둘로 갈라 외우면 틀립니다. <strong>인공지능은 지능 에이전트 안에 들어 있는
+                    한 부분</strong>이고, 지능 에이전트는 <strong>그 인공지능에 센서와 액추에이터까지 갖춰 붙인 것</strong>입니다.
+                    아무리 똑똑한 인공지능이라도 세상을 받아들일 센서와 세상을 바꿀 액추에이터가 없으면
+                    <strong>혼자서는 아무 일도 하지 못하기</strong> 때문에, 실제 제품은 늘 에이전트 형태로 만들어집니다.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-2xl flex flex-col md:flex-row gap-4 items-start">
+            <div class="text-amber-500 text-2xl mt-1 shrink-0"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <div>
+                <h4 class="font-bold text-amber-800 text-lg mb-2">헷갈리지 마세요! (오개념 방지)</h4>
+                <p class="text-amber-900 text-base leading-relaxed">
+                    <strong>"지능 에이전트가 알아서 다 해주면 사람은 아무것도 안 해도 되나요?"</strong><br>
+                    그렇지 않습니다. 지능 에이전트는 인간을 대신하는 존재가 아니라
+                    <strong>인간의 목표 달성을 돕는 협력 도구</strong>입니다. 즉 사람과 함께 문제를 해결하는 <strong>파트너 역할</strong>을 합니다.
+                </p>
+            </div>
+        </div>
+
+        <!-- 다섯 가지 특성 -->
+        <div class="space-y-6">
+            <h3 class="text-xl font-bold text-slate-800 text-center">로봇 청소기로 보는 지능 에이전트의 다섯 가지 특성</h3>
+            <div class="overflow-x-auto">
+                <table class="table-prose w-full text-base border border-slate-200 rounded-xl overflow-hidden">
+                    <thead class="bg-slate-100 text-slate-700">
+                    <tr>
+                        <th class="w-28 px-4 py-3 text-left font-bold border-b border-slate-200">특성</th>
+                        <th class="px-4 py-3 text-left font-bold border-b border-slate-200">뜻</th>
+                        <th class="px-4 py-3 text-left font-bold border-b border-slate-200">로봇 청소기라면</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr>
+                            <td class="px-4 py-3 font-bold text-slate-800">자율성</td>
+                            <td class="px-4 py-3 text-slate-700">사람이 일일이 시키지 않아도 스스로 판단해 움직인다</td>
+                            <td class="px-4 py-3 text-slate-700">바닥의 먼지를 알아보고 아무도 누르지 않아도 청소를 시작한다</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-bold text-slate-800">능동성</td>
+                            <td class="px-4 py-3 text-slate-700">반응만 하는 것이 아니라 목표를 이루려고 먼저 나선다</td>
+                            <td class="px-4 py-3 text-slate-700">배터리가 줄어들면 시키지 않아도 먼저 충전대로 돌아간다</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-bold text-slate-800">사회성</td>
+                            <td class="px-4 py-3 text-slate-700">사람이나 다른 기기와 주고받으며 함께 움직인다</td>
+                            <td class="px-4 py-3 text-slate-700">만들어 둔 집 안 지도를 앱에 보내고, 사람이 정해 준 구역에 맞춰 경로를 다시 짠다</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-bold text-slate-800">시간 연속성</td>
+                            <td class="px-4 py-3 text-slate-700">한 번 하고 끝나지 않고 계속 이어서 일한다</td>
+                            <td class="px-4 py-3 text-slate-700">청소를 마친 뒤에도 다음 청소를 위해 지도와 기록을 남겨 둔다</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-bold text-slate-800">반응성</td>
+                            <td class="px-4 py-3 text-slate-700">환경이 달라지면 그에 맞게 대응한다</td>
+                            <td class="px-4 py-3 text-slate-700">가구 위치가 바뀌면 새 지도를 그려 다른 경로로 돈다</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-slate-600 text-base leading-relaxed bg-slate-50 border border-slate-200 rounded-xl px-4 py-3">
+                <i class="fa-solid fa-circle-info text-slate-400 mr-1"></i>
+                <strong>다섯 가지가 늘 똑같은 무게로 나타나지는 않습니다.</strong>
+                <strong>사회성</strong>은 주고받을 상대가 있을 때 드러나므로 혼자 일하는 에이전트에서는 잘 보이지 않습니다.
+                다섯 낱말을 외우는 것이 목적이 아니라,
+                <strong>&lsquo;시키니까 한다&rsquo;와 &lsquo;알아서 한다&rsquo;가 어디에서 갈리는지</strong>를 보는 것이 목적입니다.
+                자율성과 능동성이 그 갈림을 가장 잘 보여 줍니다 &mdash;
+                <strong>시키지 않아도 하는 것</strong>과 <strong>먼저 나서는 것</strong>은 다릅니다.
+            </p>
+        </div>
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                로봇 청소기의 어떤 행동이 '자율성'이고 어떤 행동이 '능동성'일까요? 위 다섯 가지 특성 표를 다시 확인해 보세요.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== 행동: 액추에이터 ===== -->
+    <section id="action" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">행동(Action): 액추에이터</h2>
+            <div class="w-20 h-1.5 bg-rose-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-semibold">판단한 결과는 어떻게 실제 움직임이 될까?</p>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                판단이 끝나면 실제로 세상에 변화를 만드는 단계가 필요합니다.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="section-card flex flex-col items-center justify-center text-center">
+                <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-5 text-2xl"><i class="fa-solid fa-hand"></i></div>
+                <h3 class="text-xl font-bold mb-2">액추에이터 (Actuator)</h3>
+                <p class="text-rose-500 font-bold mb-4 text-base">"사람의 팔과 다리"</p>
+                <p class="text-slate-600 leading-relaxed text-base">
+                    지능의 명령을 받아 실제로 환경에 물리적인 변화를 일으키는 장치입니다.<br>
+                    <span class="text-slate-500 text-base">(예: 로봇 팔, 스피커, 바퀴, 화면 표시)</span>
+                </p>
+            </div>
+            <div class="section-card space-y-4">
+                <h3 class="text-lg font-bold text-slate-800">다양한 액추에이터 예시</h3>
+                <div class="overflow-x-auto">
+                    <table style="min-width:360px">
+                        <thead>
+                        <tr><th>장치</th><th>하는 일 (행동)</th><th>쓰이는 에이전트</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr><td>바퀴 모터</td><td>이동</td><td>로봇 청소기</td></tr>
+                        <tr><td>로봇 팔</td><td>물건 집기·조립</td><td>공장 자동화 로봇</td></tr>
+                        <tr><td>스피커</td><td>소리 출력</td><td>인공지능 스피커</td></tr>
+                        <tr><td>경보 장치</td><td>경고음 울리기</td><td>스마트홈 보안</td></tr>
+                        <tr><td>도어락</td><td>문 잠금·해제</td><td>자동 출입 시스템</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-2xl flex flex-col md:flex-row gap-4 items-start">
+            <div class="text-amber-500 text-2xl mt-1 shrink-0"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <div>
+                <h4 class="font-bold text-amber-800 text-lg mb-2">헷갈리지 마세요! (오개념 방지)</h4>
+                <p class="text-amber-900 text-base leading-relaxed">
+                    <strong>"자동문도 사람이 오면 열리는데, 지능 에이전트인가요?"</strong><br>
+                    자동문은 단순한 '센서'와 모터(액추에이터)만 있습니다. 하지만 상황을 보고 스스로 판단(누구인지, 열어줘야 할지 말지)하는
+                    <strong>'지능(소프트웨어)'</strong> 요소가 없기 때문에 단순한 기계일 뿐, 지능 에이전트는 아닙니다.
+                    앞에서 <strong>세 부분 중 하나라도 빠지면 지능 에이전트가 아니라고 한 것</strong>이 바로 이런 경우입니다.
+                </p>
+                <p class="text-amber-900 text-base leading-relaxed mt-2">
+                    지난 시간에 <strong>「자동으로 움직인다고 다 인공지능은 아니다」</strong>라고 배운 것과 같은 이야기입니다.
+                    자동문에 <strong>얼굴을 알아보고 들여보낼지 말지를 스스로 정하는 소프트웨어</strong>를 붙이면
+                    그때부터는 지능 에이전트가 됩니다. <strong>가르는 것은 문이 열리느냐가 아니라, 열지 말지를
+                    누가 정하느냐</strong>입니다.
+                </p>
+            </div>
+        </div>
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                센서와 액추에이터가 하는 일을 서로 바꿔 설명하고 있지는 않나요? 위 두 설명을 나란히 놓고 확인해 보세요.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== 지능 에이전트는 어디에 쓰이나 ===== -->
+    <section id="usecase" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">지능 에이전트는 어디에 쓰이나</h2>
+            <div class="w-20 h-1.5 bg-orange-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-semibold">지능 에이전트는 우리 주변 어디에서 일하고 있을까?</p>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">지능 에이전트는 온라인·산업·서비스 등 다양한 분야에서 활약합니다.</p>
+        </div>
+
+        <!-- 활용 분야 표 -->
+        <div class="section-card space-y-4">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-table text-orange-500"></i>
+                분야별 지능 에이전트 활용 사례
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="table-prose">
+                    <thead>
+                    <tr>
+                        <th>분야</th>
+                        <th>대표 사례</th>
+                        <th>센서 (인식)</th>
+                        <th>액추에이터 (행동)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><i class="fa-solid fa-cloud text-blue-500 mr-1"></i> 온라인</td>
+                        <td>음악·영상 추천 시스템</td>
+                        <td>시청·청취 기록 분석</td>
+                        <td>맞춤형 콘텐츠 노출</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa-solid fa-cloud text-blue-500 mr-1"></i> 온라인</td>
+                        <td>스팸 메일 자동 필터링</td>
+                        <td>메일 내용·발신자 분석</td>
+                        <td>스팸 폴더 자동 이동</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa-solid fa-industry text-orange-500 mr-1"></i> 산업</td>
+                        <td>불량품 검사 공장 로봇</td>
+                        <td>고해상도 카메라</td>
+                        <td>불량품 분리 로봇 팔</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa-solid fa-industry text-orange-500 mr-1"></i> 산업</td>
+                        <td>자율 비행 농업 드론</td>
+                        <td>GPS·카메라·습도 센서</td>
+                        <td>농약 살포 노즐</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa-solid fa-house-medical text-emerald-500 mr-1"></i> 서비스</td>
+                        <td>병원 돌봄 로봇</td>
+                        <td>음성·동작 감지 센서</td>
+                        <td>이동 바퀴·로봇 팔</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa-solid fa-house-medical text-emerald-500 mr-1"></i> 서비스</td>
+                        <td>스마트홈 자동 관리</td>
+                        <td>온도·조도·동작 센서</td>
+                        <td>조명·에어컨 제어</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 스마트홈 경비원 에이전트 설계 활동 -->
+        <div class="space-y-6">
+            <div class="text-center space-y-2">
+                <p class="text-indigo-500 font-black tracking-widest uppercase text-base">설계 예시</p>
+                <h3 class="text-2xl font-black text-slate-900">스마트홈 경비원 에이전트 설계</h3>
+                <p class="text-slate-500 text-base">센서, 지능, 액추에이터가 실제로 어떻게 함께 작동하는지 예시로 살펴봅니다.</p>
+            </div>
+
+            <div class="section-card text-center">
+                <p class="text-lg leading-relaxed text-slate-700">
+                    집을 지키는 <strong class="text-indigo-600">스마트홈 보안 에이전트</strong>를 만든다고 상상해 봅시다.
+                    이 에이전트는 주변 상황을 인식하고, 판단한 뒤, 적절한 행동을 수행합니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="section-card text-center">
+                    <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">1</div>
+                    <h3 class="font-bold mb-2 text-base">목표 설정</h3>
+                    <p class="text-slate-600 text-base">집 내부가 안전한지 확인한다.</p>
+                </div>
+                <div class="section-card text-center">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">2</div>
+                    <h3 class="font-bold mb-2 text-base">인식 (센서)</h3>
+                    <p class="text-slate-600 text-base">카메라로 집 내부 상황을 관찰한다.</p>
+                </div>
+                <div class="section-card text-center">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">3</div>
+                    <h3 class="font-bold mb-2 text-base">추론 (지능)</h3>
+                    <p class="text-slate-600 text-base">가족인지 침입자인지 판단한다.</p>
+                </div>
+                <div class="section-card text-center">
+                    <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">4</div>
+                    <h3 class="font-bold mb-2 text-base">행동 (액추에이터)</h3>
+                    <p class="text-slate-600 text-base">경보를 울리거나 문을 열어준다.</p>
+                </div>
+            </div>
+
+            <div class="section-card !p-0 overflow-hidden">
+                <div class="bg-[#282c34] px-6 py-4 flex items-center gap-3">
+                    <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                    <span class="text-slate-400 ml-2 font-mono text-base">smart_home.c</span>
+                </div>
+                <div class="bg-[#1e2227] p-6 overflow-x-auto">
+<div class="code-block"><button class="code-copy" type="button" data-copy aria-label="코드 복사"><i class="fa-solid fa-copy" aria-hidden="true"></i><span>복사</span></button><pre><code class="font-mono leading-relaxed text-slate-300 text-base"><span class="text-slate-500">// 스마트홈 보안 에이전트의 작동 흐름</span>
+
+<span class="text-purple-400">void</span> <span class="text-blue-400">runSecurityAgent</span>() {
+    <span class="text-orange-400">while</span> (<span class="text-yellow-400">true</span>) {
+        <span class="text-slate-500">// 1. 인식 (Sensor)</span>
+        Image currentView = cameraSensor.<span class="text-blue-400">captureImage</span>();
+
+        <span class="text-slate-500">// 2. 추론 (Intelligence)</span>
+        Person detectedPerson = aiEngine.<span class="text-blue-400">analyzeFace</span>(currentView);
+
+        <span class="text-orange-400">if</span> (detectedPerson == <span class="text-emerald-400">UNKNOWN_PERSON</span>) {
+            <span class="text-slate-500">// 3. 행동 (Actuator)</span>
+            speakerActuator.<span class="text-blue-400">soundAlarm</span>();
+            networkModule.<span class="text-blue-400">callPolice</span>();
+        } <span class="text-orange-400">else</span> <span class="text-orange-400">if</span> (detectedPerson == <span class="text-emerald-400">FAMILY_MEMBER</span>) {
+            doorActuator.<span class="text-blue-400">unlock</span>();
+        }
+    }
+}</code></pre></div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                위 사례 중 하나를 골라 인식·판단·행동이 각각 무엇인지 말할 수 있나요? 그 사례의 설명을 다시 확인해 보세요.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== 그래서 '판단'은 실제로 어떻게 하는가? ===== -->
+    <section id="howjudge" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">그래서 '판단'은 실제로 어떻게 하는가?</h2>
+            <div class="w-20 h-1.5 bg-violet-600 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                인식 → 판단 → 행동의 순서를 배웠습니다. 그렇다면 <strong>'판단'은 어떤 방식으로 이루어질까요?</strong><br>
+                이것이 인공지능 기초 전체의 핵심 질문입니다.
+            </p>
+        </div>
+
+        <!-- 판단의 정의 -->
+        <div class="section-card space-y-4">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-scale-balanced text-violet-600"></i>
+                '판단'이란 무엇인가?
+            </h3>
+            <p class="text-base text-slate-700 leading-relaxed">
+                판단이란 <strong>여러 선택지 중에서 하나를 고르는 일</strong>입니다.
+                로봇 청소기는 "어느 방을 먼저 청소할까?"를 골라야 하고,
+                체스 AI는 "다음 수를 어디에 둘까?"를 골라야 합니다.
+                이 선택을 하는 방법이 크게 <strong>세 갈래</strong>로 나뉩니다.
+                이 가운데 <strong>두 갈래를 1-2에서</strong> 배우고, <strong>나머지 하나는 2단원 전체</strong>에 걸쳐 배웁니다.
+            </p>
+            <p class="text-base text-slate-700 leading-relaxed bg-violet-50 border border-violet-200 rounded-xl px-4 py-3">
+                <i class="fa-solid fa-link text-violet-500 mr-1"></i>
+                <strong>지난 시간과 이어 보면</strong> — 인공지능을 일반 소프트웨어와 비교할 때
+                <strong>「사람이 규칙을 적어 주느냐, 데이터에서 규칙을 찾아내느냐」</strong>로 갈라 보았습니다.
+                그런데 아래 세 갈래를 보면 <strong>데이터로 학습하는 것은 그중 하나뿐</strong>입니다.
+                나머지 둘은 <strong>학습하지 않고도 스스로 고릅니다.</strong>
+                그러니 <strong>「학습해야만 인공지능」이라고 외워 두면 안 됩니다.</strong>
+                공통점은 학습이 아니라 <strong>상황을 보고 스스로 고른다</strong>는 것입니다.
+            </p>
+        </div>
+
+        <!-- 두 가지 방법 + 기계학습 예고 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 방법 1: 탐색 -->
+            <div class="bg-blue-50 border-2 border-blue-300 rounded-3xl p-7 space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    <div>
+                        <p class="text-blue-500 font-black text-base uppercase tracking-wider">방법 1</p>
+                        <h3 class="text-xl font-black text-blue-800">탐색 (Search)</h3>
+                    </div>
+                </div>
+                <p class="text-slate-700 text-base leading-relaxed">
+                    가능한 모든 경우를 <strong>상태 공간 트리</strong>로 펼쳐 놓고, 목표로 가는 최적의 길을 찾는 방법입니다.
+                </p>
+                <div class="bg-white rounded-2xl p-4 border border-blue-200 text-base text-slate-700">
+                    <strong class="text-blue-700">로봇 청소기 예시:</strong><br>
+                    "어느 방으로 갈지" — 가능한 경로를 모두 펼쳐 최단 경로를 탐색
+                </div>
+                <div class="space-y-2 pt-2">
+                    <a href="1-2-1.탐색과-문제-해결.html" class="next-card" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">
+                        <div class="next-card-icon"><i class="fa-solid fa-search"></i></div>
+                        <div>
+                            <div class="text-base font-black">1-2-1. 탐색과 문제 해결 →</div>
+                            <div class="text-blue-200 font-medium text-base">상태 공간 트리, BFS/DFS</div>
+                        </div>
+                    </a>
+                    <a href="1-2-2.지능적-탐색.html" class="next-card" style="background:linear-gradient(135deg,#06b6d4,#0e7490)">
+                        <div class="next-card-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                        <div>
+                            <div class="text-base font-black">1-2-2. 지능적 탐색 →</div>
+                            <div class="text-cyan-200 font-medium text-base">휴리스틱, A* 알고리즘</div>
+                        </div>
+                    </a>
+                    <a href="1-2-3.탐색을-활용한-문제-해결.html" class="next-card" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)">
+                        <div class="next-card-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
+                        <div>
+                            <div class="text-base font-black">1-2-3. 탐색을 활용한 문제 해결 →</div>
+                            <div class="text-violet-200 font-medium text-base">8-퍼즐, N-Queen 등</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 방법 2: 지식 표현과 추론 -->
+            <div class="bg-emerald-50 border-2 border-emerald-300 rounded-3xl p-7 space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-book-open"></i></div>
+                    <div>
+                        <p class="text-emerald-500 font-black text-base uppercase tracking-wider">방법 2</p>
+                        <h3 class="text-xl font-black text-emerald-800">지식 표현과 추론</h3>
+                    </div>
+                </div>
+                <p class="text-slate-700 text-base leading-relaxed">
+                    아는 사실을 <strong>규칙·의미망·프레임</strong>으로 미리 적어 두고, 그 지식에서 새로운 사실을 이끌어 내는 방법입니다.
+                </p>
+                <div class="bg-white rounded-2xl p-4 border border-emerald-200 text-base text-slate-700">
+                    <strong class="text-emerald-700">로봇 청소기 예시:</strong><br>
+                    "카펫 위에서는 물걸레를 올린다" — 사람이 적어둔 규칙으로 상황 판단
+                </div>
+                <div class="space-y-2 pt-2">
+                    <a href="1-2-4.지식의-표현과-논리-추론.html" class="next-card" style="background:linear-gradient(135deg,#10b981,#065f46)">
+                        <div class="next-card-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                        <div>
+                            <div class="text-base font-black">1-2-4. 지식의 표현과 논리 추론 →</div>
+                            <div class="text-emerald-200 font-medium text-base">규칙, 의미망, 논리 추론</div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- 기계학습 예고 -->
+                <div class="bg-white border border-orange-200 rounded-2xl p-5 mt-2">
+                    <p class="text-orange-600 font-black text-base mb-2">
+                        <i class="fa-solid fa-seedling mr-1"></i> 그리고 세 번째 방법 (2단원 예고)
+                    </p>
+                    <p class="text-slate-600 text-base leading-relaxed">
+                        탐색이나 규칙은 <em>사람이 직접</em> 경우의 수나 규칙을 알려줘야 합니다.
+                        <strong>기계학습</strong>은 그 규칙을 <em>데이터에서 스스로 찾는</em> 세 번째 방법입니다.
+                    </p>
+                    <div class="bg-orange-50 rounded-xl p-3 mt-3 text-slate-700 text-base">
+                        <strong class="text-orange-700">로봇 청소기 예시:</strong><br>
+                        "먼지 사진을 수천 장 보여주면 AI가 스스로 '먼지 패턴'을 익힌다"
+                    </div>
+                    <a href="2-1-1.기계학습과-문제-해결-과정.html" class="next-card mt-3" style="background:linear-gradient(135deg,#f97316,#c2410c)">
+                        <div class="next-card-icon"><i class="fa-solid fa-robot"></i></div>
+                        <div>
+                            <div class="text-base font-black">2-1-1. 기계학습과 문제 해결 과정 →</div>
+                            <div class="text-orange-200 font-medium text-base">데이터로 규칙을 스스로 찾기</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 세 갈래 비교 정리 -->
+        <div class="section-card space-y-4">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-table-columns text-violet-600"></i>
+                판단 방법 세 갈래 한눈에 비교
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="table-prose" style="min-width:540px">
+                    <thead>
+                    <tr>
+                        <th>판단 방법</th>
+                        <th>핵심 아이디어</th>
+                        <th>로봇 청소기 예시</th>
+                        <th>배우는 곳</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong class="text-blue-700">탐색</strong></td>
+                        <td>경우를 모두 펼쳐 최적 경로 탐색</td>
+                        <td>어느 방을 먼저 청소할까?</td>
+                        <td>1-2-1, 1-2-2, 1-2-3</td>
+                    </tr>
+                    <tr>
+                        <td><strong class="text-emerald-700">지식 표현·추론</strong></td>
+                        <td>규칙을 미리 적어두고 새 사실 추론</td>
+                        <td>카펫이면 물걸레 올리기</td>
+                        <td>1-2-4</td>
+                    </tr>
+                    <tr>
+                        <td><strong class="text-orange-700">기계학습</strong></td>
+                        <td>데이터에서 패턴을 스스로 학습</td>
+                        <td>먼지 사진 보고 종류 파악</td>
+                        <td>2단원 전체</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                '판단'을 해내는 세 가지 방법의 이름을 말할 수 있나요? 그리고 그중 어느 것이 '데이터로 학습하는' 방법인가요?
+                위 비교 표를 가리고 떠올려 본 뒤 맞춰 보세요.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== 확인 퀴즈 ===== -->
+    <section id="quiz" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">확인 퀴즈</h2>
+            <div class="w-20 h-1.5 bg-teal-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">오늘 배운 인공지능의 원리를 머릿속에 정리해 봅시다!</p>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Q1 -->
+            <div class="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-300">
+                <h3 class="font-bold text-xl mb-6 text-slate-800 leading-relaxed">
+                    <span class="text-teal-600 mr-2 bg-teal-100 px-3 py-1 rounded-lg">Q1</span>
+                    A/D 변환의 3단계를 올바른 순서로 나열한 것은 무엇일까요?
+                </h3>
+                <div class="space-y-3" id="q1">
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '부호화는 마지막 3단계입니다. 순서를 다시 확인해 보세요.')">A. 부호화 → 샘플링 → 양자화</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 샘플링(쪼개기) → 양자화(숫자 매기기) → 부호화(0과 1로 변환)의 순서로 진행됩니다.')">B. 샘플링 → 양자화 → 부호화</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '양자화는 샘플링 이후 단계입니다. 순서를 다시 확인해 보세요.')">C. 양자화 → 샘플링 → 부호화</button>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-300">
+                <h3 class="font-bold text-xl mb-6 text-slate-800 leading-relaxed">
+                    <span class="text-teal-600 mr-2 bg-teal-100 px-3 py-1 rounded-lg">Q2</span>
+                    지능 에이전트의 센서에 대한 설명으로 올바른 것을 고르세요.
+                </h3>
+                <div class="space-y-3" id="q2">
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '센서가 측정한 값은 A/D 변환기를 거쳐 디지털로 바뀌어야 컴퓨터가 이해할 수 있습니다.')">A. 센서가 측정한 자연의 소리나 빛은 컴퓨터가 별도의 변환 없이 곧바로 이해할 수 있다.</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '오답입니다! 센서는 빛의 강도나 반사 같은 환경 변화에 매우 취약하여 착각할 수 있습니다.')">B. 센서는 인간의 눈과 같아서, 빛이 너무 강하거나 그림자가 져도 사물을 100% 완벽하게 인식한다.</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 센서는 빛의 변화나 반사에 따라 같은 사물도 다르게 인식하는 오류를 범할 수 있으므로, 여러 센서를 함께 사용해야 합니다.')">C. 센서는 빛의 변화나 반사에 따라 같은 사물도 다르게 인식하는 한계가 있을 수 있다.</button>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-300">
+                <h3 class="font-bold text-xl mb-6 text-slate-800 leading-relaxed">
+                    <span class="text-teal-600 mr-2 bg-teal-100 px-3 py-1 rounded-lg">Q3</span>
+                    다음 중 지능 에이전트를 구성하는 3요소와 그 역할이 <u>잘못</u> 짝지어진 것은?
+                </h3>
+                <div class="space-y-3" id="q3">
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '센서는 사람의 눈과 귀처럼 외부 환경을 인식하는 역할이 맞습니다.')">A. 센서 — 외부 환경을 지각하고 데이터를 수집한다.</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '지능(소프트웨어)은 수집된 정보를 바탕으로 판단하고 추론하는 두뇌 역할이 맞습니다.')">B. 지능(소프트웨어) — 상황을 분석하고 알맞은 행동을 추론한다.</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 액추에이터는 정보를 분석하는 것이 아니라, 판단이 끝난 후 스피커나 모터 등을 통해 직접 행동하는 역할을 합니다.')">C. 액추에이터 — 센서가 수집한 정보를 바탕으로 스스로 학습하고 분석한다.</button>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-300">
+                <h3 class="font-bold text-xl mb-6 text-slate-800 leading-relaxed">
+                    <span class="text-teal-600 mr-2 bg-teal-100 px-3 py-1 rounded-lg">Q4</span>
+                    드론 수십 대가 서로 부딪히지 않으면서 하늘에서 에어쇼 대형을 맞추고 있습니다. 이 상황에서 가장 돋보이는 지능 에이전트의 특성은 무엇일까요?
+                </h3>
+                <div class="space-y-3" id="q4">
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '자율성도 있지만, 여러 대가 서로 부딪히지 않고 신호를 주고받으며 대형을 맞추는 것이 핵심입니다.')">A. 자율성</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 다른 기기와 주고받으며 함께 움직이는 것이 사회성입니다.')">B. 사회성</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '반응성은 환경이 달라졌을 때 그에 맞게 대응하는 성질입니다. 여기서는 서로 주고받는 것이 더 두드러집니다.')">C. 반응성</button>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-300">
+                <h3 class="font-bold text-xl mb-6 text-slate-800 leading-relaxed">
+                    <span class="text-teal-600 mr-2 bg-teal-100 px-3 py-1 rounded-lg">Q5</span>
+                    로봇 청소기가 "어느 방을 먼저 청소할지" 결정하는 방법으로 가장 적합한 것은?
+                </h3>
+                <div class="space-y-3" id="q5">
+                    <button class="quiz-btn" onclick="checkAnswer(this, true, '정답입니다! 어느 방을 먼저 갈지 경로를 탐색하는 것은 상태 공간 트리로 가능한 경우를 펼쳐 최적의 길을 찾는 탐색 방법입니다.')">A. 탐색 — 가능한 경로를 상태 공간 트리로 펼쳐 최단 경로를 찾는다.</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '지식 표현과 추론은 \'카펫 위에서는 물걸레를 올린다\'처럼 규칙을 미리 적어두고 추론하는 방법입니다. 경로 탐색과는 다릅니다.')">B. 지식 표현과 추론 — 카펫 위에서는 물걸레를 쓴다는 규칙을 적용한다.</button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '기계학습은 먼지 사진을 보고 종류를 알아내는 것처럼 데이터에서 패턴을 학습하는 방법입니다.')">C. 기계학습 — 먼지 사진 수천 장을 학습해 패턴을 인식한다.</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 핵심 정리 ===== -->
+    <section class="scroll-mt-24">
+        <div class="bg-gradient-to-br from-indigo-600 to-teal-700 text-white rounded-3xl p-8 md:p-10 space-y-6">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <h2 class="text-2xl font-black">AI와 함께 똑똑 정리하기</h2>
+            </div>
+            <div class="bg-white/10 rounded-2xl p-6 space-y-3">
+                <p class="font-black text-lg text-yellow-200">Q. 인공지능은 어떤 원리로 일하는가?</p>
+                <p class="text-base leading-relaxed opacity-95">
+                    A. 인공지능은 <strong>인식 → 판단 → 행동</strong>의 순서로 세상과 상호작용합니다.
+                    센서가 아날로그 신호를 수집해 A/D 변환으로 디지털 데이터로 바꾸면(인식),
+                    지능이 탐색·지식 표현·추론·기계학습 가운데 알맞은 방법으로 무엇을 할지 결정하고(판단),
+                    액추에이터가 실제로 환경을 바꿉니다(행동).
+                    이 세 부분을 모두 갖춘 시스템 전체를 <strong>지능 에이전트</strong>라고 부르고,
+                    <strong>인공지능은 그 안에서 판단을 맡는 부분</strong>입니다.
+                    단, 센서는 완벽하지 않으므로 여러 센서를 함께 사용해야 합니다.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white/10 rounded-2xl p-4">
+                    <p class="font-black text-base text-yellow-200 mb-2">핵심 용어</p>
+                    <ul class="space-y-1 text-base">
+                        <li><strong>센서</strong> — 아날로그 → 전기 신호</li>
+                        <li><strong>A/D 변환기</strong> — 전기 → 디지털</li>
+                        <li><strong>지능 에이전트</strong> — 센서+지능+액추에이터</li>
+                        <li><strong>액추에이터</strong> — 판단 → 행동</li>
+                    </ul>
+                </div>
+                <div class="bg-white/10 rounded-2xl p-4">
+                    <p class="font-black text-base text-yellow-200 mb-2">지능 에이전트의 다섯 가지 특성</p>
+                    <ul class="space-y-1 text-base">
+                        <li>① 자율성 — 시키지 않아도 스스로 판단</li>
+                        <li>② 능동성 — 먼저 나서서 움직임</li>
+                        <li>③ 사회성 — 사람·다른 기기와 주고받음</li>
+                        <li>④ 시간 연속성 — 한 번으로 끝나지 않고 이어서 일함</li>
+                        <li>⑤ 반응성 — 환경이 달라지면 그에 맞게 대응</li>
+                    </ul>
+                </div>
+                <div class="bg-white/10 rounded-2xl p-4">
+                    <p class="font-black text-base text-yellow-200 mb-2">판단의 세 가지 방법</p>
+                    <ul class="space-y-1 text-base">
+                        <li><strong>탐색</strong> — 경로 탐색 (1-2-1~3)</li>
+                        <li><strong>지식 표현·추론</strong> — 규칙 기반 (1-2-4)</li>
+                        <li><strong>기계학습</strong> — 데이터 학습 (2단원)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ── 푸터 ── -->
+<footer class="bg-white border-t border-slate-200 mt-20 px-6 py-5">
+    <div class="max-w-6xl mx-auto flex items-center justify-center gap-1">
+        <a href="../index.html" title="강의노트 목록" aria-label="강의노트 목록"
+           class="w-11 h-11 grid place-items-center rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-slate-100 transition-colors"><i class="fa-solid fa-house text-base"></i></a>
+        <a href="https://github.com/itmir913/Visual-Assets-for-CS-Teacher" target="_blank" rel="noopener noreferrer"
+           title="GitHub 저장소" aria-label="GitHub 저장소"
+           class="w-11 h-11 grid place-items-center rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-slate-100 transition-colors"><svg viewBox="0 0 16 16" class="w-4 h-4" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
+        <span class="text-base text-slate-400 ml-2">&copy; luminousky</span>
+    </div>
+</footer>
+
+<script>
+    function checkAnswer(btn, isCorrect, message) {
+        const container = btn.parentElement;
+        const buttons = container.querySelectorAll('.quiz-btn');
+
+        buttons.forEach(b => {
+            if (!b.dataset.label) b.dataset.label = b.textContent;
+            b.classList.remove('correct', 'wrong');
+            b.classList.add('disabled');
+        });
+
+        if (isCorrect) {
+            btn.classList.add('correct');
+            btn.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i>${btn.dataset.label}`;
+        } else {
+            btn.classList.add('wrong');
+            btn.innerHTML = `<i class="fa-solid fa-circle-xmark mr-2"></i>${btn.dataset.label}`;
+        }
+
+        showToast(message, isCorrect ? 'success' : 'error');
+
+        setTimeout(() => {
+            buttons.forEach(b => {
+                b.classList.remove('correct', 'wrong', 'disabled');
+                b.innerHTML = b.dataset.label;
+            });
+        }, 3000);
+    }
+
+    let currentToast = null;
+
+    function showToast(message, type) {
+        if (currentToast) currentToast.remove();
+
+        const toast = document.createElement('div');
+        const icon = type === 'success'
+            ? '<i class="fa-solid fa-circle-check mr-2 text-xl"></i>'
+            : '<i class="fa-solid fa-circle-xmark mr-2 text-xl"></i>';
+
+        toast.className = `toast-message fixed bottom-10 left-1/2 -translate-x-1/2 px-8 py-4 rounded-2xl text-white font-bold shadow-2xl transition-all transform translate-y-20 opacity-0 z-[1000] flex items-center ${type === 'success' ? 'bg-teal-600' : 'bg-rose-600'}`;
+        toast.innerHTML = `${icon}<span>${message}</span>`;
+        document.body.appendChild(toast);
+        currentToast = toast;
+
+        setTimeout(() => {
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+        }, 10);
+
+        setTimeout(() => {
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+</script>
+
+<script>
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-copy]');
+        if (!btn) return;
+        const code = btn.closest('.code-block')?.querySelector('pre');
+        if (!code) return;
+        const text = code.textContent;
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch {
+            // file://은 보안 컨텍스트가 아니라 navigator.clipboard가 없다.
+            // 오프라인 zip을 그대로 여는 학생이 있으므로 폴백을 지우지 않는다.
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.cssText = 'position:fixed;opacity:0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } finally { ta.remove(); }
+        }
+        btn.classList.add('is-done');
+        const label = btn.querySelector('span');
+        const before = label.textContent;
+        label.textContent = '복사됨';
+        setTimeout(() => { label.textContent = before; btn.classList.remove('is-done'); }, 1500);
+    });
+</script>
+</body>
+</html>

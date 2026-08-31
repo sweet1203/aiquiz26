@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음성 인식과 언어 이해</title>
+    <style>
+        /* 코드·모노스페이스 요소의 한글이 시스템 기본 글꼴로 떨어지는 것을 막는다.
+           라틴 문자는 모노스페이스, 한글은 Pretendard로 렌더링된다. */
+        code, kbd, samp, pre,
+        body .font-mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+            "Courier New", "Pretendard Variable", Pretendard, "Apple SD Gothic Neo",
+            "Malgun Gothic", monospace;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto,
+            "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+            "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+        }
+
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background-color: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-card {
+            background: white;
+            padding: clamp(1.25rem, 4vw, 2.5rem);
+            border-radius: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-btn {
+            width: 100%;
+            padding: 1.25rem;
+            text-align: left;
+            border-radius: 1rem;
+            border: 2px solid #e2e8f0;
+            background-color: #f8fafc;
+            font-weight: 500;
+            color: #374151;
+            font-size: 1rem;
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+        .quiz-btn:hover {
+            background: #f0f9ff;
+            border-color: #7dd3fc;
+        }
+
+        .quiz-btn.correct {
+            background: #0284c7;
+            color: white;
+            border-color: #0284c7;
+        }
+
+        .quiz-btn.wrong {
+            background: #f43f5e;
+            color: white;
+            border-color: #f43f5e;
+        }
+
+        .quiz-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* 음성 파형 애니메이션 */
+        .wave-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            height: 40px;
+        }
+
+        .wave-bar {
+            width: 6px;
+            background-color: #38bdf8;
+            border-radius: 3px;
+            animation: wave 1s infinite ease-in-out alternate;
+        }
+
+        .wave-bar:nth-child(1) {
+            height: 10px;
+            animation-delay: 0.0s;
+        }
+
+        .wave-bar:nth-child(2) {
+            height: 20px;
+            animation-delay: 0.1s;
+        }
+
+        .wave-bar:nth-child(3) {
+            height: 40px;
+            animation-delay: 0.2s;
+        }
+
+        .wave-bar:nth-child(4) {
+            height: 25px;
+            animation-delay: 0.3s;
+        }
+
+        .wave-bar:nth-child(5) {
+            height: 15px;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes wave {
+            0% {
+                transform: scaleY(0.5);
+                background-color: #bae6fd;
+            }
+            100% {
+                transform: scaleY(1.2);
+                background-color: #0284c7;
+            }
+        }
+    </style>
+  <link rel="stylesheet" href="../assets/ai-basics-ZHMNdnwA.css">
+</head>
+<body class="text-slate-900">
+
+<!-- ── Hero ── -->
+<header id="top" class="hero-gradient text-white py-32 px-6 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+        <i class="fa-solid fa-microphone-lines absolute top-10 left-10 text-8xl transform -rotate-12"></i>
+        <i class="fa-solid fa-comments absolute bottom-10 right-10 text-9xl"></i>
+    </div>
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+        <span class="inline-block px-4 py-1.5 bg-white/20 rounded-full font-bold mb-6 backdrop-blur-sm border border-white/30 text-base">인공지능 기초</span>
+        <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight break-keep">
+            음성 인식과 언어 이해
+        </h1>
+        <p class="text-lg md:text-xl opacity-90 font-medium max-w-2xl mx-auto leading-relaxed">
+            "헤이, 스마트폰! 오늘 날씨 어때?"<br>
+            기계가 목소리를 글자로 옮기는 일과 <strong>그 글의 뜻을 다루는 일이 어떻게 다른지</strong>를 따라가 봅니다.
+        </p>
+    </div>
+</header>
+
+<!-- ── 학습 목표 배너 ── -->
+<div class="bg-white border-b border-slate-200 px-6 py-6">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex items-start gap-4">
+            <div class="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-bullseye text-sky-600 text-lg"></i>
+            </div>
+            <div>
+                <p class="font-black text-base text-slate-500 mb-2 uppercase tracking-widest">학습 목표</p>
+                <ol class="space-y-1 text-base font-medium text-slate-800 list-decimal list-outside pl-5">
+                    <li>음성 인식과 언어 이해가 무엇인지, 둘이 어떻게 다른지 설명할 수 있다.</li>
+                    <li>순환 신경망이 순차적인 데이터를 다루는 방식을 설명할 수 있다.</li>
+                    <li>딥러닝(순환 신경망)이 음성 인식과 자연어 처리 문제를 해결하는 활용 사례를 탐색할 수 있다.</li>
+                    <li>언어 모델이 답을 만들어 내는 방식과 그 한계를 설명할 수 있다.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── 네비게이션 ── -->
+<nav class="sticky-nav px-6 py-4">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-sky-600 rounded-xl flex items-center justify-center text-white shadow-md">
+                <i class="fa-solid fa-ear-listen text-base"></i>
+            </div>
+            <span class="font-black text-xl tracking-tight text-slate-800">음성 인식과 언어 이해</span>
+        </div>
+        <div class="hidden md:flex flex-wrap justify-end gap-x-4 gap-y-1 font-bold text-slate-500 text-base">
+            <a href="#speech" class="hover:text-sky-600 transition">음성 인식</a>
+            <a href="#rnn" class="hover:text-indigo-600 transition">순환 신경망</a>
+            <a href="#speech-deep" class="hover:text-blue-600 transition">음성 인식 활용</a>
+            <a href="#language" class="hover:text-emerald-600 transition">언어 이해</a>
+            <a href="#language-deep" class="hover:text-teal-600 transition">자연어 처리 활용</a>
+            <a href="#llm" class="hover:text-violet-600 transition">언어 모델</a>
+            <a href="#misconception" class="hover:text-amber-600 transition">오해와 진실</a>
+            <a href="#quiz" class="hover:text-sky-600 transition">퀴즈</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ── 메인 콘텐츠 ── -->
+<main class="max-w-6xl mx-auto px-4 sm:px-6 py-20 space-y-24">
+
+    <!-- ===== Section 1: 음성 인식 ===== -->
+    <section id="speech" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">소리를 글자로! (음성 인식)</h2>
+            <div class="w-20 h-1.5 bg-sky-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-semibold">사람의 목소리는 어떤 과정을 거쳐 글자가 될까?</p>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">우리의 아날로그 목소리가 컴퓨터에게 인식되기까지</p>
+        </div>
+
+        <div class="section-card space-y-6">
+            <p class="text-base text-slate-700 leading-relaxed">
+                인공지능 스피커에게 말을 걸면 가장 먼저 일어나는 일은
+                <strong>우리의 목소리(아날로그 소리)를 컴퓨터가 읽을 수 있는 글자(텍스트)로 바꾸는 것</strong>입니다.
+                이를 <span class="text-sky-600 font-bold bg-sky-50 px-2 py-1 rounded">음성 인식(Speech Recognition)</span>이라고
+                합니다.
+                마치 컴퓨터가 '받아쓰기'를 하는 것과 같아요.
+            </p>
+
+            <div class="bg-sky-50 border-l-4 border-sky-500 rounded-r-2xl p-6 space-y-3">
+                <h4 class="font-black text-sky-900 flex items-center gap-2 text-lg">
+                    <i class="fa-solid fa-wave-square"></i> 목소리는 언제 숫자가 될까?
+                </h4>
+                <p class="text-base text-slate-700 leading-relaxed">
+                    앞에서 <strong>센서와 A/D 변환</strong>을 배웠던 것을 떠올려 봅시다. 목소리는 공기의 떨림이라
+                    끊어짐 없이 이어지는 <strong>아날로그 신호</strong>입니다. 마이크가 이것을 전기 신호로 바꾸고,
+                    <strong>샘플링 → 양자화 → 부호화</strong>를 거치면 <strong>시간 순서대로 늘어선 숫자들</strong>이 됩니다.
+                </p>
+                <p class="text-base text-slate-700 leading-relaxed">
+                    지난 시간의 사진이 <strong>격자 위의 숫자</strong>였다면, 목소리는 <strong>한 줄로 이어지는 숫자</strong>입니다.
+                    같은 딥러닝이라도 <strong>데이터의 생김새가 다르면 다루는 구조도 달라집니다.</strong>
+                    이어지는 절에서 그 구조를 살펴봅시다.
+                </p>
+            </div>
+
+            <details class="bg-slate-50 border border-slate-200 rounded-xl p-4 mt-4">
+                <summary class="font-bold text-base text-slate-700 cursor-pointer">
+                    더 알아보기: 음성 인식의 3단계 (참고 자료)
+                </summary>
+                <div class="mt-3 text-base text-slate-600 space-y-2">
+            <div class="grid md:grid-cols-3 gap-5">
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center relative">
+                    <i class="fa-solid fa-chevron-right absolute -right-3 top-1/2 -translate-y-1/2 text-slate-300 hidden md:block text-2xl z-10"></i>
+                    <div class="wave-container justify-center mb-4">
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                    </div>
+                    <div class="w-8 h-8 bg-sky-500 text-white rounded-full flex items-center justify-center font-black text-base mx-auto mb-3">
+                        1
+                    </div>
+                    <h4 class="font-black text-slate-900 mb-2 text-base">소리 듣기</h4>
+                    <p class="text-slate-500 text-base leading-relaxed">마이크 센서를 통해 공기의 떨림인 소리를 전기 신호로 바꿉니다.</p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center relative">
+                    <i class="fa-solid fa-chevron-right absolute -right-3 top-1/2 -translate-y-1/2 text-slate-300 hidden md:block text-2xl z-10"></i>
+                    <div class="text-4xl text-sky-400 mb-4 h-10 flex items-center justify-center">
+                        <i class="fa-solid fa-scissors transform -rotate-90"></i>
+                    </div>
+                    <div class="w-8 h-8 bg-sky-500 text-white rounded-full flex items-center justify-center font-black text-base mx-auto mb-3">
+                        2
+                    </div>
+                    <h4 class="font-black text-slate-900 mb-2 text-base">음소 쪼개기</h4>
+                    <p class="text-slate-500 text-base leading-relaxed">소리를 가장 작은 단위인 '자음'과 '모음'(음소)으로 잘게 쪼개어 분석합니다.</p>
+                </div>
+
+                <div class="bg-sky-50 border border-sky-200 rounded-2xl p-6 text-center">
+                    <div class="text-4xl text-blue-500 mb-4 h-10 flex items-center justify-center">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <div class="w-8 h-8 bg-sky-500 text-white rounded-full flex items-center justify-center font-black text-base mx-auto mb-3">
+                        3
+                    </div>
+                    <h4 class="font-black text-slate-900 mb-2 text-base">텍스트 변환</h4>
+                    <p class="text-slate-500 text-base leading-relaxed">분석한 소리의 패턴을 사전에 등록된 단어들과 비교하여 글자로 출력합니다.</p>
+                </div>
+            </div>
+
+            <!-- 흐름 요약 -->
+            <div class="bg-sky-50 border border-sky-200 rounded-2xl p-5 flex items-center gap-4">
+                <div class="w-11 h-11 bg-sky-600 text-white rounded-xl flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-route text-lg"></i>
+                </div>
+                <p class="text-base text-sky-800 font-medium leading-relaxed">
+                    <strong>소리(아날로그)</strong> → 마이크 센서 → <strong>전기 신호</strong> → A/D 변환 → <strong>디지털 데이터</strong> → 음소
+                    분석 → <strong>텍스트(글자)</strong>
+                </p>
+            </div>
+                </div>
+            </details>
+        </div>
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                목소리가 숫자로 바뀌기까지 어떤 단계를 거치나요? 그리고 그 숫자는 사진의 숫자와 어떻게 다른 모양으로 늘어서 있나요?
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== Section 1.2: 순환 신경망 ===== -->
+    <section id="rnn" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">순환 신경망 — 앞을 기억하며 읽는다</h2>
+            <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-semibold">순서가 있는 데이터는 왜 따로 다뤄야 할까?</p>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">소리와 글을 다루는 신경망의 구조</p>
+        </div>
+
+        <div class="section-card space-y-6">
+            <p class="text-base text-slate-700 leading-relaxed">
+                목소리도 글도 <strong class="text-indigo-600">순차 데이터(sequential data)</strong>입니다.
+                <strong>앞뒤 순서가 바뀌면 뜻이 달라지는 데이터</strong>를 가리킵니다.
+                &lsquo;나는 밥을 먹었다&rsquo;와 &lsquo;밥은 나를 먹었다&rsquo;는 같은 낱말로 되어 있지만 순서 하나로 뜻이 완전히 달라지지요.
+            </p>
+            <p class="text-base text-slate-700 leading-relaxed">
+                그런데 지금까지 배운 신경망은 <strong>입력을 한 번에 통째로 받아</strong> 답을 내놓습니다.
+                말은 길이도 제각각이고, 지금 들리는 소리가 무슨 글자인지는 <strong>앞에서 무슨 소리가 났는지에 달려 있습니다.</strong>
+                그래서 나온 구조가 <strong class="text-indigo-600">순환 신경망(RNN, Recurrent Neural Network)</strong>입니다.
+            </p>
+            <p class="text-base text-slate-700 leading-relaxed">
+                순환 신경망은 데이터를 <strong>앞에서부터 한 조각씩</strong> 받습니다. 그리고 조각 하나를 처리할 때마다
+                <strong>지금까지 읽은 내용을 요약한 값</strong>을 만들어 <strong>다음 조각을 처리할 때 함께 넣어 줍니다.</strong>
+                이 요약값이 되돌아 들어오기 때문에 &lsquo;순환&rsquo;이라는 이름이 붙었습니다.
+            </p>
+
+            <div class="overflow-x-auto">
+                <svg viewBox="0 0 500 235" role="img" class="mx-auto block"
+                     aria-label="같은 계산 상자 세 개가 왼쪽에서 오른쪽으로 이어지고, 각 상자는 아래에서 소리 조각을 받아 위로 글자를 내놓으며, 앞 상자가 만든 요약값을 다음 상자에 넘겨준다"
+                     style="min-width:575px; width:100%; height:auto; max-width:575px;">
+                    <defs>
+                        <marker id="rnnArrow" viewBox="0 0 10 10" refX="9" refY="5"
+                                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+                        </marker>
+                    </defs>
+                    <g font-size="14" text-anchor="middle" fill="#334155">
+                        <text x="250" y="20" font-weight="700" fill="#4338ca">같은 상자가 시간 순서로 반복됩니다</text>
+
+                        <!-- 출력 -->
+                        <text x="90" y="55">글자 1</text>
+                        <text x="250" y="55">글자 2</text>
+                        <text x="410" y="55">글자 3</text>
+                        <line x1="90" y1="105" x2="90" y2="65" stroke="#475569" stroke-width="2" marker-end="url(#rnnArrow)"/>
+                        <line x1="250" y1="105" x2="250" y2="65" stroke="#475569" stroke-width="2" marker-end="url(#rnnArrow)"/>
+                        <line x1="410" y1="105" x2="410" y2="65" stroke="#475569" stroke-width="2" marker-end="url(#rnnArrow)"/>
+
+                        <!-- 상자 -->
+                        <rect x="45" y="105" width="90" height="55" rx="10" fill="#eef2ff" stroke="#4338ca" stroke-width="2"/>
+                        <rect x="205" y="105" width="90" height="55" rx="10" fill="#eef2ff" stroke="#4338ca" stroke-width="2"/>
+                        <rect x="365" y="105" width="90" height="55" rx="10" fill="#eef2ff" stroke="#4338ca" stroke-width="2"/>
+                        <text x="90" y="138" fill="#3730a3" font-weight="700">순환층</text>
+                        <text x="250" y="138" fill="#3730a3" font-weight="700">순환층</text>
+                        <text x="410" y="138" fill="#3730a3" font-weight="700">순환층</text>
+
+                        <!-- 요약값 전달 -->
+                        <line x1="135" y1="132" x2="200" y2="132" stroke="#475569" stroke-width="2" marker-end="url(#rnnArrow)"/>
+                        <line x1="295" y1="132" x2="360" y2="132" stroke="#475569" stroke-width="2" marker-end="url(#rnnArrow)"/>
+                        <text x="167" y="120" font-size="14" fill="#475569">요약</text>
+                        <text x="327" y="120" font-size="14" fill="#475569">요약</text>
+
+                        <!-- 입력 -->
+                        <line x1="90" y1="200" x2="90" y2="165" stroke="#475569" stroke-width="2" marker-end="url(#rnnArrow)"/>
+                        <line x1="250" y1="200" x2="250" y2="165" stroke="#475569" stroke-width="2" marker-end="url(#rnnArrow)"/>
+                        <line x1="410" y1="200" x2="410" y2="165" stroke="#475569" stroke-width="2" marker-end="url(#rnnArrow)"/>
+                        <text x="90" y="218">소리 조각 1</text>
+                        <text x="250" y="218">소리 조각 2</text>
+                        <text x="410" y="218">소리 조각 3</text>
+                    </g>
+                </svg>
+            </div>
+
+            <div class="bg-indigo-50 border-l-4 border-indigo-500 rounded-r-2xl p-6 space-y-3">
+                <p class="font-black text-indigo-900 text-base">그림을 읽는 법</p>
+                <p class="text-base text-slate-700 leading-relaxed">
+                    상자가 세 개 그려져 있지만 <strong>서로 다른 세 개의 층이 아닙니다.</strong>
+                    <strong>같은 상자를 시간 순서대로 펼쳐 그린 것</strong>이고, 안에 든 가중치도 셋이 똑같습니다.
+                    달라지는 것은 <strong>들어오는 조각</strong>과 <strong>앞에서 넘어온 요약값</strong>뿐입니다.
+                </p>
+                <p class="text-base text-slate-700 leading-relaxed">
+                    그래서 세 번째 조각을 처리할 때는 첫 번째·두 번째 조각의 흔적이 요약값에 담겨 함께 들어옵니다.
+                    같은 &lsquo;ㅅ&rsquo; 소리라도 앞에 무엇이 있었느냐에 따라 다른 글자로 적히는 이유가 여기에 있습니다.
+                </p>
+            </div>
+
+            <div class="bg-amber-50 border-l-4 border-amber-500 rounded-r-2xl p-6 space-y-3">
+                <p class="font-black text-amber-800 text-base">이 구조에도 약점이 있습니다</p>
+                <p class="text-base text-slate-700 leading-relaxed">
+                    요약값은 조각을 하나 지날 때마다 <strong>다시 계산되어 덮어 쓰입니다.</strong>
+                    그래서 문장이 길어지면 <strong>맨 앞의 내용이 흐려져</strong>, 한참 앞에서 나온 말과 지금 말을 이어 붙이기 어려워집니다.
+                    앞 시간에 본 <strong>기울기 소실</strong>이 여기서도 발목을 잡습니다.
+                </p>
+                <p class="text-base text-slate-700 leading-relaxed">
+                    그래서 오래된 정보를 더 잘 붙드는 구조들이 뒤이어 나왔고, 요즘 번역기나 대화형 인공지능은
+                    <strong>문장 전체를 한꺼번에 놓고 어느 낱말끼리 관련이 깊은지 측정하는 방식</strong>을 주로 씁니다.
+                    <span class="text-slate-500">그 방식들의 이름까지 외울 필요는 없습니다. 다만
+                    &lsquo;순서를 다루는 방법이 순환 신경망 하나뿐인 것은 아니다&rsquo;라는 점만 기억해 둡시다.</span>
+                </p>
+            </div>
+        </div>
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                순환 신경망이 다음 조각으로 넘겨주는 것은 무엇인가요? 그리고 문장이 길어지면 왜 앞부분이 흐려질까요?
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== Section 1.5: 딥러닝을 활용한 음성 인식 사례 ===== -->
+    <section id="speech-deep" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">딥러닝은 음성 인식을 어디에 활용할까?</h2>
+            <div class="w-20 h-1.5 bg-blue-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">단순한 받아쓰기를 넘어, 감정까지 읽어내는 오늘날의 음성 인식</p>
+        </div>
+
+        <div class="section-card space-y-6">
+            <p class="text-base text-slate-700 leading-relaxed">
+                오늘날의 음성 인식은 단순히 음성을 알아듣고 텍스트로 바꾸는 것을 넘어, <strong>음성에 포함된 감정을 인식</strong>하고
+                <strong>화자의 음성을 학습해 재생성</strong>할 수 있는 수준으로 발전하였습니다.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-5">
+                    <div class="w-11 h-11 bg-blue-500 text-white rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-comment-dots"></i>
+                    </div>
+                    <p class="font-black text-slate-800 mb-1">음성 비서 및 가상 어시스턴트</p>
+                    <p class="text-base text-slate-600 leading-relaxed">사용자의 음성 명령을 이해하고, 문자 메시지를 보내거나 검색 결과를 알려주는 등의 작업을 수행합니다.</p>
+                </div>
+                <div class="bg-sky-50 border border-sky-200 rounded-2xl p-5">
+                    <div class="w-11 h-11 bg-sky-500 text-white rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-face-smile-beam"></i>
+                    </div>
+                    <p class="font-black text-slate-800 mb-1">음성 감정 분석</p>
+                    <p class="text-base text-slate-600 leading-relaxed">목소리의 톤·속도·크기·사용 단어 등을 분석하여 화자의 감정을 인식합니다. 공감 마케팅 등에 활용됩니다.</p>
+                </div>
+                <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-5">
+                    <div class="w-11 h-11 bg-indigo-500 text-white rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-wave-square"></i>
+                    </div>
+                    <p class="font-black text-slate-800 mb-1">음성 재생성 및 합성</p>
+                    <p class="text-base text-slate-600 leading-relaxed">특정 화자의 음성을 학습해 다른 문장을 읽는 목소리를 만듭니다. 언어 장애인을 위한 목소리 생성, 영화 더빙 등에 쓰입니다.</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                음성 인식이 단순한 '받아쓰기'에서 더 나아가 무엇까지 해내고 있나요? 위 활용 사례를 다시 살펴보세요.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== Section 2: 언어 이해 ===== -->
+    <section id="language" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">글자의 진짜 뜻 파악하기 (언어 이해)</h2>
+            <div class="w-20 h-1.5 bg-emerald-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-semibold">글자로 옮겼다고 해서 그 뜻까지 아는 것일까?</p>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">텍스트로 바뀐 문장의 단어 관계와 사람의 진짜 의도를 파악하는 과정</p>
+        </div>
+
+        <div class="section-card space-y-6">
+            <p class="text-slate-700 text-base leading-relaxed">
+                받아쓰기를 완벽하게 했다고 해서 컴퓨터가 그 말의 '뜻'을 안다는 것은 아닙니다.
+                텍스트로 바뀐 문장을 뜯어보고 <strong>단어들의 관계와 사람의 진짜 의도를 파악하는 과정</strong>을
+                <span class="text-emerald-700 font-bold">언어 이해(Language Understanding)</span>라고 합니다.
+                그리고 사람이 쓰는 말과 글을 <strong>컴퓨터가 계산으로 다룰 수 있는 형태로 바꾸어</strong> 번역·요약·분류 같은 일에 쓰는
+                기술 분야 전체를 <strong class="text-emerald-700">자연어 처리(NLP, Natural Language Processing)</strong>라고 부릅니다.
+                언어 이해는 그 안에 들어 있는 한 갈래입니다.
+            </p>
+
+            <div class="bg-emerald-50 border-l-4 border-emerald-500 rounded-r-2xl p-6 space-y-2">
+                <p class="font-black text-emerald-800 text-base">&lsquo;이해한다&rsquo;는 말을 조심해서 씁시다</p>
+                <p class="text-base text-slate-700 leading-relaxed">
+                    앞서 <strong>&lsquo;알아본다&rsquo;는 것과 &lsquo;뜻을 이해한다&rsquo;는 것은 다르다</strong>고 했습니다.
+                    여기서 말하는 &lsquo;언어 이해&rsquo;도 사람이 말뜻을 알아듣는 것과 같은 일이 아니라,
+                    <strong>수많은 문장에서 함께 쓰이던 낱말의 관계를 계산해 가장 그럴듯한 해석을 고르는 일</strong>입니다.
+                    관습적으로 &lsquo;이해&rsquo;라는 낱말을 쓸 뿐입니다.
+                </p>
+            </div>
+
+            <details class="bg-slate-50 border border-slate-200 rounded-xl p-4 mt-4">
+                <summary class="font-bold text-base text-slate-700 cursor-pointer">
+                    더 알아보기: 구문 → 개체명 → 의도 분석 3단계 (참고 자료)
+                </summary>
+                <div class="mt-3 text-base text-slate-600 space-y-2">
+            <!-- 1. 구문 분석 -->
+            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-300 space-y-4">
+                <h3 class="text-xl font-bold text-emerald-700 flex items-center gap-2">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    1. 구문 분석 (Syntax Analysis)
+                </h3>
+                <p class="text-slate-600 text-base leading-relaxed">
+                    문장을 가장 작은 뜻을 가진 단어(형태소)로 쪼개고, 누가 무엇을 했는지 단어 간의 문법적 관계를 분석합니다.
+                </p>
+                <div class="bg-[#282c34] rounded-xl overflow-hidden">
+                    <div class="flex items-center px-4 py-2 bg-[#1e2227] border-b border-[#111]">
+                        <div class="flex space-x-1.5">
+                            <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                        </div>
+                    </div>
+                    <div class="p-4 font-mono text-base overflow-x-auto">
+                        <p class="text-[#abb2bf]">오늘 뉴스에서 기온이 35도가 넘는다고 해.</p>
+                        <p class="text-emerald-400 mt-2">➔ [오늘/명사] [뉴스/명사] [에서/조사] [기온/명사] [이/조사] [35도/숫자+명사] ...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 개체명 분석 -->
+            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-300 space-y-4">
+                <h3 class="text-xl font-bold text-purple-700 flex items-center gap-2">
+                    <i class="fa-solid fa-tags"></i>
+                    2. 개체명 분석 (Entities Analysis)
+                </h3>
+                <p class="text-slate-600 text-base leading-relaxed">
+                    문장 속에서 '사람', '조직', '시간', '장소' 등을 나타내는 중요한 고유명사에 꼬리표(태그)를 붙입니다.
+                </p>
+                <div class="bg-white border border-slate-200 p-5 rounded-xl text-base font-medium">
+                    <p class="mb-4 text-slate-700">"<span class="bg-purple-100 text-purple-800 px-2 py-1 rounded">학생 A</span>는 <span
+                            class="bg-amber-100 text-amber-800 px-2 py-1 rounded">2024년</span>에 <span
+                            class="bg-sky-100 text-sky-800 px-2 py-1 rounded">학교 방송부</span>에 들어갔다."</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 font-mono text-base">
+                        <span class="text-purple-700">#학생 A ➔ [사람/Person]</span>
+                        <span class="text-amber-700">#2024년 ➔ [시간/Time]</span>
+                        <span class="text-sky-700">#학교 방송부 ➔ [조직/Organization]</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 의도 분석 -->
+            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-300 space-y-4">
+                <h3 class="text-xl font-bold text-rose-700 flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    3. 의도 분석 (Intent Analysis)
+                </h3>
+                <p class="text-slate-600 text-base leading-relaxed">
+                    최종적으로 사용자가 이 말을 왜 했는지 진짜 목적을 찾아냅니다.
+                </p>
+                <div class="flex flex-wrap items-center gap-3 bg-white border border-slate-200 p-4 rounded-xl">
+                    <div class="text-2xl">👤</div>
+                    <div class="bg-slate-200 px-4 py-2 rounded-lg text-slate-800 text-base">"방이 너무 덥네"</div>
+                    <i class="fa-solid fa-arrow-right text-slate-400"></i>
+                    <div class="text-2xl text-emerald-600">🤖</div>
+                    <div class="bg-emerald-50 border border-emerald-300 px-4 py-2 rounded-lg text-emerald-800 font-bold text-base">
+                        에어컨을 켜달라는 의도로 파악! ➔ (동작 수행)
+                    </div>
+                </div>
+            </div>
+                </div>
+            </details>
+        </div>
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                받아쓰기를 완벽하게 해도 왜 '뜻을 안다'고 할 수 없을까요? 위 언어 이해의 정의를 다시 읽어 보세요.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== Section 2.5: 딥러닝을 활용한 자연어 처리 사례 ===== -->
+    <section id="language-deep" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">딥러닝은 자연어 처리를 어디에 활용할까?</h2>
+            <div class="w-20 h-1.5 bg-teal-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">번역부터 챗봇까지, 언어의 숨은 의미를 이해하는 딥러닝</p>
+        </div>
+
+        <div class="section-card space-y-6">
+            <p class="text-base text-slate-700 leading-relaxed">
+                딥러닝을 쓰기 전의 자연어 처리는 사람이 만든 사전과 문법 규칙에 기대었습니다.
+                지금은 <strong>엄청난 양의 글에서 낱말이 함께 쓰이던 방식을 학습</strong>하기 때문에,
+                문장에 배어 있는 <strong>감정이나 관용 표현, 직접 적히지 않은 뜻</strong>까지 상당 부분 짚어 냅니다.
+                그 덕분에 기계 번역과 질의응답의 성능이 크게 올랐습니다.
+                <span class="text-slate-500">다만 &lsquo;상당 부분&rsquo;이지 전부는 아닙니다 &mdash; 학습한 글에 드물게 나오던 표현이나
+                새로 생긴 말에서는 여전히 어긋납니다.</span>
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="bg-teal-50 border border-teal-200 rounded-2xl p-5">
+                    <div class="w-11 h-11 bg-teal-500 text-white rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-language"></i>
+                    </div>
+                    <p class="font-black text-slate-800 mb-1">기계 번역의 발달</p>
+                    <p class="text-base text-slate-600 leading-relaxed">
+                        초기의 단순 기계 번역은 정해진 어법에 따라 번역했지만, 딥러닝은 원문 속 단어·어순·문법을 인공신경망으로 재구성하여
+                        스스로 학습하고 번역합니다.
+                    </p>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-5">
+                    <div class="w-11 h-11 bg-emerald-500 text-white rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-newspaper"></i>
+                    </div>
+                    <p class="font-black text-slate-800 mb-1">문서 분류 및 감정 분석</p>
+                    <p class="text-base text-slate-600 leading-relaxed">
+                        텍스트 문서를 주제나 감정(긍정·부정·중립) 등의 관점에서 분류합니다. 뉴스 기사 분류나 소셜 미디어 감정 분석에 활용됩니다.
+                    </p>
+                </div>
+                <div class="bg-cyan-50 border border-cyan-200 rounded-2xl p-5">
+                    <div class="w-11 h-11 bg-cyan-500 text-white rounded-xl flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <p class="font-black text-slate-800 mb-1">자연어 생성과 챗봇</p>
+                    <p class="text-base text-slate-600 leading-relaxed">
+                        질문을 받아 문장을 새로 지어 답합니다. 은행이나 쇼핑몰의 상담 챗봇, 자동 요약, 글쓰기 도우미 등에 쓰입니다.
+                        이런 모델이 답을 어떻게 만들어 내는지는 <a href="#llm" class="text-violet-600 font-bold underline underline-offset-2">다음 절</a>에서 봅니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                번역과 챗봇은 각각 언어의 어떤 점을 다루는 기술인가요? 위 활용 사례를 다시 비교해 보세요.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== Section 2.7: 대규모 언어 모델 ===== -->
+    <section id="llm" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">언어 모델은 어떻게 답을 지어낼까?</h2>
+            <div class="w-20 h-1.5 bg-violet-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-semibold">술술 대답한다고 해서 아는 것일까?</p>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">대규모 언어 모델의 원리와 반드시 알아야 할 한계</p>
+        </div>
+
+        <div class="section-card space-y-6">
+            <p class="text-base text-slate-700 leading-relaxed">
+                우리가 쓰는 대화형 인공지능의 바탕에는 <strong class="text-violet-600">대규모 언어 모델(LLM, Large Language Model)</strong>이 있습니다.
+                엄청난 양의 글을 학습한 신경망인데, 학습으로 익힌 일은 뜻밖에도 단순합니다 &mdash;
+                <strong>지금까지의 글 다음에 어떤 낱말이 올 법한지를 확률로 매기는 것</strong>입니다.
+            </p>
+            <p class="text-base text-slate-700 leading-relaxed">
+                그렇게 낱말 하나를 고르면, 고른 낱말을 문장 뒤에 붙이고 <strong>다시 그다음 낱말의 확률을 매깁니다.</strong>
+                이것을 반복하면 긴 답변 한 편이 만들어집니다.
+            </p>
+
+            <div class="overflow-x-auto">
+                <svg viewBox="0 0 480 205" role="img" class="mx-auto block"
+                     aria-label="빈칸이 있는 문장 뒤에 올 낱말 후보 네 개와 각각의 확률을 가로 막대로 나타낸 그림"
+                     style="min-width:550px; width:100%; height:auto; max-width:550px;">
+                    <g font-size="14" fill="#334155">
+                        <text x="10" y="24" font-weight="700" fill="#6d28d9">&ldquo;오늘 점심에 김밥을 ____&rdquo; 다음에 올 낱말은?</text>
+
+                        <text x="150" y="63" text-anchor="end">먹었다</text>
+                        <rect x="160" y="50" width="149" height="20" rx="4" fill="#8b5cf6"/>
+                        <text x="319" y="63">0.62</text>
+
+                        <text x="150" y="100" text-anchor="end">샀다</text>
+                        <rect x="160" y="87" width="43" height="20" rx="4" fill="#a78bfa"/>
+                        <text x="213" y="100">0.18</text>
+
+                        <text x="150" y="137" text-anchor="end">만들었다</text>
+                        <rect x="160" y="124" width="22" height="20" rx="4" fill="#c4b5fd"/>
+                        <text x="192" y="137">0.09</text>
+
+                        <text x="150" y="174" text-anchor="end">던졌다</text>
+                        <rect x="160" y="161" width="4" height="20" rx="2" fill="#ddd6fe"/>
+                        <text x="174" y="174">0.01</text>
+
+                        <text x="10" y="199" fill="#64748b">확률이 높은 낱말을 골라 붙이고, 같은 일을 처음부터 다시 합니다</text>
+                    </g>
+                </svg>
+            </div>
+
+            <div class="bg-violet-50 border-l-4 border-violet-500 rounded-r-2xl p-6 space-y-2">
+                <p class="font-black text-violet-900 text-base">여기서 아주 중요한 점</p>
+                <p class="text-base text-slate-700 leading-relaxed">
+                    모델이 고르는 기준은 <strong>&lsquo;참인가&rsquo;가 아니라 &lsquo;그럴듯한가&rsquo;</strong>입니다.
+                    학습할 때 맞혀야 했던 것은 사실 여부가 아니라 <strong>다음 낱말</strong>이었기 때문입니다.
+                    사실을 확인하는 장치가 따로 붙어 있지 않으면, 모델은 <strong>사실인지 아닌지를 따져 볼 수단 자체가 없습니다.</strong>
+                </p>
+            </div>
+        </div>
+
+        <div class="section-card space-y-6">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-rose-500"></i>
+                그럴듯한 거짓을 자신 있게 말한다
+            </h3>
+            <p class="text-base text-slate-700 leading-relaxed">
+                그래서 언어 모델은 <strong>있지도 않은 책 제목, 실제와 다른 연도, 존재하지 않는 법 조항</strong>을
+                아주 매끄러운 문장으로 만들어 내놓곤 합니다. 이런 현상을 <strong class="text-rose-600">환각 (hallucination)</strong>이라고 부릅니다.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="bg-rose-50 border border-rose-200 rounded-2xl p-6 space-y-2">
+                    <p class="font-black text-rose-800 text-base">왜 더 위험한가</p>
+                    <p class="text-base text-slate-700 leading-relaxed">
+                        틀린 답도 <strong>맞는 답과 똑같이 매끄럽게</strong> 나옵니다.
+                        모델은 &lsquo;자신 없음&rsquo;을 표시하도록 만들어진 것이 아니라 <strong>가장 그럴듯한 문장을 만들도록</strong> 만들어졌기 때문입니다.
+                        말투가 확신에 차 있다는 것이 <strong>맞다는 근거가 되지 못합니다.</strong>
+                    </p>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 space-y-2">
+                    <p class="font-black text-emerald-800 text-base">그래서 우리가 할 일</p>
+                    <ul class="space-y-2 text-base text-slate-700 list-disc list-outside pl-5">
+                        <li><strong>숫자·날짜·이름·출처</strong>는 반드시 원래 자료에서 다시 확인합니다.</li>
+                        <li>&ldquo;어디서 나온 이야기인지 알려 달라&rdquo;고 물어 <strong>확인할 수 있는 형태</strong>로 받아 둡니다.</li>
+                        <li>과제나 발표에 쓸 때는 <strong>어디를 인공지능의 도움으로 썼는지</strong> 밝힙니다.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 space-y-2">
+                <p class="font-black text-slate-800 text-base">그렇다고 쓸모없다는 뜻은 아닙니다</p>
+                <p class="text-base text-slate-700 leading-relaxed">
+                    글을 다듬거나, 여러 문단을 요약하거나, 생각을 넓힐 실마리를 얻는 일처럼
+                    <strong>사실 여부를 내가 곧바로 판단할 수 있는 작업</strong>에서는 큰 도움이 됩니다.
+                    <strong>내가 확인할 수 없는 사실을 대신 알아봐 달라고 맡길 때</strong> 위험해지는 것입니다.
+                </p>
+            </div>
+        </div>
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                언어 모델이 낱말을 고르는 기준은 무엇이었나요? 답변이 매끄럽다는 사실이 왜 &lsquo;맞다&rsquo;는 근거가 되지 못할까요?
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== Section 3: 오해와 진실 ===== -->
+    <section id="misconception" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">헷갈리기 쉬운 점! (오개념 방지)</h2>
+            <div class="w-20 h-1.5 bg-amber-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-semibold">음성 인식과 언어 이해를 같은 것으로 생각하고 있지는 않았을까?</p>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">자주 잘못 이해하는 개념들을 바로잡아 봅시다.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- 오개념 1 -->
+            <div class="section-card space-y-4">
+                <div class="flex items-center gap-3">
+                    <span class="bg-amber-500 text-white font-bold px-3 py-1 rounded-full text-base">자주 하는 실수 1</span>
+                </div>
+                <p class="text-base font-bold text-slate-800">"컴퓨터는 우리가 쓴 글자 그대로 소리를 듣는다?"</p>
+                <p class="text-base text-slate-700 leading-relaxed">
+                    <strong>아닙니다!</strong> 우리는 글을 쓸 때와 실제 소리 내어 읽을 때 발음이 다른 경우가 많습니다.
+                </p>
+                <div class="bg-amber-50 rounded-xl border border-amber-200 p-4 flex items-center justify-between text-center gap-4">
+                    <div>
+                        <span class="block text-slate-500 mb-1 text-base">표기 (글자)</span>
+                        <span class="font-bold text-xl">비빔밥</span>
+                    </div>
+                    <i class="fa-solid fa-not-equal text-slate-400 text-xl"></i>
+                    <div>
+                        <span class="block text-slate-500 mb-1 text-base">발음 (컴퓨터가 듣는 소리)</span>
+                        <span class="font-bold text-xl text-rose-500">[비빔빰]</span>
+                    </div>
+                </div>
+                <p class="text-base text-slate-600 leading-relaxed">
+                    따라서 인공지능은 <strong>[비빔빰]</strong>이라고 들린 소리를 다시 <strong>'비빔밥'</strong>이라는 올바른 표기로 매칭해 주는 학습 과정이 필요합니다.
+                </p>
+            </div>
+
+            <!-- 오개념 2 -->
+            <div class="section-card space-y-4">
+                <div class="flex items-center gap-3">
+                    <span class="bg-indigo-500 text-white font-bold px-3 py-1 rounded-full text-base">자주 하는 실수 2</span>
+                </div>
+                <p class="text-base font-bold text-slate-800">"문법만 완벽하면 뜻을 100% 이해한다?"</p>
+                <p class="text-base text-slate-700 leading-relaxed">
+                    문법(구문 분석)이 맞아도 뜻이 헷갈리는 경우가 매우 많습니다.
+                    앞뒤 문맥(상황)을 파악하는 것이 인공지능에게 가장 어려운 숙제 중 하나입니다.
+                </p>
+                <div class="bg-indigo-50 rounded-xl border border-indigo-200 p-4">
+                    <p class="font-bold text-base text-slate-800 mb-3">"배가 아프다."</p>
+                    <ul class="space-y-2 text-base text-slate-600">
+                        <li>🤔 1. 신체 부위 <strong>위장(Stomach)</strong>이 아픈 걸까?</li>
+                        <li>🤔 2. 타는 <strong>배(Boat)</strong>가 망가졌다는 뜻일까?</li>
+                        <li>🤔 3. 남이 잘돼서 <strong>질투</strong>가 난다는 속담일까?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Section 4: 확인 퀴즈 ===== -->
+    <section id="quiz" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">확인 퀴즈</h2>
+            <div class="w-20 h-1.5 bg-sky-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">오늘 배운 음성 인식과 언어 이해 과정을 확인해 봅시다!</p>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Q1 -->
+            <div class="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-300">
+                <h3 class="font-bold text-xl mb-6 text-slate-800 leading-relaxed">
+                    <span class="text-sky-600 mr-2 bg-sky-100 px-3 py-1 rounded-lg">Q1</span>
+                    사람의 아날로그 목소리를 센서로 듣고, 이를 분석하여 컴퓨터가 읽을 수 있는 '텍스트(글자)'로 변환하는 기술은 무엇인가요?
+                </h3>
+                <div class="space-y-3" id="q1">
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '컴퓨터 비전은 이미지를 인식하는 기술입니다.')">A. 컴퓨터 비전
+                    </button>
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, true, '정답입니다! 소리를 글자로 바꾸는 받아쓰기 과정을 음성 인식(Speech Recognition)이라고 합니다.')">
+                        B. 음성 인식
+                    </button>
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '의미 분석은 이미 텍스트로 바뀐 글의 뜻을 파악하는 단계입니다.')">
+                        C. 의미 분석
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-300">
+                <h3 class="font-bold text-xl mb-6 text-slate-800 leading-relaxed">
+                    <span class="text-sky-600 mr-2 bg-sky-100 px-3 py-1 rounded-lg">Q2</span>
+                    문장 안에서 특정한 이름을 가진 단어(예: 사람 이름, 기관 이름, 시간 등)를 찾아내어 어떤 유형인지 분류하는 분석 과정은 무엇인가요?
+                </h3>
+                <div class="bg-slate-100 border border-slate-300 rounded-xl p-4 mb-5 font-mono text-base text-emerald-700">
+                    예: "학생 A(사람)는 2024년(시간)에 학교 방송부(조직)에 들어갔다."
+                </div>
+                <div class="space-y-3" id="q2">
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, true, '정답입니다! 고유명사나 중요한 단어의 종류(사람, 장소, 시간 등)를 태그하는 것을 개체명 분석이라고 합니다.')">
+                        A. 개체명 분석 (Entities Analysis)
+                    </button>
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, false, '구문 분석은 문장의 구조(주어, 동사 등 문법적 관계)를 파악하는 것입니다.')">B. 구문 분석
+                        (Syntax Analysis)
+                    </button>
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, false, '음성 합성은 글자를 다시 사람의 목소리로 만들어 읽어주는 기술입니다.')">C. 음성 합성 (TTS)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-300">
+                <h3 class="font-bold text-xl mb-6 text-slate-800 leading-relaxed">
+                    <span class="text-sky-600 mr-2 bg-sky-100 px-3 py-1 rounded-lg">Q3</span>
+                    사용자가 인공지능 스피커에게 "방이 너무 더워"라고 말했습니다. 인공지능이 이를 듣고
+                    <strong>'에어컨을 켜달라는 요청'</strong>이라고 파악하여 에어컨을 켰습니다. 언어 이해의 어느 단계에 해당할까요?
+                </h3>
+                <div class="space-y-3" id="q3">
+                    <button class="quiz-btn" onclick="checkAnswer(this, false, '형태소 분석은 단어를 쪼개는 기초 단계입니다.')">A. 형태소 분석
+                    </button>
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, false, '단어의 사전적 의미만 파악하는 것이 아니라 진짜 목적을 찾아야 합니다.')">B. 사전적 의미 분석
+                    </button>
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, true, '정답입니다! 사용자가 이 말을 한 진짜 목적(의도)을 파악하여 행동하는 단계입니다.')">C. 의도 분석
+                        (Intent Analysis)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-300">
+                <h3 class="font-bold text-xl mb-6 text-slate-800 leading-relaxed">
+                    <span class="text-sky-600 mr-2 bg-sky-100 px-3 py-1 rounded-lg">Q4</span>
+                    순환 신경망이 조각을 하나 처리할 때마다 <strong>다음 조각에 넘겨주는</strong> 것은 무엇인가요?
+                </h3>
+                <div class="space-y-3" id="q4">
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, false, '펼쳐 그린 상자들은 서로 다른 층이 아니라 같은 상자입니다. 가중치도 셋이 같습니다.')">
+                        A. 조각마다 새로 만든 서로 다른 가중치
+                    </button>
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, true, '정답입니다! 지금까지 읽은 내용을 요약한 값을 다음 조각과 함께 넣어 주기 때문에 앞뒤 맥락을 살릴 수 있습니다.')">
+                        B. 지금까지 읽은 내용을 요약한 값
+                    </button>
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, false, '입력 조각 자체를 그대로 넘기는 것이 아니라, 그것을 처리해 만든 요약값을 넘깁니다.')">
+                        C. 방금 들어온 소리 조각을 그대로 복사한 것
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="bg-slate-50 rounded-2xl p-6 md:p-8 border border-slate-300">
+                <h3 class="font-bold text-xl mb-6 text-slate-800 leading-relaxed">
+                    <span class="text-sky-600 mr-2 bg-sky-100 px-3 py-1 rounded-lg">Q5</span>
+                    대화형 인공지능이 <strong>있지도 않은 책 제목을 아주 자신 있게</strong> 알려 주었습니다.
+                    이런 일이 생기는 까닭으로 가장 알맞은 것은 무엇일까요?
+                </h3>
+                <div class="space-y-3" id="q5">
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, true, '정답입니다! 학습으로 익힌 일은 다음에 올 법한 낱말을 고르는 것이라, 사실인지 아닌지를 따지는 장치가 따로 없으면 그럴듯한 거짓도 매끄럽게 나옵니다.')">
+                        A. 모델이 고르는 기준이 &lsquo;참인가&rsquo;가 아니라 &lsquo;그럴듯한가&rsquo;이기 때문이다.
+                    </button>
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, false, '문법 오류와는 관계가 없습니다. 오히려 문장은 아주 매끄럽게 나오기 때문에 알아채기 어려운 것입니다.')">
+                        B. 문법을 분석하는 기능이 빠져 있어 문장이 틀렸기 때문이다.
+                    </button>
+                    <button class="quiz-btn"
+                            onclick="checkAnswer(this, false, '말투가 확신에 차 있다는 것은 맞다는 근거가 되지 못합니다. 모델은 자신 없음을 표시하도록 만들어진 것이 아닙니다.')">
+                        C. 자신 없는 답은 애초에 내놓지 않도록 만들어져 있기 때문이다.
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 핵심 정리 ===== -->
+    <section class="scroll-mt-24">
+        <div class="bg-gradient-to-br from-sky-600 to-blue-700 text-white rounded-3xl p-8 md:p-10 space-y-6">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-microphone-lines"></i>
+                </div>
+                <h2 class="text-2xl font-black">AI와 함께 똑똑 정리하기</h2>
+            </div>
+            <div class="bg-white/10 rounded-2xl p-6 space-y-3">
+                <p class="font-black text-lg text-yellow-200">Q. 인공지능 스피커는 어떻게 내 말을 이해할까?</p>
+                <p class="text-base leading-relaxed opacity-95">
+                    A. 목소리는 A/D 변환을 거쳐 <strong>시간 순서대로 늘어선 숫자</strong>가 되고, 음성 인식(Speech Recognition)이 이것을 글자로 옮깁니다.
+                    순서가 있는 데이터라서 <strong>앞의 요약값을 다음 조각에 넘기는</strong> 순환 신경망(RNN) 같은 구조를 씁니다.
+                    글자로 옮기는 일과 <strong>그 글의 뜻을 다루는 일(언어 이해)은 별개</strong>이고, 이 둘을 아우르는 분야가 자연어 처리입니다.
+                    다만 여기서 말하는 &lsquo;이해&rsquo;는 가장 그럴듯한 해석을 고르는 계산이며,
+                    <strong>대규모 언어 모델은 그럴듯한 거짓을 자신 있게 말할 수 있다</strong>는 점을 잊지 말아야 합니다.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white/10 rounded-2xl p-4">
+                    <p class="font-black text-base text-yellow-200 mb-2">음성 인식 · 자연어 처리</p>
+                    <ul class="space-y-1 text-base list-disc list-outside pl-5">
+                        <li>목소리 → A/D 변환 → 순서 있는 숫자</li>
+                        <li>음성 인식은 <strong>받아쓰기</strong>, 언어 이해는 <strong>뜻 다루기</strong></li>
+                        <li>순환 신경망 — 앞의 요약값을 다음 조각에 넘김</li>
+                        <li>순서를 다루는 방법이 순환 신경망 하나뿐인 것은 아님</li>
+                    </ul>
+                </div>
+                <div class="bg-white/10 rounded-2xl p-4">
+                    <p class="font-black text-base text-yellow-200 mb-2">딥러닝 활용 사례</p>
+                    <ul class="space-y-1 text-base list-disc list-outside pl-5">
+                        <li>음성 비서 · 음성 감정 분석 · 음성 합성</li>
+                        <li>기계 번역 · 문서 분류 및 감정 분석</li>
+                        <li>자연어 생성과 챗봇</li>
+                    </ul>
+                </div>
+                <div class="bg-white/10 rounded-2xl p-4">
+                    <p class="font-black text-base text-yellow-200 mb-2">주요 오개념</p>
+                    <ul class="space-y-1 text-base list-disc list-outside pl-5">
+                        <li>표기 ≠ 발음</li>
+                        <li>받아쓰기 ≠ 뜻을 아는 것</li>
+                        <li>매끄러운 답 ≠ 맞는 답 (환각)</li>
+                        <li>문맥 파악이 핵심 난제</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ── 푸터 ── -->
+<footer class="bg-white border-t border-slate-200 mt-20 px-6 py-5">
+    <div class="max-w-6xl mx-auto flex items-center justify-center gap-1">
+        <a href="../index.html" title="강의노트 목록" aria-label="강의노트 목록"
+           class="w-11 h-11 grid place-items-center rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-slate-100 transition-colors"><i class="fa-solid fa-house text-base"></i></a>
+        <a href="https://github.com/itmir913/Visual-Assets-for-CS-Teacher" target="_blank" rel="noopener noreferrer"
+           title="GitHub 저장소" aria-label="GitHub 저장소"
+           class="w-11 h-11 grid place-items-center rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-slate-100 transition-colors"><svg viewBox="0 0 16 16" class="w-4 h-4" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
+        <span class="text-base text-slate-400 ml-2">&copy; luminousky</span>
+    </div>
+</footer>
+
+<script>
+    function checkAnswer(btn, isCorrect, message) {
+        const container = btn.parentElement;
+        const buttons = container.querySelectorAll('.quiz-btn');
+
+        buttons.forEach(b => {
+            if (!b.dataset.label) b.dataset.label = b.textContent;
+            b.classList.remove('correct', 'wrong');
+            b.classList.add('disabled');
+        });
+
+        if (isCorrect) {
+            btn.classList.add('correct');
+            btn.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i>${btn.dataset.label}`;
+        } else {
+            btn.classList.add('wrong');
+            btn.innerHTML = `<i class="fa-solid fa-circle-xmark mr-2"></i>${btn.dataset.label}`;
+        }
+
+        showToast(message, isCorrect ? 'success' : 'error');
+
+        setTimeout(() => {
+            buttons.forEach(b => {
+                b.classList.remove('correct', 'wrong', 'disabled');
+                b.innerHTML = b.dataset.label;
+            });
+        }, 3000);
+    }
+
+    let currentToast = null;
+
+    function showToast(message, type) {
+        if (currentToast) currentToast.remove();
+
+        const toast = document.createElement('div');
+        const icon = type === 'success'
+            ? '<i class="fa-solid fa-circle-check mr-2 text-xl"></i>'
+            : '<i class="fa-solid fa-circle-xmark mr-2 text-xl"></i>';
+
+        toast.className = `toast-message fixed bottom-10 left-1/2 -translate-x-1/2 px-8 py-4 rounded-2xl text-white font-bold shadow-2xl transition-all transform translate-y-20 opacity-0 z-[1000] flex items-center ${type === 'success' ? 'bg-sky-600' : 'bg-rose-600'}`;
+        toast.innerHTML = `${icon}<span>${message}</span>`;
+        document.body.appendChild(toast);
+        currentToast = toast;
+
+        setTimeout(() => {
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+        }, 10);
+
+        setTimeout(() => {
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+</script>
+
+</body>
+</html>
