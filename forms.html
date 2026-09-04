@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>인공지능 기초 질문폼</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Cpath d='M18 40h28v6H18zM18 18h28v6H18zM18 29h20v6H18z' fill='white'/%3E%3C/svg%3E">
+  <style>
+    :root { --bg:#f5f7fb; --card:#ffffff; --ink:#172033; --muted:#667085; --line:#d9e0ec; --accent:#2563eb; --soft:#eef4ff; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:linear-gradient(180deg,#eaf2ff 0%,var(--bg) 360px); color:var(--ink); font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; line-height:1.55; }
+    main { width:min(1120px,calc(100% - 32px)); margin:42px auto 64px; }
+    .hero { background:rgba(255,255,255,.82); border:1px solid var(--line); border-radius:28px; padding:32px; box-shadow:0 24px 70px rgba(31,41,55,.12); }
+    .eyebrow { margin:0 0 8px; color:var(--accent); font-weight:800; }
+    h1 { margin:0; font-size:clamp(2rem,5vw,3.5rem); letter-spacing:-.055em; line-height:1.05; }
+    .lead { max-width:760px; margin:16px 0 0; color:var(--muted); font-size:1.05rem; }
+    .stats { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+    .stat { padding:9px 13px; border-radius:999px; background:var(--soft); color:#1e3a8a; font-weight:800; }
+    .hero-link { display:inline-block; margin-top:18px; padding:10px 14px; border-radius:999px; background:var(--accent); color:#fff; font-weight:800; text-decoration:none; }
+    .hero-link:hover { background:#1d4ed8; }
+    .hero-links { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+    .hero-link.ghost { background:var(--soft); color:#1d4ed8; border:1px solid #bfd4ff; }
+    .hero-link.ghost:hover { background:#e0ecff; }
+    .unit { margin-top:34px; }
+    h2 { margin:0 0 14px; font-size:1.35rem; letter-spacing:-.03em; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .task-card { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; align-items:center; min-height:92px; padding:16px; border:1px solid var(--line); border-radius:18px; background:var(--card); color:var(--ink); text-decoration:none; box-shadow:0 10px 28px rgba(31,41,55,.06); transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease; }
+    .task-card:hover { transform:translateY(-2px); border-color:#93c5fd; box-shadow:0 16px 34px rgba(37,99,235,.13); }
+    .task-card:focus { outline:3px solid rgba(37,99,235,.25); outline-offset:3px; }
+    .task-order { grid-row:1 / span 2; display:grid; place-items:center; width:44px; height:44px; border-radius:14px; background:#dbeafe; color:#1d4ed8; font-weight:900; }
+    strong { font-size:1.03rem; }
+    small { color:var(--muted); }
+    @media (max-width:760px) { main { margin-top:20px; } .hero { padding:22px; border-radius:22px; } .grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <p class="eyebrow">대성여자고등학교 · 인공지능 기초</p>
+      <h1>소단원별 생기부 질문폼</h1>
+      <p class="lead">코들 코스웨어와 강의용 PPT 수업을 마친 뒤, 해당 소단원 카드를 열어 반·학번·이름과 수업 연계 질문 답변을 제출합니다.</p>
+      <div class="stats"><span class="stat">4개 단원</span><span class="stat">51개 질문폼</span><span class="stat">반: 인공지능C/F/G</span><span class="stat">수행평가 2회 · 각 25%</span></div>
+      <div class="hero-links">
+      <a class="hero-link" href="assessment.html">수행평가 안내 보기</a>
+      <a class="hero-link ghost" href="summary-index.html">쉬운 설명 정리본 보기</a>
+    </div>
+    </section>
+    <section class="unit"><h2>Ⅰ. 인공지능의 이해</h2><div class="grid"><a class="task-card" href="forms/ai-01-1-1-1.html">
+              <span class="task-order">01</span>
+              <strong>인공지능의 개념과 특성</strong>
+              <small>1-1-1 · 16~19쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-02-1-1-2.html">
+              <span class="task-order">02</span>
+              <strong>인공지능의 원리</strong>
+              <small>1-1-2 · 20~23쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-02-1-1-2-1.html">
+              <span class="task-order">02</span>
+              <strong>인공지능의 문제 해결</strong>
+              <small>1-1-2-1 · 24~25쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-03-1-1-3.html">
+              <span class="task-order">03</span>
+              <strong>AI 역량기르기</strong>
+              <small>1-1-3 · 26~27쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-04-1-2-1.html">
+              <span class="task-order">04</span>
+              <strong>탐색을 활용한 문제 해결 ① 맹목적 탐색</strong>
+              <small>1-2-1 · 28~35쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-04-1-2-1-1.html">
+              <span class="task-order">04</span>
+              <strong>탐색을 활용한 문제 해결 ② 정보 이용 탐색</strong>
+              <small>1-2-1-1 · 36~41쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-05-1-2-2.html">
+              <span class="task-order">05</span>
+              <strong>지식의 표현과 명제 논리</strong>
+              <small>1-2-2 · 42~44쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-05-1-2-2-1.html">
+              <span class="task-order">05</span>
+              <strong>술어 논리와 규칙 기반 구현</strong>
+              <small>1-2-2-1 · 45~47쪽</small>
+            </a>
+<a class="task-card" href="forms/07-1.html">
+              <span class="task-order">07</span>
+              <strong>7-1 지식의 표현과 규칙 기반 사고</strong>
+              <small>7-1 · 42~47쪽</small>
+            </a>
+<a class="task-card" href="forms/08-1.html">
+              <span class="task-order">08</span>
+              <strong>8-1 규칙 기반 구현과 DFS/BFS 활동</strong>
+              <small>8-1 · 48~51쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-06-1-2-3.html">
+              <span class="task-order">06</span>
+              <strong>AI 역량기르기</strong>
+              <small>1-2-3 · 48~49쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-07-u1-project.html">
+              <span class="task-order">07</span>
+              <strong>창의융합프로젝트</strong>
+              <small>Ⅰ 프로젝트 · 50~51쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-08-u1-summary.html">
+              <span class="task-order">08</span>
+              <strong>직업소개, 단원정리</strong>
+              <small>Ⅰ 마무리 · 52~53쪽</small>
+            </a></div></section>
+<section class="unit"><h2>Ⅱ. 인공지능과 학습</h2><div class="grid"><a class="task-card" href="forms/ai-09-2-1-1.html">
+              <span class="task-order">09</span>
+              <strong>기계학습과 문제 해결 과정</strong>
+              <small>2-1-1 · 58~61쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-10-2-1-2.html">
+              <span class="task-order">10</span>
+              <strong>데이터 수집 방법</strong>
+              <small>2-1-2 · 62~63쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-10-2-1-2-1.html">
+              <span class="task-order">10</span>
+              <strong>데이터 편향성</strong>
+              <small>2-1-2-1 · 64쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-10-2-1-2-2.html">
+              <span class="task-order">10</span>
+              <strong>붓꽃 데이터 수집 실습</strong>
+              <small>2-1-2-2 · 65쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-11-2-1-3.html">
+              <span class="task-order">11</span>
+              <strong>데이터 속성 구분과 통합</strong>
+              <small>2-1-3 · 66~67쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-11-2-1-3-1.html">
+              <span class="task-order">11</span>
+              <strong>결측치와 이상치 처리</strong>
+              <small>2-1-3-1 · 68~71쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-11-2-1-3-2.html">
+              <span class="task-order">11</span>
+              <strong>핵심 속성 추출</strong>
+              <small>2-1-3-2 · 72~73쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-12-2-1-4.html">
+              <span class="task-order">12</span>
+              <strong>기계학습의 3가지 유형</strong>
+              <small>2-1-4 · 74쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-12-2-1-4-1.html">
+              <span class="task-order">12</span>
+              <strong>k-최근접 이웃 알고리즘</strong>
+              <small>2-1-4-1 · 75쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-13-2-1-5.html">
+              <span class="task-order">13</span>
+              <strong>모델 학습과 성능 평가</strong>
+              <small>2-1-5 · 76~81쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-13-2-1-5-1.html">
+              <span class="task-order">13</span>
+              <strong>기계학습 알고리즘</strong>
+              <small>2-1-5-1 · 82~85쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-13-2-1-5-2.html">
+              <span class="task-order">13</span>
+              <strong>선형 회귀 알고리즘 실습</strong>
+              <small>2-1-5-2 · 86~87쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-14-2-1-6.html">
+              <span class="task-order">14</span>
+              <strong>AI 역량기르기</strong>
+              <small>2-1-6 · 88~89쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-15-2-2-1.html">
+              <span class="task-order">15</span>
+              <strong>퍼셉트론과 딥러닝의 구조</strong>
+              <small>2-2-1 · 90~92쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-15-2-2-1-1.html">
+              <span class="task-order">15</span>
+              <strong>딥러닝의 학습</strong>
+              <small>2-2-1-1 · 93~95쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-15-2-2-1-2.html">
+              <span class="task-order">15</span>
+              <strong>MNIST 손글씨 분류 실습</strong>
+              <small>2-2-1-2 · 96~101쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-16-2-2-2.html">
+              <span class="task-order">16</span>
+              <strong>컴퓨터 비전</strong>
+              <small>2-2-2 · 102~109쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-17-2-2-3.html">
+              <span class="task-order">17</span>
+              <strong>음성 인식</strong>
+              <small>2-2-3 · 110~113쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-18-2-2-4.html">
+              <span class="task-order">18</span>
+              <strong>자연어 처리</strong>
+              <small>2-2-4 · 114~119쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-19-2-2-5.html">
+              <span class="task-order">19</span>
+              <strong>AI 역량기르기</strong>
+              <small>2-2-5 · 120~121쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-20-u2-project.html">
+              <span class="task-order">20</span>
+              <strong>창의융합프로젝트</strong>
+              <small>Ⅱ 프로젝트 · 122~125쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-21-u2-summary.html">
+              <span class="task-order">21</span>
+              <strong>마무리(직업소개, 단원정리)</strong>
+              <small>Ⅱ 마무리 · 126~127쪽</small>
+            </a></div></section>
+<section class="unit"><h2>Ⅲ. 인공지능의 사회적 영향</h2><div class="grid"><a class="task-card" href="forms/ai-22-3-1-1.html">
+              <span class="task-order">22</span>
+              <strong>인공지능의 발전과 사회 변화</strong>
+              <small>Ⅲ-1-1 · 132~139쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-23-3-1-2.html">
+              <span class="task-order">23</span>
+              <strong>인공지능과 진로</strong>
+              <small>Ⅲ-1-2 · 140~143쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-24-3-1-3.html">
+              <span class="task-order">24</span>
+              <strong>AI 역량기르기</strong>
+              <small>Ⅲ-1-3 · 144~145쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-25-3-2-1.html">
+              <span class="task-order">25</span>
+              <strong>인간과 인공지능의 공존</strong>
+              <small>Ⅲ-2-1 · 146~149쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-26-3-2-2.html">
+              <span class="task-order">26</span>
+              <strong>인공지능의 편향과 딜레마</strong>
+              <small>Ⅲ-2-2 · 150~155쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-27-3-2-3.html">
+              <span class="task-order">27</span>
+              <strong>사회적 책임</strong>
+              <small>Ⅲ-2-3 · 156~159쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-28-3-2-5.html">
+              <span class="task-order">28</span>
+              <strong>AI 역량기르기</strong>
+              <small>Ⅲ-2-5 · 160~161쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-29-u3-project.html">
+              <span class="task-order">29</span>
+              <strong>창의융합프로젝트</strong>
+              <small>Ⅲ 프로젝트 · 162~163쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-30-u3-summary.html">
+              <span class="task-order">30</span>
+              <strong>마무리 (직업소개, 단원정리)</strong>
+              <small>Ⅲ 마무리 · 164~165쪽</small>
+            </a></div></section>
+<section class="unit"><h2>Ⅳ. 인공지능 프로젝트</h2><div class="grid"><a class="task-card" href="forms/ai-31-4-1-1.html">
+              <span class="task-order">31</span>
+              <strong>인공지능과 지속가능발전목표</strong>
+              <small>Ⅳ-1-1 · 170~177쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-32-4-1-2.html">
+              <span class="task-order">32</span>
+              <strong>인공지능 프로젝트 수행과정</strong>
+              <small>Ⅳ-1-2 · 178~189쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-33-4-2.html">
+              <span class="task-order">33</span>
+              <strong>정형 데이터 프로젝트 ① 문제 정의와 데이터 준비</strong>
+              <small>Ⅳ-2 · 190~195쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-33-4-2-1.html">
+              <span class="task-order">33</span>
+              <strong>정형 데이터 프로젝트 ② 모델 학습과 성능 개선</strong>
+              <small>Ⅳ-2-1 · 196~201쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-34-4-3.html">
+              <span class="task-order">34</span>
+              <strong>비정형 데이터 프로젝트 ① 산불 이미지 분류</strong>
+              <small>Ⅳ-3 · 202~213쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-34-4-3-1.html">
+              <span class="task-order">34</span>
+              <strong>비정형 데이터 프로젝트 ② 데이터 편향성 해결</strong>
+              <small>Ⅳ-3-1 · 214~217쪽</small>
+            </a>
+<a class="task-card" href="forms/ai-35-u4-summary.html">
+              <span class="task-order">35</span>
+              <strong>마무리 (직업소개, 단원정리)</strong>
+              <small>Ⅳ 마무리 · 218~219쪽</small>
+            </a></div></section>
+  </main>
+</body>
+</html>
