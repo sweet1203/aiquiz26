@@ -51,7 +51,31 @@
   .btn.ghost{background:var(--blue-soft);color:var(--blue);}
   .btn.off{background:#f1f5f9;color:#94a3b8;cursor:default;}
   footer{margin-top:44px;color:var(--sub);font-size:.8rem;border-top:1px solid var(--line);padding-top:16px;}
-</style>
+
+    .pill.made {
+      background: #fff7ed;
+      color: #c2410c;
+      border: 1px solid #fdba74;
+      font-weight: 700;
+    }
+    a.made-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 8px;
+      margin: 0 2px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #fff7ed, #ffedd5);
+      border: 1px solid #fdba74;
+      color: #9a3412 !important;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    a.made-link::before {
+      content: "✨";
+    }
+
+  </style>
 </head>
 <body>
 <div class="wrap">
@@ -95,7 +119,7 @@
 
   <div class="card h">
     <div class="top"><h3>🗂️ 차시별 추가 정리자료</h3><span class="cnt">종합 허브</span></div>
-    <p class="use">가장 종합적인 허브 — 차시별 대응표 + 실습 HTML 묶음(회귀·분류·이미지·군집) + 질문폼 링크까지. · <a href="aibasics-semester2/classification-models-easy-guide.html" target="_blank" rel="noopener">분류 모델 쉬운 가이드</a></p>
+    <p class="use">가장 종합적인 허브 — 차시별 대응표 + 실습 HTML 묶음(회귀·분류·이미지·군집) + 질문폼 링크까지. · <a class="made-link" href="aibasics-semester2/classification-models-easy-guide.html" target="_blank" rel="noopener">✨ 분류 모델 쉬운 가이드</a></p>
     <div class="kv"><b>위치</b> <code>dist/aibasics-semester2/index.html</code></div>
     <div class="kv"><b>주소</b> <code>/aibasics-semester2/</code></div>
     <div class="actions"><a class="btn" href="aibasics-semester2/index.html">허브 열기</a></div>

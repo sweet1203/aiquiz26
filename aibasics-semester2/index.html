@@ -252,6 +252,30 @@
       th { position: static; }
       a { color: #000; text-decoration: none; }
     }
+  
+    .pill.made {
+      background: #fff7ed;
+      color: #c2410c;
+      border: 1px solid #fdba74;
+      font-weight: 700;
+    }
+    a.made-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 8px;
+      margin: 0 2px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #fff7ed, #ffedd5);
+      border: 1px solid #fdba74;
+      color: #9a3412 !important;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    a.made-link::before {
+      content: "✨";
+    }
+
   </style>
 </head>
 <body>
@@ -269,7 +293,7 @@
     </header>
 
     <section class="notice">
-      <strong>읽는 기준</strong>: <span class="pill exact">직접 대응</span>은 제목·내용이 거의 같은 원본 HTML이 있는 경우, <span class="pill partial">부분 대응</span>은 원본 한 자료를 2026 질문폼에서 더 잘게 나눈 경우, <span class="pill review">별도 제작/검토</span>는 질문폼·정리·프로젝트·평가용으로 원본에 1:1 자료가 없는 경우입니다.
+      <strong>읽는 기준</strong>: <span class="pill exact">직접 대응</span>은 제목·내용이 거의 같은 원본 HTML이 있는 경우, <span class="pill partial">부분 대응</span>은 원본 한 자료를 2026 질문폼에서 더 잘게 나눈 경우, <span class="pill review">별도 제작/검토</span>는 질문폼·정리·프로젝트·평가용으로 원본에 1:1 자료가 없는 경우, <span class="pill made">✨ 직접 제작</span>은 이번에 새로 만들어 목록에 추가한 자료입니다.
     </section>
 
     <div class="toolbar" aria-label="바로가기">
@@ -419,7 +443,7 @@
     <h2>원본 실습 HTML 활용 묶음</h2>
     <div class="source-list">
       <div class="source-card"><h3>정형 데이터·회귀</h3><p><a href="aiquiz/practice/temp-electricity.html">전력 소비량 예측</a>, <a href="aiquiz/practice/exercise-calories.html">운동 칼로리 예측</a></p></div>
-      <div class="source-card"><h3>분류 모델</h3><p><a href="classification-models-easy-guide.html" target="_blank" rel="noopener">분류 모델 쉽게 이해하기</a>, <a href="aiquiz/practice/loan-approval.html">대출 승인 분류</a>, <a href="aiquiz/practice/fraud-detection.html">이상거래 탐지</a></p></div>
+      <div class="source-card"><h3>분류 모델</h3><p><a class="made-link" href="classification-models-easy-guide.html" target="_blank" rel="noopener">분류 모델 쉽게 이해하기</a>, <a href="aiquiz/practice/loan-approval.html">대출 승인 분류</a>, <a href="aiquiz/practice/fraud-detection.html">이상거래 탐지</a></p></div>
       <div class="source-card"><h3>이미지 프로젝트</h3><p><a href="aiquiz/practice/mask-detection.html">마스크 착용 분류</a>, <a href="aiquiz/practice/recycling-sort.html">분리수거 분류</a></p></div>
       <div class="source-card"><h3>군집 모델</h3><p><a href="aiquiz/practice/music-cluster.html">음악 취향 군집화</a></p></div>
     </div>
