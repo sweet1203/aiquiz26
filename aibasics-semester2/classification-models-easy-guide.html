@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>분류 모델 4가지 — 아주 쉽게 이해하기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a2332;
+      --muted: #5a6a7a;
+      --paper: #f7f4ef;
+      --card: #ffffff;
+      --line: #e2ddd4;
+      --knn: #0d9488;
+      --knn-soft: #ccfbf1;
+      --log: #0284c7;
+      --log-soft: #e0f2fe;
+      --svm: #c2410c;
+      --svm-soft: #ffedd5;
+      --tree: #7c3aed;
+      --tree-soft: #ede9fe;
+      --accent: #f59e0b;
+      --shadow: 0 12px 40px rgba(26, 35, 50, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans KR", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 10% -10%, #d1fae5 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 100% 0%, #ffedd5 0%, transparent 45%),
+        var(--paper);
+      line-height: 1.65;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 28px 16px 36px;
+      animation: fadeUp 0.7s ease both;
+    }
+    .hero .eyebrow {
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #0f766e;
+      background: var(--knn-soft);
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-family: "Black Han Sans", "Noto Sans KR", sans-serif;
+      font-size: clamp(2rem, 5vw, 2.85rem);
+      font-weight: 400;
+      line-height: 1.25;
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
+    }
+    .hero p.lead {
+      margin: 0 auto;
+      max-width: 34em;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    /* Nav chips */
+    nav.chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 28px 0 8px;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+    nav.chips a {
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 10px 16px;
+      border-radius: 12px;
+      color: var(--ink);
+      background: var(--card);
+      border: 1.5px solid var(--line);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    nav.chips a:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    nav.chips a.knn { border-color: #99f6e4; background: var(--knn-soft); color: #0f766e; }
+    nav.chips a.log { border-color: #bae6fd; background: var(--log-soft); color: #0369a1; }
+    nav.chips a.svm { border-color: #fed7aa; background: var(--svm-soft); color: #9a3412; }
+    nav.chips a.tree { border-color: #ddd6fe; background: var(--tree-soft); color: #5b21b6; }
+
+    /* Intro card */
+    .intro {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 24px 26px;
+      margin: 28px 0;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      animation: fadeUp 0.7s 0.15s ease both;
+    }
+    .intro h2 {
+      margin: 0 0 10px;
+      font-size: 1.25rem;
+    }
+    .intro .analogy {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-top: 18px;
+    }
+    @media (max-width: 640px) {
+      .intro .analogy { grid-template-columns: 1fr; }
+      .intro .arrow { transform: rotate(90deg); text-align: center; }
+    }
+    .bubble {
+      background: #fffbeb;
+      border: 2px dashed #fbbf24;
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 0.95rem;
+    }
+    .bubble strong { color: #b45309; }
+    .arrow {
+      font-size: 1.8rem;
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    /* Model sections */
+    section.model {
+      margin: 40px 0;
+      background: var(--card);
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      animation: fadeUp 0.6s ease both;
+    }
+    section.model .head {
+      padding: 22px 26px 18px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    section.model .badge {
+      flex-shrink: 0;
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #fff;
+    }
+    section.model.knn .badge { background: var(--knn); }
+    section.model.log .badge { background: var(--log); }
+    section.model.svm .badge { background: var(--svm); }
+    section.model.tree .badge { background: var(--tree); }
+
+    section.model h2 {
+      margin: 0 0 4px;
+      font-size: 1.45rem;
+      font-family: "Black Han Sans", sans-serif;
+      font-weight: 400;
+    }
+    section.model .eng {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin: 0;
+    }
+    section.model .body {
+      padding: 0 26px 26px;
+    }
+    section.model .one-line {
+      font-size: 1.12rem;
+      font-weight: 700;
+      margin: 0 0 16px;
+      padding: 12px 16px;
+      border-radius: 12px;
+    }
+    section.model.knn .one-line { background: var(--knn-soft); color: #0f766e; }
+    section.model.log .one-line { background: var(--log-soft); color: #0369a1; }
+    section.model.svm .one-line { background: var(--svm-soft); color: #9a3412; }
+    section.model.tree .one-line { background: var(--tree-soft); color: #5b21b6; }
+
+    .story {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 720px) {
+      .story { grid-template-columns: 1fr; }
+    }
+
+    .story p { margin: 0 0 12px; color: #334155; }
+    .story ul {
+      margin: 0;
+      padding-left: 1.2em;
+      color: #334155;
+    }
+    .story li { margin-bottom: 6px; }
+
+    .viz {
+      background: #fafaf9;
+      border: 1.5px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      min-height: 200px;
+    }
+    .viz svg { width: 100%; height: auto; display: block; }
+    .viz .caption {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 10px;
+      font-weight: 500;
+    }
+
+    .tip {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #f0fdf4;
+      border-left: 4px solid #22c55e;
+      font-size: 0.95rem;
+    }
+    .tip strong { color: #15803d; }
+
+    /* Compare table */
+    .compare {
+      margin-top: 48px;
+      background: var(--card);
+      border-radius: 24px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .compare h2 {
+      margin: 0 0 8px;
+      font-family: "Black Han Sans", sans-serif;
+      font-weight: 400;
+      font-size: 1.5rem;
+    }
+    .compare > p { color: var(--muted); margin: 0 0 18px; }
+
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      min-width: 640px;
+    }
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      background: #1a2332;
+      color: #fff;
+      font-weight: 700;
+    }
+    th:first-child { border-radius: 10px 0 0 0; }
+    th:last-child { border-radius: 0 10px 0 0; }
+    tr:nth-child(even) td { background: #fafaf9; }
+    td:first-child { font-weight: 700; white-space: nowrap; }
+
+    .quiz {
+      margin-top: 28px;
+      display: grid;
+      gap: 12px;
+    }
+    .quiz-item {
+      background: #fffbeb;
+      border: 1.5px solid #fde68a;
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .quiz-item .q { font-weight: 700; margin-bottom: 6px; }
+    .quiz-item .a {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .quiz-item details summary {
+      cursor: pointer;
+      color: #b45309;
+      font-weight: 700;
+      list-style: none;
+    }
+    .quiz-item details summary::-webkit-details-marker { display: none; }
+    .quiz-item details[open] .a { margin-top: 8px; }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media print {
+      body { background: #fff; }
+      nav.chips { display: none; }
+      section.model, .intro, .compare { box-shadow: none; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="eyebrow">인공지능 기초 · 분류 모델</div>
+      <h1>모델을 고르는<br />아주 쉬운 안내서</h1>
+      <p class="lead">
+        “모델”은 <strong>문제를 푸는 방법</strong>이에요.<br />
+        아래 4가지는 모두 <strong>예 / 아니오처럼 종류를 맞히는</strong> 데 씁니다.
+      </p>
+    </header>
+
+    <nav class="chips" aria-label="바로가기">
+      <a class="knn" href="#knn">① k-NN</a>
+      <a class="log" href="#log">② 로지스틱 회귀</a>
+      <a class="svm" href="#svm">③ 서포트 벡터 머신</a>
+      <a class="tree" href="#tree">④ 의사결정트리</a>
+      <a href="#compare">⑤ 한눈에 비교</a>
+    </nav>
+
+    <div class="intro">
+      <h2>먼저, 모델이 뭐야?</h2>
+      <p style="margin:0;color:#475569;">
+        시험 공부를 예로 들어요. 과거에 풀었던 문제(훈련 데이터)를 보고
+        <strong>“비슷한 문제가 나오면 이렇게 풀자”</strong>는 규칙을 만드는 것이 모델입니다.
+      </p>
+      <div class="analogy">
+        <div class="bubble">
+          <strong>입력(독립 변수)</strong><br />
+          키, 몸무게, 공부 시간…<br />
+          <span style="color:#78716c;font-size:0.9em;">→ 단서들</span>
+        </div>
+        <div class="arrow">→</div>
+        <div class="bubble">
+          <strong>출력(종속 변수)</strong><br />
+          합격 / 불합격<br />
+          <span style="color:#78716c;font-size:0.9em;">→ 맞히고 싶은 것</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- k-NN -->
+    <section class="model knn" id="knn">
+      <div class="head">
+        <div class="badge">k</div>
+        <div>
+          <h2>k-NN</h2>
+          <p class="eng">k-Nearest Neighbors · 케이 엔엔 · “가까운 이웃”</p>
+        </div>
+      </div>
+      <div class="body">
+        <p class="one-line">🙋 “주변 친구들이 뭐라고 하니?” → 다수결로 정해요</p>
+        <div class="story">
+          <div>
+            <p>
+              새 친구가 전학 왔어요. 이 친구가 <strong>축구파</strong>인지 <strong>농구파</strong>인지 모를 때,
+              <strong>제일 가까운 친구 k명</strong>에게 물어보고 더 많은 쪽으로 정합니다.
+            </p>
+            <ul>
+              <li><strong>k = 3</strong>이면 가까운 3명에게 물어봄</li>
+              <li>축구 2 · 농구 1 → <strong>축구파</strong>로 분류</li>
+              <li>“거리”가 가까울수록 더 비슷한 데이터</li>
+            </ul>
+            <div class="tip">
+              <strong>기억!</strong> 키·몸무게처럼 숫자 크기가 다르면
+              “키 1cm”와 “몸무게 1kg”가 불공평해져요 → 그래서 <strong>표준화</strong>를 자주 해요.
+            </div>
+          </div>
+          <div class="viz" aria-hidden="true">
+            <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+              <rect width="320" height="220" rx="12" fill="#f0fdfa"/>
+              <!-- known points -->
+              <circle cx="70" cy="60" r="12" fill="#14b8a6"/>
+              <circle cx="100" cy="90" r="12" fill="#14b8a6"/>
+              <circle cx="55" cy="110" r="12" fill="#14b8a6"/>
+              <circle cx="240" cy="50" r="12" fill="#f97316"/>
+              <circle cx="260" cy="100" r="12" fill="#f97316"/>
+              <circle cx="210" cy="130" r="12" fill="#f97316"/>
+              <!-- ring of k=3 -->
+              <circle cx="140" cy="100" r="48" fill="none" stroke="#0d9488" stroke-width="2" stroke-dasharray="6 4" opacity="0.7"/>
+              <!-- new point -->
+              <circle cx="140" cy="100" r="14" fill="#1a2332"/>
+              <text x="140" y="105" text-anchor="middle" fill="#fff" font-size="11" font-family="Noto Sans KR" font-weight="700">?</text>
+              <!-- labels -->
+              <text x="55" y="195" fill="#0f766e" font-size="13" font-family="Noto Sans KR" font-weight="700">● 축구파</text>
+              <text x="160" y="195" fill="#c2410c" font-size="13" font-family="Noto Sans KR" font-weight="700">● 농구파</text>
+              <text x="140" y="28" text-anchor="middle" fill="#5a6a7a" font-size="12" font-family="Noto Sans KR">가까운 3명에게 물어보기 (k=3)</text>
+            </svg>
+            <p class="caption">점선 원 안이 “가까운 이웃”이에요</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Logistic -->
+    <section class="model log" id="log">
+      <div class="head">
+        <div class="badge">%</div>
+        <div>
+          <h2>로지스틱 회귀</h2>
+          <p class="eng">Logistic Regression · “확률로 나누기”</p>
+        </div>
+      </div>
+      <div class="body">
+        <p class="one-line">📊 “합격 확률이 50%보다 크면 합격!” 처럼 선을 그어요</p>
+        <div class="story">
+          <div>
+            <p>
+              이름은 “회귀”지만, 우리가 쓰는 건 <strong>두 갈래로 나누는 분류</strong>예요.<br />
+              공부 시간이 늘수록 합격 확률이 올라간다고 보고,
+              <strong>부드러운 S자 곡선</strong>으로 “얼마나 확실한지(%)”를 계산합니다.
+            </p>
+            <ul>
+              <li>출력은 대략 <strong>0~100% 확률</strong></li>
+              <li>보통 <strong>50% 넘으면 A반</strong>, 아니면 B반</li>
+              <li>“왜 그렇게 나왔는지”를 숫자(가중치)로 설명하기 쉬움</li>
+            </ul>
+            <div class="tip">
+              <strong>비유:</strong> 온도계처럼 “조금 위험한지 / 많이 위험한지”를
+              <strong>확률</strong>로 보여 주는 모델이에요.
+            </div>
+          </div>
+          <div class="viz" aria-hidden="true">
+            <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+              <rect width="320" height="220" rx="12" fill="#f0f9ff"/>
+              <!-- axes -->
+              <line x1="40" y1="180" x2="290" y2="180" stroke="#94a3b8" stroke-width="2"/>
+              <line x1="40" y1="180" x2="40" y2="30" stroke="#94a3b8" stroke-width="2"/>
+              <text x="165" y="208" text-anchor="middle" fill="#64748b" font-size="12" font-family="Noto Sans KR">공부 시간 →</text>
+              <text x="18" y="110" fill="#64748b" font-size="11" font-family="Noto Sans KR" transform="rotate(-90 18 110)">확률</text>
+              <!-- S curve -->
+              <path d="M50 165 C 100 160, 120 150, 140 110 S 200 40, 280 35" fill="none" stroke="#0284c7" stroke-width="3.5"/>
+              <!-- 50% line -->
+              <line x1="40" y1="105" x2="290" y2="105" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <text x="295" y="109" fill="#d97706" font-size="11" font-family="Noto Sans KR" font-weight="700">50%</text>
+              <text x="200" y="55" fill="#0369a1" font-size="12" font-family="Noto Sans KR" font-weight="700">합격 쪽</text>
+              <text x="70" y="155" fill="#0369a1" font-size="12" font-family="Noto Sans KR" font-weight="700">불합격 쪽</text>
+            </svg>
+            <p class="caption">S자 곡선: 왼쪽은 낮고, 오른쪽으로 갈수록 확률이 올라가요</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SVM -->
+    <section class="model svm" id="svm">
+      <div class="head">
+        <div class="badge">‖</div>
+        <div>
+          <h2>서포트 벡터 머신</h2>
+          <p class="eng">SVM · Support Vector Machine · “가장 넓은 길 찾기”</p>
+        </div>
+      </div>
+      <div class="body">
+        <p class="one-line">🛣️ 두 무리 사이에 <strong>가장 넓은 안전 통로</strong>를 만들어요</p>
+        <div class="story">
+          <div>
+            <p>
+              교실 바닥에 파란 팀·주황 팀이 서 있어요.
+              선생님은 두 팀 사이에 <strong>선</strong>을 그어 나누는데,
+              선을 너무 한쪽에 붙이면 위험하겠죠?
+            </p>
+            <p>
+              SVM은 <strong>양쪽에서 가장 가까운 친구들(서포트 벡터)</strong>을 보고,
+              그 사이 <strong>여유(마진)가 제일 넓은</strong> 경계를 고릅니다.
+            </p>
+            <ul>
+              <li>“딱 붙어 나누기”보다 <strong>여유 있게 나누기</strong></li>
+              <li>경계 근처의 몇 점이 특히 중요</li>
+              <li>데이터가 복잡하면 곡선 경계도 가능(고급)</li>
+            </ul>
+            <div class="tip">
+              <strong>비유:</strong> 두 나라 사이에 <strong>비무장지대처럼 넓은 중간 지대</strong>를
+              남기는 국경선이에요.
+            </div>
+          </div>
+          <div class="viz" aria-hidden="true">
+            <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+              <rect width="320" height="220" rx="12" fill="#fff7ed"/>
+              <!-- margin band -->
+              <polygon points="95,20 145,20 225,200 175,200" fill="#fdba74" opacity="0.35"/>
+              <!-- decision line -->
+              <line x1="120" y1="20" x2="200" y2="200" stroke="#c2410c" stroke-width="3"/>
+              <!-- margin lines -->
+              <line x1="95" y1="20" x2="175" y2="200" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <line x1="145" y1="20" x2="225" y2="200" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <!-- blue class -->
+              <circle cx="55" cy="50" r="11" fill="#0284c7"/>
+              <circle cx="70" cy="100" r="11" fill="#0284c7"/>
+              <circle cx="50" cy="150" r="11" fill="#0284c7"/>
+              <circle cx="95" cy="80" r="11" fill="#0284c7" stroke="#1a2332" stroke-width="2"/>
+              <!-- orange class -->
+              <circle cx="260" cy="60" r="11" fill="#ea580c"/>
+              <circle cx="250" cy="120" r="11" fill="#ea580c"/>
+              <circle cx="270" cy="170" r="11" fill="#ea580c"/>
+              <circle cx="210" cy="100" r="11" fill="#ea580c" stroke="#1a2332" stroke-width="2"/>
+              <text x="160" y="115" text-anchor="middle" fill="#9a3412" font-size="12" font-family="Noto Sans KR" font-weight="700">넓은 여유</text>
+              <text x="30" y="205" fill="#0369a1" font-size="12" font-family="Noto Sans KR" font-weight="700">A반</text>
+              <text x="270" y="205" fill="#c2410c" font-size="12" font-family="Noto Sans KR" font-weight="700">B반</text>
+            </svg>
+            <p class="caption">검은 테두리 점 = 경계를 정하는 데 중요한 “서포트 벡터”</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Decision Tree -->
+    <section class="model tree" id="tree">
+      <div class="head">
+        <div class="badge">◇</div>
+        <div>
+          <h2>의사결정트리</h2>
+          <p class="eng">Decision Tree · “스무고개 · 질문 나무”</p>
+        </div>
+      </div>
+      <div class="body">
+        <p class="one-line">🌳 “질문이 맞으면 왼쪽, 아니면 오른쪽!” 스무고개처럼 분류해요</p>
+        <div class="story">
+          <div>
+            <p>
+              친구에게 동물을 맞히게 할 때처럼,
+              <strong>예/아니오로 대답할 수 있는 질문</strong>을 이어 갑니다.
+            </p>
+            <ul>
+              <li>나이 &gt; 50? → 예 / 아니오</li>
+              <li>콜레스테롤이 높은가? → 예 / 아니오</li>
+              <li>끝까지 가면 <strong>결과(발병 / 정상)</strong>가 나옴</li>
+            </ul>
+            <p>
+              사람이 읽기 쉬운 장점이 커요.
+              “왜 이 환자를 위험하다고 했지?”를
+              <strong>질문 경로</strong>로 설명할 수 있습니다.
+            </p>
+            <div class="tip">
+              <strong>주의:</strong> 질문을 너무 잘게 나누면
+              훈련 데이터만 외워 버리는 <strong>과대적합</strong>이 잘 생겨요.
+              (그래서 <code>max_depth</code>로 깊이를 제한하기도 합니다.)
+            </div>
+          </div>
+          <div class="viz" aria-hidden="true">
+            <svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+              <rect width="320" height="240" rx="12" fill="#f5f3ff"/>
+              <!-- root -->
+              <rect x="100" y="16" width="120" height="36" rx="8" fill="#7c3aed"/>
+              <text x="160" y="39" text-anchor="middle" fill="#fff" font-size="13" font-family="Noto Sans KR" font-weight="700">나이 &gt; 50?</text>
+              <!-- lines -->
+              <line x1="130" y1="52" x2="70" y2="90" stroke="#a78bfa" stroke-width="2"/>
+              <line x1="190" y1="52" x2="250" y2="90" stroke="#a78bfa" stroke-width="2"/>
+              <text x="85" y="78" fill="#6d28d9" font-size="11" font-family="Noto Sans KR">예</text>
+              <text x="220" y="78" fill="#6d28d9" font-size="11" font-family="Noto Sans KR">아니오</text>
+              <!-- level 2 -->
+              <rect x="20" y="92" width="100" height="36" rx="8" fill="#8b5cf6"/>
+              <text x="70" y="115" text-anchor="middle" fill="#fff" font-size="12" font-family="Noto Sans KR" font-weight="700">혈압 높음?</text>
+              <rect x="200" y="92" width="100" height="36" rx="8" fill="#8b5cf6"/>
+              <text x="250" y="115" text-anchor="middle" fill="#fff" font-size="12" font-family="Noto Sans KR" font-weight="700">운동하나?</text>
+              <!-- lines to leaves -->
+              <line x1="50" y1="128" x2="40" y2="165" stroke="#a78bfa" stroke-width="2"/>
+              <line x1="90" y1="128" x2="100" y2="165" stroke="#a78bfa" stroke-width="2"/>
+              <line x1="230" y1="128" x2="220" y2="165" stroke="#a78bfa" stroke-width="2"/>
+              <line x1="270" y1="128" x2="280" y2="165" stroke="#a78bfa" stroke-width="2"/>
+              <!-- leaves -->
+              <rect x="10" y="168" width="60" height="32" rx="8" fill="#ef4444"/>
+              <text x="40" y="189" text-anchor="middle" fill="#fff" font-size="12" font-family="Noto Sans KR" font-weight="700">위험</text>
+              <rect x="80" y="168" width="60" height="32" rx="8" fill="#22c55e"/>
+              <text x="110" y="189" text-anchor="middle" fill="#fff" font-size="12" font-family="Noto Sans KR" font-weight="700">주의</text>
+              <rect x="200" y="168" width="60" height="32" rx="8" fill="#22c55e"/>
+              <text x="230" y="189" text-anchor="middle" fill="#fff" font-size="12" font-family="Noto Sans KR" font-weight="700">양호</text>
+              <rect x="270" y="168" width="60" height="32" rx="8" fill="#eab308"/>
+              <text x="300" y="189" text-anchor="middle" fill="#fff" font-size="12" font-family="Noto Sans KR" font-weight="700">보통</text>
+              <text x="160" y="228" text-anchor="middle" fill="#5a6a7a" font-size="11" font-family="Noto Sans KR">질문이 이어지며 아래로 내려가요</text>
+            </svg>
+            <p class="caption">위 = 질문, 아래 색 상자 = 최종 답</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compare -->
+    <section class="compare" id="compare">
+      <h2>한눈에 비교하기</h2>
+      <p>어떤 걸 고를지 고민될 때 이 표를 보세요.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>모델</th>
+              <th>한 줄 비유</th>
+              <th>잘 맞는 때</th>
+              <th>조심할 점</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color:#0f766e;">k-NN</td>
+              <td>가까운 친구에게 물어보기</td>
+              <td>데이터가 비슷한 것끼리 모여 있을 때</td>
+              <td>숫자 단위가 다르면 표준화 필요 · 느려질 수 있음</td>
+            </tr>
+            <tr>
+              <td style="color:#0369a1;">로지스틱 회귀</td>
+              <td>확률(%)로 선 긋기</td>
+              <td>예/아니오 + “얼마나 확실한지”가 필요할 때</td>
+              <td>관계가 너무 복잡하면 힘듦</td>
+            </tr>
+            <tr>
+              <td style="color:#c2410c;">SVM</td>
+              <td>가장 넓은 안전 통로</td>
+              <td>두 무리가 비교적 나뉘어 보일 때</td>
+              <td>개념이 어려움 · 설정을 잘 맞춰야 함</td>
+            </tr>
+            <tr>
+              <td style="color:#5b21b6;">의사결정트리</td>
+              <td>스무고개 질문 나무</td>
+              <td>이유를 사람 말로 설명하고 싶을 때</td>
+              <td>너무 깊게 나누면 과대적합</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="quiz">
+        <h3 style="margin:18px 0 0;font-size:1.15rem;">퀴즈 — 답을 고른 뒤 펼쳐 보세요</h3>
+
+        <div class="quiz-item">
+          <div class="q">Q1. “주변 환자 중 비슷한 사람 5명의 다수결로 진단한다.” → 어떤 모델?</div>
+          <details>
+            <summary>정답 보기</summary>
+            <div class="a">✅ <strong>k-NN</strong> (k=5). 가까운 이웃에게 물어보는 방식이에요.</div>
+          </details>
+        </div>
+
+        <div class="quiz-item">
+          <div class="q">Q2. “나이 먼저 묻고, 그다음 혈압을 물어 위험/안전을 정한다.” → 어떤 모델?</div>
+          <details>
+            <summary>정답 보기</summary>
+            <div class="a">✅ <strong>의사결정트리</strong>. 질문이 나무처럼 이어져요.</div>
+          </details>
+        </div>
+
+        <div class="quiz-item">
+          <div class="q">Q3. “합격 확률이 62%라서 합격으로 본다.” → 어떤 모델 느낌?</div>
+          <details>
+            <summary>정답 보기</summary>
+            <div class="a">✅ <strong>로지스틱 회귀</strong>. 확률(%)로 판단하는 느낌이 강해요.</div>
+          </details>
+        </div>
+
+        <div class="quiz-item">
+          <div class="q">Q4. “두 반 사이에 최대한 넓은 복도를 남기고 선을 긋는다.” → 어떤 모델?</div>
+          <details>
+            <summary>정답 보기</summary>
+            <div class="a">✅ <strong>SVM(서포트 벡터 머신)</strong>. 여유(마진)를 넓히는 게 핵심이에요.</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      인공지능 기초 · 2단원 부록 활동 연계 자료 · 브라우저에서 바로 열어 보세요<br />
+      File: classification-models-easy-guide.html
+    </footer>
+  </div>
+</body>
+</html>
