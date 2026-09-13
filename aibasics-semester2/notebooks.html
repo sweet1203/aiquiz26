@@ -11,7 +11,7 @@
   .wrap{max-width:960px;margin:0 auto;padding:32px 20px 64px;}
   h1{font-size:1.6rem;margin:0 0 4px;} .lede{color:var(--sub);margin:0 0 12px;}
   .back{display:inline-block;margin-bottom:18px;color:var(--blue);text-decoration:none;font-weight:600;font-size:.9rem;}
-  .tipbox{background:#fff7ed;border:1px solid #fdba74;color:#9a3412;border-radius:12px;padding:12px 16px;font-size:.86rem;margin-bottom:22px;}
+  .tipbox{background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:12px;padding:12px 16px;font-size:.86rem;margin-bottom:22px;}
   h2{font-size:1.05rem;margin:26px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--line);}
   .list{display:flex;flex-direction:column;gap:10px;}
   .nb{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--orange);
@@ -20,80 +20,56 @@
   .fn{margin-top:3px;} .fn code{font-size:.76rem;color:#64748b;background:#f1f5f9;padding:1px 6px;border-radius:5px;}
   .acts{display:flex;gap:8px;flex-shrink:0;}
   .btn{text-decoration:none;font-weight:700;font-size:.84rem;padding:7px 13px;border-radius:8px;white-space:nowrap;}
-  .btn.colab{background:#f97316;color:#fff;} .btn.ghost{background:#eff6ff;color:var(--blue);}
+  .btn.ghost{background:#eff6ff;color:var(--blue);}
   footer{margin-top:34px;color:var(--sub);font-size:.8rem;border-top:1px solid var(--line);padding-top:14px;}
 </style></head>
 <body><div class="wrap">
   <a class="back" href="../index.html">← 자료실로</a>
-  <h1>📓 실습 노트북 (Colab)</h1>
-  <p class="lede">인공지능 기초 소단원별 실습 노트북입니다. <b>Colab에서 열기</b>로 바로 실행하거나 <b>.ipynb</b>로 내려받으세요.</p>
-  <div class="tipbox">⚠️ 일부 노트북은 CSV 데이터가 필요합니다(표시된 것). Colab에서 열면 해당 CSV를 <b>직접 업로드</b>하거나 <code>files.upload()</code>로 올린 뒤 실행하세요. seaborn 내장 데이터(tips·iris)를 쓰는 노트북은 그대로 실행됩니다.</div>
+  <h1>📓 실습 노트북</h1>
+  <p class="lede">인공지능 기초 소단원별 실습 노트북 17종입니다. 필요한 단원 파일을 확인·내려받아 쓰세요.</p>
+  <div class="tipbox">📌 각 <b>노트북 파일(.ipynb)</b> 링크로 내용을 확인하고 내려받을 수 있습니다. 일부 노트북은 CSV 데이터가 필요합니다(표시된 것).</div>
 
     <h2>Ⅱ-1 · 데이터와 기계학습</h2>
     <div class="list">
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">기계학습과 문제 해결 과정</span>
           <div class="fn"><code>2-1-1-ml-problem-solving.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/2-1-1-ml-problem-solving.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="2-1-1-ml-problem-solving.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/2-1-1-ml-problem-solving.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">데이터 수집</span>
           <div class="fn"><code>2-1-2-data-collection.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/2-1-2-data-collection.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="2-1-2-data-collection.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/2-1-2-data-collection.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">웹 크롤링 (학교망 대체)</span><span class="note">requests·bs4·pytrends</span>
           <div class="fn"><code>2-1-2-web-crawling-alt.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/2-1-2-web-crawling-alt.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="2-1-2-web-crawling-alt.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/2-1-2-web-crawling-alt.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">데이터 전처리 — 핵심 속성·산점도·히트맵</span><span class="note">★ 2-1-4 페이지와 대응</span>
           <div class="fn"><code>2-1-3-data-preprocessing.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/2-1-3-data-preprocessing.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="2-1-3-data-preprocessing.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/2-1-3-data-preprocessing.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">기계학습 유형과 알고리즘 선정</span>
           <div class="fn"><code>2-1-4-algorithm-selection.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/2-1-4-algorithm-selection.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="2-1-4-algorithm-selection.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/2-1-4-algorithm-selection.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">모델 학습과 성능 평가</span>
           <div class="fn"><code>2-1-5-model-training-evaluation.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/2-1-5-model-training-evaluation.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="2-1-5-model-training-evaluation.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/2-1-5-model-training-evaluation.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">선형 회귀와 군집</span>
           <div class="fn"><code>2-1-6-regression-clustering.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/2-1-6-regression-clustering.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="2-1-6-regression-clustering.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/2-1-6-regression-clustering.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">붓꽃 데이터 살펴보기</span><span class="note">Iris1.csv 필요</span>
           <div class="fn"><code>iris1-data-exploration.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/iris1-data-exploration.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="iris1-data-exploration.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/iris1-data-exploration.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
     </div>
 
@@ -102,42 +78,27 @@
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">퍼셉트론과 딥러닝의 구조·학습</span>
           <div class="fn"><code>2-2-1-perceptron-deeplearning.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/2-2-1-perceptron-deeplearning.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="2-2-1-perceptron-deeplearning.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/2-2-1-perceptron-deeplearning.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">손글씨 분류 실습</span><span class="note">MNIST</span>
           <div class="fn"><code>2-2-1-2-handwriting-classification.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/2-2-1-2-handwriting-classification.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="2-2-1-2-handwriting-classification.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/2-2-1-2-handwriting-classification.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">컴퓨터 비전</span>
           <div class="fn"><code>2-2-2-computer-vision.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/2-2-2-computer-vision.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="2-2-2-computer-vision.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/2-2-2-computer-vision.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">음성 인식</span>
           <div class="fn"><code>2-2-3-speech-recognition.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/2-2-3-speech-recognition.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="2-2-3-speech-recognition.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/2-2-3-speech-recognition.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">자연어 처리</span>
           <div class="fn"><code>2-2-4-nlp.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/2-2-4-nlp.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="2-2-4-nlp.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/2-2-4-nlp.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
     </div>
 
@@ -146,36 +107,24 @@
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">심장마비 발병 분류</span><span class="note">heart.csv</span>
           <div class="fn"><code>222-heart-attack-classification.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/222-heart-attack-classification.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="222-heart-attack-classification.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/222-heart-attack-classification.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">주택 가격 예측</span><span class="note">USA_Housing.csv</span>
           <div class="fn"><code>223-housing-price-prediction.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/223-housing-price-prediction.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="223-housing-price-prediction.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/223-housing-price-prediction.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">콜레라 원인 발견 (지도 시각화)</span><span class="note">folium · 콜레라 csv</span>
           <div class="fn"><code>224-cholera-folium.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/224-cholera-folium.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="224-cholera-folium.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/224-cholera-folium.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
       <div class="nb">
         <div class="nbmain"><span class="nbtitle">63쪽 웹 크롤링</span>
           <div class="fn"><code>p63-web-crawling.ipynb</code></div></div>
-        <div class="acts">
-          <a class="btn colab" href="https://colab.research.google.com/github/sweet1203/aiquiz26/blob/main/aibasics-semester2/notebooks/p63-web-crawling.ipynb" target="_blank" rel="noopener">▶ Colab에서 열기</a>
-          <a class="btn ghost" href="p63-web-crawling.ipynb" target="_blank" rel="noopener">.ipynb</a>
-        </div>
+        <div class="acts"><a class="btn ghost" href="notebooks/p63-web-crawling.ipynb" target="_blank" rel="noopener">노트북 파일 (.ipynb)</a></div>
       </div>
     </div>
 
-  <footer>인공지능 기초 2학기 · 실습 노트북 17종 · Colab 링크는 공개 저장소 sweet1203/aiquiz26 기준</footer>
+  <footer>인공지능 기초 2학기 · 실습 노트북 17종</footer>
 </div></body></html>
