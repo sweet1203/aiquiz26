@@ -228,6 +228,7 @@
             <a href="#viz-concept" class="hover:text-cyan-600 transition">시각화란?</a>
             <a href="#bar-line" class="hover:text-cyan-600 transition">막대·선그래프</a>
             <a href="#scatter" class="hover:text-cyan-600 transition">산점도</a>
+            <a href="#heatmap" class="hover:text-cyan-600 transition">히트맵</a>
             <a href="#distribution" class="hover:text-cyan-600 transition">분포 그래프</a>
             <a href="#iris-viz" class="hover:text-cyan-600 transition">붓꽃 시각화</a>
             <a href="#feature-stats" class="hover:text-cyan-600 transition">특성 통계표</a>
@@ -883,6 +884,172 @@
             </span>
             <p class="text-base text-sky-900 font-medium leading-relaxed">
                 산점도에서 점들이 오른쪽 위로 길게 늘어서 있다면 두 속성은 어떤 관계일까요? 위 상관관계 설명을 다시 확인해 보세요.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== Section 3.5: 상관관계 히트맵 ===== -->
+    <section id="heatmap" class="scroll-mt-24 space-y-8">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">여러 속성을 한눈에 — 상관관계 히트맵</h2>
+            <div class="w-20 h-1.5 bg-cyan-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-semibold">산점도는 두 속성씩, 히트맵은 <strong>모든 속성의 관계를 한 판에</strong></p>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                속성이 여러 개일 때 <strong>어떤 속성이 중요한지</strong>를 색으로 한눈에 보여 주는 방법입니다.
+            </p>
+        </div>
+
+        <div class="section-card space-y-8">
+            <!-- 히트맵이란 -->
+            <div class="bg-indigo-50 border border-indigo-300 rounded-2xl p-6">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-start gap-4">
+                    <div class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-table-cells"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-indigo-900 mb-2">히트맵(Heatmap)이란?</h3>
+                        <p class="text-base text-indigo-800 leading-relaxed">
+                            속성끼리 얼마나 <strong>함께 움직이는지(상관관계)</strong>를 <strong>색의 진하기</strong>로 나타낸 표입니다.
+                            산점도 한 장은 두 속성만 비교하지만, 히트맵은 <strong>모든 속성 쌍의 관계</strong>를 한 그림에 담아
+                            <strong>목표와 강하게 연결된 속성 = 중요한 속성</strong>을 빠르게 찾게 해 줍니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 상관계수 눈금 -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+                <p class="font-bold text-base text-slate-800 mb-3">
+                    <i class="fa-solid fa-ruler-horizontal text-slate-500 mr-1"></i>색이 뜻하는 것 — 상관계수 (−1 ~ +1)
+                </p>
+                <p class="text-base text-slate-600 leading-relaxed mb-4">
+                    두 속성이 함께 움직이는 정도를 <strong>−1에서 +1 사이 숫자</strong>로 나타낸 것이 상관계수입니다.
+                    히트맵은 이 숫자를 색으로 바꿔 보여 줍니다.
+                </p>
+                <div class="flex items-stretch rounded-xl overflow-hidden border border-slate-200 text-center text-sm font-bold">
+                    <div class="flex-1 py-2" style="background:#2563eb;color:#fff">−1<br><span class="font-normal">강한 음(반대로)</span></div>
+                    <div class="flex-1 py-2" style="background:#bfdbfe;color:#1e3a8a">−0.5</div>
+                    <div class="flex-1 py-2" style="background:#f1f5f9;color:#475569">0<br><span class="font-normal">관계 거의 없음</span></div>
+                    <div class="flex-1 py-2" style="background:#fca5a5;color:#7f1d1d">+0.5</div>
+                    <div class="flex-1 py-2" style="background:#dc2626;color:#fff">+1<br><span class="font-normal">강한 양(같이)</span></div>
+                </div>
+                <p class="text-sm text-slate-500 mt-3 leading-relaxed">
+                    <strong>빨강</strong>이 진할수록 <strong>같이 커지는</strong> 관계, <strong>파랑</strong>이 진할수록 <strong>한쪽이 커지면 다른 쪽은 작아지는</strong> 관계입니다.
+                    옅은 색(0에 가까움)은 서로 <strong>거의 상관없음</strong>을 뜻합니다.
+                </p>
+            </div>
+
+            <!-- 왜 필요한가 -->
+            <div class="bg-amber-50 border border-amber-200 border-l-4 border-l-amber-500 rounded-2xl p-5">
+                <p class="font-bold text-base text-amber-900 mb-1">
+                    <i class="fa-solid fa-layer-group mr-1"></i>산점도만으로는 왜 부족할까?
+                </p>
+                <p class="text-base text-amber-800 leading-relaxed">
+                    속성이 4개면 두 개씩 짝지어 산점도를 <strong>6장</strong>, 10개면 <strong>45장</strong>이나 그려야 합니다.
+                    이걸 하나하나 보는 대신, <strong>히트맵 한 장</strong>으로 모든 짝의 관계를 한 번에 훑고
+                    눈에 띄는 칸(진한 색)만 골라 산점도로 자세히 확인하면 됩니다.
+                </p>
+            </div>
+
+            <!-- 예제 히트맵 -->
+            <div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">
+                    <i class="fa-solid fa-graduation-cap text-indigo-600 mr-2"></i>예제: 무엇이 국어 성적과 가장 관련 있을까?
+                </h3>
+                <p class="text-base text-slate-500 mb-5">
+                    앞 산점도에서 본 학급 설문에 속성을 더 모았습니다 — <strong>독서 시간·수면 시간·스마트폰 사용 시간</strong>이
+                    각각 <strong>국어 성적</strong>과 얼마나 관련 있는지 히트맵으로 한 번에 봅니다.
+                    (맨 아래 <strong>국어 성적</strong> 줄만 읽으면 어떤 속성이 중요한지 바로 보입니다.)
+                </p>
+
+                <div class="overflow-x-auto">
+                    <div class="inline-grid gap-1.5 mx-auto" style="grid-template-columns:auto repeat(4,72px);">
+                        <!-- 헤더 행 -->
+                        <div></div>
+                        <div class="flex items-end justify-center pb-1 font-bold text-sm text-slate-600 text-center leading-tight">독서<br>시간</div>
+                        <div class="flex items-end justify-center pb-1 font-bold text-sm text-slate-600 text-center leading-tight">수면<br>시간</div>
+                        <div class="flex items-end justify-center pb-1 font-bold text-sm text-slate-600 text-center leading-tight">스마트폰<br>사용</div>
+                        <div class="flex items-end justify-center pb-1 font-bold text-sm text-indigo-700 text-center leading-tight">★국어<br>성적</div>
+
+                        <!-- 독서 시간 행 -->
+                        <div class="flex items-center justify-end pr-2 font-bold text-sm text-slate-600">독서 시간</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base" style="background:#334155;color:#fff">1.00</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base" style="background:#fecaca;color:#7f1d1d">0.25</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base" style="background:#3b82f6;color:#fff">−0.55</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base" style="background:#dc2626;color:#fff">0.82</div>
+
+                        <!-- 수면 시간 행 -->
+                        <div class="flex items-center justify-end pr-2 font-bold text-sm text-slate-600">수면 시간</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base" style="background:#fecaca;color:#7f1d1d">0.25</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base" style="background:#334155;color:#fff">1.00</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base" style="background:#bfdbfe;color:#1e3a8a">−0.30</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base" style="background:#fca5a5;color:#7f1d1d">0.35</div>
+
+                        <!-- 스마트폰 사용 행 -->
+                        <div class="flex items-center justify-end pr-2 font-bold text-sm text-slate-600">스마트폰 사용</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base" style="background:#3b82f6;color:#fff">−0.55</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base" style="background:#bfdbfe;color:#1e3a8a">−0.30</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base" style="background:#334155;color:#fff">1.00</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base" style="background:#2563eb;color:#fff">−0.65</div>
+
+                        <!-- 국어 성적 행 (목표) -->
+                        <div class="flex items-center justify-end pr-2 font-black text-sm text-indigo-700">★ 국어 성적</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base ring-2 ring-indigo-400" style="background:#dc2626;color:#fff">0.82</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base ring-2 ring-indigo-400" style="background:#fca5a5;color:#7f1d1d">0.35</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base ring-2 ring-indigo-400" style="background:#2563eb;color:#fff">−0.65</div>
+                        <div class="flex items-center justify-center h-14 rounded-lg font-bold text-base ring-2 ring-indigo-400" style="background:#334155;color:#fff">1.00</div>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-400 text-center mt-2">국어 성적 줄에 <span class="text-indigo-600 font-bold">파란 테두리</span>를 둘렀습니다. 대각선의 1.00은 자기 자신과의 관계라 늘 최대입니다.</p>
+
+                <!-- 핵심 해석 -->
+                <div class="bg-cyan-50 border border-cyan-300 rounded-2xl p-5 mt-5">
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-lightbulb text-cyan-600 text-xl mt-0.5 shrink-0"></i>
+                        <div class="text-base text-cyan-800 leading-relaxed space-y-2">
+                            <p><strong>속성 중요도 읽기 — 국어 성적 줄만 보세요.</strong></p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li><strong>독서 시간 +0.82</strong> (진한 빨강) — 국어 성적과 가장 강하게 같이 움직입니다. <strong>가장 중요한 속성.</strong></li>
+                                <li><strong>스마트폰 사용 −0.65</strong> (진한 파랑) — 많이 쓸수록 성적이 낮아지는 뚜렷한 관계. <strong>이것도 중요한 속성</strong>(반대 방향).</li>
+                                <li><strong>수면 시간 +0.35</strong> (옅은 빨강) — 약하게만 관련. 중요도는 낮은 편.</li>
+                            </ul>
+                            <p>그래서 국어 성적을 예측할 속성을 고른다면 <strong>독서 시간과 스마트폰 사용</strong>을 먼저 씁니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 중복 주의 -->
+                <div class="bg-amber-50 border border-amber-200 border-l-4 border-l-amber-500 rounded-2xl p-5 mt-5">
+                    <p class="font-bold text-base text-amber-900 mb-1">
+                        <i class="fa-solid fa-clone mr-1"></i>속성끼리도 살펴보세요 — 정보가 겹칠 수 있습니다
+                    </p>
+                    <p class="text-base text-amber-800 leading-relaxed">
+                        독서 시간과 스마트폰 사용은 서로 <strong>−0.55</strong>로 꽤 연결돼 있습니다.
+                        두 속성이 이렇게 강하게 상관하면 <strong>비슷한 정보를 두 번 담고 있는 셈</strong>이라,
+                        나중에 둘 중 하나만 남겨도 될 때가 있습니다. 히트맵은 이런 <strong>겹치는 속성</strong>도 함께 보여 줍니다.
+                    </p>
+                </div>
+
+                <!-- 붓꽃 연결 -->
+                <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 mt-5">
+                    <p class="text-base text-emerald-800 leading-relaxed">
+                        <i class="fa-solid fa-seedling text-emerald-600 mr-1"></i>
+                        <strong>붓꽃 데이터로도 같은 일을 합니다.</strong> 꽃잎 길이와 꽃잎 너비의 상관은 약 <strong>+0.96</strong>으로 거의 하나처럼 움직입니다 —
+                        앞 산점도에서 &ldquo;꽃잎 속성이 품종을 잘 가른다&rdquo;고 본 결론과 히트맵이 같은 이야기를 해 주는 것입니다.
+                        오렌지(Orange) 프로그램의 <strong>Correlations</strong> 위젯을 쓰면 이 히트맵을 바로 만들 수 있습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-sky-50 border border-sky-200
+                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
+                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
+                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
+            </span>
+            <p class="text-base text-sky-900 font-medium leading-relaxed">
+                히트맵에서 목표(국어 성적) 줄의 칸이 <strong>진한 색</strong>일수록 그 속성은 더 중요할까요, 덜 중요할까요? 왜 그런지 위 상관계수 눈금을 다시 보며 설명해 보세요.
             </p>
         </div>
     </section>
