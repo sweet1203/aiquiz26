@@ -232,7 +232,6 @@
             <a href="#distribution" class="hover:text-cyan-600 transition">분포 그래프</a>
             <a href="#iris-viz" class="hover:text-cyan-600 transition">붓꽃 시각화</a>
             <a href="#feature-stats" class="hover:text-cyan-600 transition">특성 통계표</a>
-            <a href="#orange" class="hover:text-cyan-600 transition">오렌지 실습</a>
             <a href="#quiz" class="hover:text-cyan-600 transition">퀴즈</a>
         </div>
     </div>
@@ -1688,169 +1687,6 @@
         </details>
     </section>
 
-    <!-- ===== Section 7: 오렌지 실습 ===== -->
-    <section id="orange" class="scroll-mt-24 space-y-8">
-        <div class="text-center space-y-4">
-            <h2 class="text-3xl font-black text-slate-900">오렌지(Orange) 프로그램으로 데이터 시각화 실습하기</h2>
-            <div class="w-20 h-1.5 bg-cyan-500 mx-auto rounded-full"></div>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-semibold">코딩 없이 데이터를 분석하려면 어떤 도구를 쓸 수 있을까?</p>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto"><strong>오렌지(Orange)</strong>는 기계학습 및 데이터 시각화에 유용한 도구로,
-                코딩 없이 데이터를 분석할 수 있습니다.</p>
-        </div>
-
-        <div class="section-card space-y-8">
-            <!-- 오렌지 프로그램 특징 -->
-            <div class="bg-orange-50 border border-orange-300 rounded-2xl p-6">
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-start gap-4">
-                    <div class="w-12 h-12 bg-orange-500 text-white rounded-full flex items-center justify-center text-xl shrink-0">
-                        <i class="fa-solid fa-circle-nodes"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-orange-900 mb-2">오렌지 프로그램이란?</h3>
-                        <p class="text-base text-orange-800 leading-relaxed">
-                            초보자뿐 아니라 전문 데이터 과학자에게도 훌륭한 데이터 마이닝 도구입니다.
-                            <strong>위젯(Widget)</strong>이라는 구성 요소를 <strong>워크플로(Workflow)</strong>에 연결하는 방식으로
-                            복잡한 데이터 분석을 간단하게 구성할 수 있습니다.
-                            사용자는 코딩 대신 <strong>데이터 분석에 집중</strong>할 수 있습니다.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4단계 실습 -->
-            <div>
-                <h3 class="text-xl font-bold text-slate-800 mb-5">
-                    <i class="fa-solid fa-list-ol text-orange-500 mr-2"></i>붓꽃 데이터 시각화 실습 4단계
-                </h3>
-                <div class="space-y-4">
-                    <!-- Step 1 -->
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 bg-orange-500 text-white rounded-full flex items-center justify-center font-black text-base shrink-0 mt-0.5">
-                            1
-                        </div>
-                        <div class="flex-1 bg-orange-50 rounded-2xl p-5 border border-orange-200">
-                            <p class="font-bold text-base text-orange-800 mb-2">오렌지 프로그램 설치</p>
-                            <p class="text-base text-orange-700 leading-relaxed">오렌지(<a class="ext-link"
-                                    href="https://orangedatamining.com" target="_blank"
-                                    rel="noopener noreferrer">orangedatamining.com</a>) 웹 사이트에서 프로그램을
-                                다운로드하여 설치합니다.</p>
-                        </div>
-                    </div>
-                    <!-- Step 2 -->
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 bg-orange-500 text-white rounded-full flex items-center justify-center font-black text-base shrink-0 mt-0.5">
-                            2
-                        </div>
-                        <div class="flex-1 bg-orange-50 rounded-2xl p-5 border border-orange-200">
-                            <p class="font-bold text-base text-orange-800 mb-2">File 위젯으로 데이터 불러오기</p>
-                            <p class="text-base text-orange-700 leading-relaxed">Data 목록에서 <strong>File 위젯</strong>을
-                                캔버스에 드래그하여, 캐글에서 다운로드한 붓꽃 데이터 파일(Iris.csv)을 불러옵니다.</p>
-                        </div>
-                    </div>
-                    <!-- Step 3 -->
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 bg-orange-500 text-white rounded-full flex items-center justify-center font-black text-base shrink-0 mt-0.5">
-                            3
-                        </div>
-                        <div class="flex-1 bg-orange-50 rounded-2xl p-5 border border-orange-200">
-                            <p class="font-bold text-base text-orange-800 mb-3">속성 역할 설정</p>
-                            <p class="text-base text-orange-700 leading-relaxed mb-3">File 위젯을 더블 클릭하여 각 속성의 역할을
-                                설정합니다.</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-800 rounded-full text-base font-bold">
-                                    <i class="fa-solid fa-arrow-right-to-bracket"></i> feature: 꽃받침·꽃잎 길이/너비
-                                </span>
-                                <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-100 text-amber-800 rounded-full text-base font-bold">
-                                    <i class="fa-solid fa-bullseye"></i> target: Species(품종)
-                                </span>
-                                <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-100 text-slate-700 rounded-full text-base font-bold">
-                                    <i class="fa-solid fa-tag"></i> meta: Id(일련번호)
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Step 4 -->
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 bg-orange-500 text-white rounded-full flex items-center justify-center font-black text-base shrink-0 mt-0.5">
-                            4
-                        </div>
-                        <div class="flex-1 bg-orange-50 rounded-2xl p-5 border border-orange-200">
-                            <p class="font-bold text-base text-orange-800 mb-2">Data Table로 데이터 확인 후 Scatter Plot 연결</p>
-                            <p class="text-base text-orange-700 leading-relaxed">Data Table 위젯으로 속성값을 확인한 뒤, <strong>Scatter
-                                Plot 위젯</strong>을 연결하여 x축·y축 속성을 선택하고 품종별로 다른 색으로 시각화합니다.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 속성 역할표 -->
-            <div>
-                <h3 class="text-xl font-bold text-slate-800 mb-4">
-                    <i class="fa-solid fa-table text-orange-500 mr-2"></i>오렌지에서 데이터 속성의 역할
-                </h3>
-                <div class="overflow-x-auto rounded-2xl border border-slate-200">
-                    <table class="min-w-[480px]">
-                        <thead>
-                        <tr>
-                            <th>역할</th>
-                            <th>영문명</th>
-                            <th>설명</th>
-                            <th>붓꽃 데이터 예시</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><span
-                                    class="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-base font-bold">속성</span>
-                            </td>
-                            <td class="font-bold text-blue-700">feature</td>
-                            <td>예측하는 값에 영향을 주는 <strong>독립 변수</strong>의 값</td>
-                            <td>꽃받침·꽃잎 길이/너비</td>
-                        </tr>
-                        <tr>
-                            <td><span
-                                    class="inline-block px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-base font-bold">목표</span>
-                            </td>
-                            <td class="font-bold text-amber-700">target</td>
-                            <td><strong>종속 변수</strong>로서 예측하고자 하는 결괏값에 영향을 주는 속성</td>
-                            <td>Species (품종)</td>
-                        </tr>
-                        <tr>
-                            <td><span
-                                    class="inline-block px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-base font-bold">메타</span>
-                            </td>
-                            <td class="font-bold text-slate-600">meta</td>
-                            <td>예측에 직접 영향을 주지는 않지만 데이터를 구성하는 데 필요한 값</td>
-                            <td>Id (일련번호)</td>
-                        </tr>
-                        <tr>
-                            <td><span
-                                    class="inline-block px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-base font-bold">무시</span>
-                            </td>
-                            <td class="font-bold text-rose-600">skip</td>
-                            <td>데이터를 예측하는 데 상관 없는 값을 처리할 때 사용. 데이터 테이블에서 <strong>보이지 않음</strong></td>
-                            <td>—</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p class="text-base text-slate-500 mt-3">
-                    <i class="fa-solid fa-circle-info mr-1 text-cyan-500"></i>
-                    일련번호는 <strong>meta</strong>로 설정하면 데이터 테이블에서도 확인할 수 있습니다. <strong>skip</strong>으로 설정하면 테이블에서 사라집니다.
-                </p>
-            </div>
-        </div>
-        <div class="bg-sky-50 border border-sky-200
-                    border-l-4 border-l-sky-500 rounded-2xl px-6 py-5
-                    flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-            <span class="shrink-0 bg-sky-500 text-white font-bold text-base px-4 py-1.5 rounded-full whitespace-nowrap">
-                <i class="fa-solid fa-circle-question mr-1"></i>스스로 확인
-            </span>
-            <p class="text-base text-sky-900 font-medium leading-relaxed">
-                오렌지에서 데이터를 불러온 뒤 어떤 순서로 위젯을 연결해야 할까요? 위 실습 화면을 처음부터 되짚어 보세요.
-            </p>
-        </div>
-    </section>
 
     <!-- ===== Section 8: AI와 함께 정리 ===== -->
     <section class="scroll-mt-24">
@@ -1961,8 +1797,6 @@
                                               style="font-size:0.5rem"></i><span>다만 <strong>함께 움직인다 ≠ 한쪽이 원인</strong></span></li>
                     <li class="flex gap-2"><i class="fa-solid fa-circle text-emerald-400 mt-1.5 shrink-0"
                                               style="font-size:0.5rem"></i><span>그림과 통계 수치는 <strong>서로 채워 주는 관계</strong></span></li>
-                    <li class="flex gap-2"><i class="fa-solid fa-circle text-emerald-400 mt-1.5 shrink-0"
-                                              style="font-size:0.5rem"></i><span>오렌지 프로그램으로 시각화 실습 가능</span></li>
                 </ul>
             </div>
         </div>
