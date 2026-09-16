@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>파이썬 실습 데모 (붙여넣기 차단)</title>
+<style>
+  :root{--bg:#0f172a;--panel:#1e293b;--line:#334155;--ink:#e2e8f0;--sub:#94a3b8;
+    --accent:#f97316;--ok:#22c55e;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}
+  body{margin:0;background:#f4f7fb;color:#0f172a;
+    font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","맑은 고딕",system-ui,sans-serif;}
+  header{background:linear-gradient(135deg,#0891b2,#059669);color:#fff;padding:20px 22px;}
+  header h1{margin:0;font-size:1.35rem;}
+  header p{margin:6px 0 0;opacity:.9;font-size:.9rem;}
+  .bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 22px;background:#fff;border-bottom:1px solid #e2e8f0;font-size:.86rem;}
+  #status{font-weight:700;}
+  .chip{padding:3px 10px;border-radius:999px;background:#fee2e2;color:#b91c1c;font-weight:700;font-size:.78rem;}
+  .wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px 22px 40px;max-width:1400px;margin:0 auto;}
+  @media(max-width:880px){.wrap{grid-template-columns:1fr;}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;}
+  .card.light{background:#fff;border-color:#e2e8f0;}
+  .card h2{margin:0;padding:11px 16px;font-size:.9rem;color:var(--ink);background:#0b1220;border-bottom:1px solid var(--line);}
+  .card.light h2{color:#334155;background:#f8fafc;border-color:#e2e8f0;}
+  #editor{flex:1;min-height:360px;width:100%;border:0;resize:vertical;padding:14px 16px;
+    background:var(--panel);color:var(--ink);font-family:var(--mono);font-size:14px;line-height:1.55;outline:none;tab-size:4;}
+  .runrow{display:flex;gap:10px;padding:10px 14px;background:#0b1220;border-top:1px solid var(--line);}
+  button{background:var(--accent);color:#fff;border:0;font-weight:700;font-size:.92rem;padding:10px 18px;border-radius:9px;cursor:pointer;}
+  button:disabled{opacity:.5;cursor:default;}
+  button.ghost{background:#334155;}
+  #out{flex:1;min-height:360px;overflow:auto;padding:14px 16px;background:#fff;}
+  #out pre{margin:0 0 12px;font-family:var(--mono);font-size:13px;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:#0f172a;background:#f1f5f9;padding:12px;border-radius:8px;}
+  #out img{max-width:100%;border:1px solid #e2e8f0;border-radius:8px;margin:0 0 12px;display:block;}
+  .hint{color:var(--sub);font-size:.8rem;padding:0 16px 12px;}
+  .note{font-size:.82rem;color:#64748b;padding:8px 22px 0;max-width:1400px;margin:0 auto;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🐍 파이썬 실습 데모 <span style="font-size:.8rem;font-weight:400;opacity:.85">· 브라우저에서 pandas 실행</span></h1>
+  <p>설치 없이 브라우저에서 바로 실행됩니다. <b>붙여넣기가 차단</b>돼 있어 직접 타이핑해야 합니다.</p>
+</header>
+
+<div class="bar">
+  <span id="status">⏳ 파이썬 환경 불러오는 중… (처음 한 번만, 수십 초 걸릴 수 있어요)</span>
+  <span class="chip">📋 붙여넣기 차단됨</span>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <h2>코드 (직접 입력)</h2>
+    <textarea id="editor" spellcheck="false" autocomplete="off"></textarea>
+    <div class="hint">💡 <code>df</code>에 데이터가 미리 들어 있습니다. 아래 버튼으로 실행하세요. (Tab=들여쓰기)</div>
+    <div class="runrow">
+      <button id="run" disabled>▶ 실행</button>
+      <button id="reset" class="ghost">예시 코드 되돌리기</button>
+    </div>
+  </div>
+  <div class="card light">
+    <h2>실행 결과 · 그래프</h2>
+    <div id="out"><p style="color:#94a3b8;font-size:.9rem">실행하면 결과와 그래프가 여기에 나옵니다.</p></div>
+  </div>
+</div>
+<p class="note">※ 데모: 데이터는 예시(공유자전거) 24행이 내장돼 있습니다. 붙여넣기 차단은 Ctrl+V·우클릭·드래그를 막습니다(완벽 차단은 아니며 현장 서술과 병행 권장).</p>
+
+<!-- 내장 CSV (예시) -->
+<script id="csv-data" type="text/plain">record_id,temperature,humidity,distance_km,weather,time_period,use_bike
+1,18.7,71.1,7.2,,점심,1
+2,25.0,70.2,4.4,흐림,점심,1
+3,16.9,38.1,2.4,맑음,저녁,0
+4,22.1,55.0,,비,아침,0
+5,,60.3,6.1,맑음,점심,1
+6,27.4,48.9,8.9,흐림,저녁,1
+7,14.2,80.5,1.2,비,아침,0
+8,19.9,,3.3,맑음,점심,0
+9,24.6,52.2,7.7,흐림,저녁,1
+10,12.0,85.1,,비,아침,0
+11,28.8,44.0,9.4,맑음,점심,1
+12,17.3,66.7,2.9,,저녁,0
+13,21.5,58.4,5.6,흐림,점심,1
+14,26.2,50.1,8.1,맑음,저녁,1
+15,13.7,78.2,1.8,비,아침,0
+16,23.0,,6.6,흐림,점심,1
+17,15.5,72.9,,비,아침,0
+18,29.1,41.3,9.9,맑음,저녁,1
+19,20.2,63.0,4.0,,점심,0
+20,18.0,69.5,3.1,비,아침,0
+21,25.9,47.7,7.9,맑음,저녁,1
+22,16.1,74.4,2.2,흐림,아침,0
+23,27.0,49.8,8.5,맑음,점심,1
+24,19.3,61.1,5.0,흐림,저녁,1
+</script>
+
+<!-- 파이썬 준비 코드 -->
+<script id="setup-py" type="text/plain">
+import io, sys, base64, traceback
+import pandas as pd
+import matplotlib
+matplotlib.use("AGG")
+import matplotlib.pyplot as plt
+
+df = pd.read_csv(io.StringIO(CSV))
+GLOBALS = {"pd": pd, "plt": plt, "df": df, "io": io}
+
+def run_user(code):
+    buf = io.StringIO()
+    old = sys.stdout
+    sys.stdout = buf
+    plt.close("all")
+    imgs = []
+    try:
+        exec(code, GLOBALS)
+        for num in plt.get_fignums():
+            fig = plt.figure(num)
+            b = io.BytesIO()
+            fig.savefig(b, format="png", bbox_inches="tight", dpi=110)
+            imgs.append(base64.b64encode(b.getvalue()).decode())
+    except Exception:
+        buf.write(traceback.format_exc())
+    finally:
+        sys.stdout = old
+        plt.close("all")
+    return [buf.getvalue(), imgs]
+</script>
+
+<!-- 예시 사용자 코드 -->
+<script id="example-py" type="text/plain"># 1) 데이터 살펴보기
+print("=== 처음 5행 ===")
+print(df.head())
+
+# 2) 결측치 개수 확인
+print("\n=== 결측치 개수 ===")
+print(df.isnull().sum())
+
+# 3) 이상치 확인 — 박스플롯
+num = df.select_dtypes(include="number").drop(columns=["record_id","use_bike"])
+num.plot(kind="box")
+plt.title("Boxplot (outliers)")
+
+# 4) 핵심변수 찾기 — 상관 히트맵
+plt.figure()
+corr = df.drop(columns=["record_id"]).corr(numeric_only=True)
+plt.imshow(corr, cmap="coolwarm", vmin=-1, vmax=1)
+plt.colorbar()
+plt.xticks(range(len(corr)), corr.columns, rotation=45, ha="right")
+plt.yticks(range(len(corr)), corr.columns)
+for i in range(len(corr)):
+    for j in range(len(corr)):
+        plt.text(j, i, f"{corr.iloc[i,j]:.2f}", ha="center", va="center", fontsize=8)
+plt.title("Correlation heatmap")
+</script>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const editor = $("#editor"), out = $("#out"), runBtn = $("#run"), status = $("#status");
+const setupPy = $("#setup-py").textContent;
+const examplePy = $("#example-py").textContent.trim();
+const csvText = $("#csv-data").textContent;
+
+editor.value = examplePy;
+
+// ── 붙여넣기 차단 ──
+function block(e){ e.preventDefault(); flash(); }
+editor.addEventListener("paste", block);
+editor.addEventListener("drop", block);
+let flashT;
+function flash(){
+  const chip = document.querySelector(".chip");
+  chip.style.background = "#ef4444"; chip.style.color = "#fff"; chip.textContent = "🚫 붙여넣기 막힘!";
+  clearTimeout(flashT);
+  flashT = setTimeout(()=>{ chip.style.background=""; chip.style.color=""; chip.textContent="📋 붙여넣기 차단됨"; }, 1200);
+}
+// Tab 들여쓰기
+editor.addEventListener("keydown", e=>{
+  if(e.key==="Tab"){ e.preventDefault();
+    const s=editor.selectionStart, en=editor.selectionEnd;
+    editor.value = editor.value.slice(0,s) + "    " + editor.value.slice(en);
+    editor.selectionStart = editor.selectionEnd = s+4;
+  }
+});
+$("#reset").addEventListener("click", ()=>{ editor.value = examplePy; });
+
+let pyodide;
+async function boot(){
+  try{
+    pyodide = await loadPyodide();
+    status.textContent = "📦 pandas · matplotlib 불러오는 중…";
+    await pyodide.loadPackage(["pandas","matplotlib"]);
+    pyodide.globals.set("CSV", csvText);
+    pyodide.runPython(setupPy);
+    status.textContent = "✅ 준비 완료 — 실행할 수 있어요";
+    runBtn.disabled = false;
+  }catch(err){
+    status.textContent = "⚠️ 불러오기 실패: " + err;
+  }
+}
+boot();
+
+runBtn.addEventListener("click", async ()=>{
+  if(!pyodide) return;
+  runBtn.disabled = true; status.textContent = "▶ 실행 중…";
+  out.innerHTML = "";
+  try{
+    pyodide.globals.set("user_code", editor.value);
+    const res = pyodide.runPython("run_user(user_code)");
+    const arr = res.toJs(); res.destroy();
+    const text = arr[0], imgs = arr[1];
+    if(text && text.trim()){
+      const pre = document.createElement("pre"); pre.textContent = text; out.appendChild(pre);
+    }
+    (imgs||[]).forEach(b64=>{
+      const img = document.createElement("img"); img.src = "data:image/png;base64,"+b64; out.appendChild(img);
+    });
+    if(!text.trim() && (!imgs||!imgs.length)){
+      out.innerHTML = "<p style='color:#94a3b8'>출력이 없습니다. print(...) 로 결과를 찍어 보세요.</p>";
+    }
+    status.textContent = "✅ 완료";
+  }catch(err){
+    const pre = document.createElement("pre"); pre.style.color="#b91c1c"; pre.textContent = String(err); out.appendChild(pre);
+    status.textContent = "⚠️ 오류";
+  }finally{
+    runBtn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
