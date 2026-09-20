@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>개념 지도 — 모델·알고리즘·학습 방식</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F3F6F1; --paper: #FFFFFF; --ink: #1F2A24; --ink-soft: #55655C;
+    --border: #DCE6DC; --border-soft: #E8EFE6;
+    /* 개념 3색 — 페이지 전체에서 고정 */
+    --model: #1E9E5A; --model-bg: #E7F7EE; --model-line: #BCEAD1;   /* 모델 = 초록 */
+    --algo:  #2F6FED; --algo-bg:  #EAF1FF; --algo-line:  #C7DBFF;   /* 알고리즘 = 파랑 */
+    --learn: #7B5EEA; --learn-bg: #F1EDFE; --learn-line: #D7CBFB;   /* 학습방식 = 보라 */
+    --data:  #E8871E; --data-bg:  #FFF3E4; --data-line:  #FFD9A8;   /* 데이터 = 주황 */
+    --safe-t: env(safe-area-inset-top, 0px); --safe-b: env(safe-area-inset-bottom, 0px);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:#171D19; --paper:#202821; --ink:#ECF3EC; --ink-soft:#A9BAB0; --border:#33403A; --border-soft:#2A3630;
+      --model-bg:#123425; --algo-bg:#1B2A44; --learn-bg:#241E44; --data-bg:#3A2A12;
+      --model-line:#255C40; --algo-line:#3E5788; --learn-line:#4B3E82; --data-line:#6B5326;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:#171D19; --paper:#202821; --ink:#ECF3EC; --ink-soft:#A9BAB0; --border:#33403A; --border-soft:#2A3630;
+    --model-bg:#123425; --algo-bg:#1B2A44; --learn-bg:#241E44; --data-bg:#3A2A12;
+    --model-line:#255C40; --algo-line:#3E5788; --learn-line:#4B3E82; --data-line:#6B5326;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(70px + var(--safe-t)); }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+  body {
+    margin:0; background:var(--bg);
+    background-image: linear-gradient(var(--border-soft) 1px, transparent 1px), linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+    background-size: 28px 28px; color:var(--ink);
+    font-family:'Noto Sans KR', sans-serif; line-height:1.7;
+    padding-top:var(--safe-t); padding-bottom:var(--safe-b);
+  }
+  h1,h2,h3 { font-family:'Gowun Dodum', sans-serif; font-weight:400; margin:0; }
+  code,.mono { font-family:'JetBrains Mono', monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+
+  nav.top { position:sticky; top:0; z-index:50; padding-top:var(--safe-t);
+    background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); }
+  .nav-inner { max-width:980px; margin:0 auto; padding:12px 20px; display:flex; gap:8px; overflow-x:auto; }
+  .nav-inner a { flex:none; text-decoration:none; font-size:13.5px; font-weight:500; padding:7px 13px; border-radius:999px;
+    border:1px solid var(--border); background:var(--paper); white-space:nowrap; color:var(--ink-soft); transition:color .15s, border-color .15s; }
+  .nav-inner a:hover { color:var(--ink); }
+
+  .hero { padding:52px 0 30px; text-align:center; }
+  .hero .eyebrow { font-size:14px; color:var(--ink-soft); margin-bottom:10px; }
+  .hero h1 { font-size:clamp(26px,5vw,40px); line-height:1.35; }
+  .hero p.lead { max-width:640px; margin:16px auto 0; color:var(--ink-soft); font-size:16px; }
+
+  /* 색 강조 스팬 */
+  .k-model { color:var(--model); font-weight:700; }
+  .k-algo  { color:var(--algo);  font-weight:700; }
+  .k-learn { color:var(--learn); font-weight:700; }
+  .k-data  { color:var(--data);  font-weight:700; }
+
+  section.block { padding:44px 0; border-top:1px solid var(--border); }
+  .kicker { font-size:13px; color:var(--ink-soft); margin-bottom:4px; }
+  h2.title { font-size:clamp(21px,3.4vw,27px); margin:2px 0 14px; }
+  .lead-p { color:var(--ink-soft); max-width:660px; margin:0 0 8px; }
+
+  .flow { background:var(--paper); border:1px solid var(--border); border-radius:16px; padding:18px; margin-top:12px; }
+  .flow svg { width:100%; height:auto; display:block; }
+  .flow-cap { font-size:12.5px; color:var(--ink-soft); text-align:center; margin-top:10px; }
+
+  .three { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:8px; }
+  @media (max-width:760px){ .three { grid-template-columns:1fr; } }
+  .concept { background:var(--paper); border:1px solid var(--border); border-radius:16px; padding:18px; border-top:5px solid var(--border); }
+  .concept.m { border-top-color:var(--model); } .concept.a { border-top-color:var(--algo); } .concept.l { border-top-color:var(--learn); }
+  .concept .tag { display:inline-block; font-size:12px; font-weight:700; padding:3px 10px; border-radius:7px; margin-bottom:8px; }
+  .concept.m .tag { background:var(--model-bg); color:var(--model); }
+  .concept.a .tag { background:var(--algo-bg); color:var(--algo); }
+  .concept.l .tag { background:var(--learn-bg); color:var(--learn); }
+  .concept h3 { font-size:17px; margin-bottom:6px; }
+  .concept .one { font-size:14.5px; }
+  .concept .eg { font-size:13px; color:var(--ink-soft); margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); }
+
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; margin-top:10px; }
+  @media (max-width:760px){ .grid2 { grid-template-columns:1fr; } }
+  .viz-box { background:var(--paper); border:1px solid var(--border); border-radius:16px; padding:18px; }
+  .viz-box svg { width:100%; height:auto; display:block; }
+  .viz-cap { font-size:12.5px; color:var(--ink-soft); text-align:center; margin-top:8px; }
+  .analogy { background:var(--paper); border:1px solid var(--border); border-radius:14px; padding:16px 18px; font-size:15px; }
+  .analogy b.h { display:block; font-size:12.5px; color:var(--ink-soft); font-weight:700; margin-bottom:6px; }
+  .keypoint { margin-top:12px; background:var(--model-bg); border:1px solid var(--model-line); border-radius:12px; padding:12px 14px; font-size:14.5px; }
+
+  .cards2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:10px; }
+  @media (max-width:640px){ .cards2 { grid-template-columns:1fr; } }
+  .card { background:var(--paper); border:1px solid var(--border); border-radius:16px; padding:18px; }
+  .card .tag { display:inline-block; font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:6px; }
+  .card h3 { font-size:17px; margin:10px 0 8px; }
+  .card p { font-size:14px; color:var(--ink-soft); margin:6px 0 0; }
+
+  .tbl-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:14px; background:var(--paper); margin-top:8px; }
+  table.map { border-collapse:collapse; width:100%; min-width:660px; font-size:14px; }
+  table.map th, table.map td { padding:12px 14px; text-align:left; border-bottom:1px solid var(--border-soft); vertical-align:top; }
+  table.map thead th { color:var(--ink-soft); font-size:12.5px; font-weight:700; }
+  table.map tr:last-child td { border-bottom:none; }
+  .pill { display:inline-block; font-size:12px; font-weight:700; padding:2px 8px; border-radius:6px; }
+  .pill.m { background:var(--model-bg); color:var(--model); }
+  .pill.a { background:var(--algo-bg); color:var(--algo); }
+  .pill.l { background:var(--learn-bg); color:var(--learn); }
+
+  .myth { display:grid; gap:10px; margin-top:10px; }
+  .myth .row { background:var(--paper); border:1px solid var(--border); border-left-width:5px; border-radius:10px; padding:12px 14px; font-size:14.5px; }
+  .myth .q { font-weight:700; }
+  .myth .a { color:var(--ink-soft); margin-top:3px; }
+
+  .crosslink { display:block; margin-top:16px; text-align:center; text-decoration:none;
+    background:var(--algo-bg); border:1px solid var(--algo-line); color:var(--algo); font-weight:700;
+    padding:14px; border-radius:14px; font-size:15px; }
+  footer { text-align:center; padding:30px 0 44px; font-size:12.5px; color:var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="nav-inner">
+    <a href="#big">한 줄 관계</a>
+    <a href="#three">세 단어</a>
+    <a href="#cook">요리 비유</a>
+    <a href="#sup">지도 vs 비지도</a>
+    <a href="#map">한눈에 지도</a>
+    <a href="#myth">자주 하는 오해</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="eyebrow">Ⅱ. 인공지능과 학습 · 단원 도입</div>
+    <h1>모델? 알고리즘? 학습 방식?<br>헷갈리는 3개념 한 번에 정리 🗺️</h1>
+    <p class="lead">이 셋은 서로 다른 층위예요. <span class="k-learn">학습 방식</span>은 <b>큰 분류</b>,
+      <span class="k-algo">알고리즘</span>은 <b>배우는 방법</b>, <span class="k-model">모델</span>은 <b>배운 결과물</b>.
+      이 페이지 내내 <span class="k-learn">보라=학습방식</span> · <span class="k-algo">파랑=알고리즘</span> · <span class="k-model">초록=모델</span> 색을 고정해서 씁니다.</p>
+  </div>
+
+  <!-- 큰 그림 -->
+  <section class="block" id="big">
+    <div class="kicker">가장 큰 그림부터</div>
+    <h2 class="title">한 줄로 보는 관계</h2>
+    <p class="lead-p"><span class="k-learn">학습 방식</span>을 정하고 → 그 안에서 <span class="k-algo">알고리즘</span>을 고르고 →
+      <span class="k-data">데이터</span>로 학습시키면 → <span class="k-model">모델</span>이 완성돼요.</p>
+
+    <div class="flow">
+      <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arw" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" fill="#9AA8A0"/>
+          </marker>
+        </defs>
+        <!-- 1 학습방식 -->
+        <rect x="20" y="60" width="180" height="80" rx="14" fill="var(--learn-bg)" stroke="var(--learn)" stroke-width="2"/>
+        <text x="110" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="var(--learn)">① 학습 방식</text>
+        <text x="110" y="115" text-anchor="middle" font-size="12" fill="var(--ink-soft)">정답이 있나 없나</text>
+        <!-- 2 알고리즘 -->
+        <rect x="250" y="60" width="180" height="80" rx="14" fill="var(--algo-bg)" stroke="var(--algo)" stroke-width="2"/>
+        <text x="340" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="var(--algo)">② 알고리즘</text>
+        <text x="340" y="115" text-anchor="middle" font-size="12" fill="var(--ink-soft)">배우는 방법(레시피)</text>
+        <!-- 3 데이터+학습 -->
+        <rect x="480" y="60" width="180" height="80" rx="14" fill="var(--data-bg)" stroke="var(--data)" stroke-width="2"/>
+        <text x="570" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="var(--data)">③ 데이터로 학습</text>
+        <text x="570" y="115" text-anchor="middle" font-size="12" fill="var(--ink-soft)">재료를 넣고 훈련</text>
+        <!-- 4 모델 -->
+        <rect x="710" y="60" width="180" height="80" rx="14" fill="var(--model-bg)" stroke="var(--model)" stroke-width="2.5"/>
+        <text x="800" y="92" text-anchor="middle" font-size="15" font-weight="700" fill="var(--model)">④ 모델 완성</text>
+        <text x="800" y="115" text-anchor="middle" font-size="12" fill="var(--ink-soft)">예측하는 완제품</text>
+        <!-- arrows -->
+        <line x1="205" y1="100" x2="243" y2="100" stroke="#9AA8A0" stroke-width="2.5" marker-end="url(#arw)"/>
+        <line x1="435" y1="100" x2="473" y2="100" stroke="#9AA8A0" stroke-width="2.5" marker-end="url(#arw)"/>
+        <line x1="665" y1="100" x2="703" y2="100" stroke="#9AA8A0" stroke-width="2.5" marker-end="url(#arw)"/>
+        <text x="450" y="175" text-anchor="middle" font-size="12.5" fill="var(--ink-soft)">같은 ②알고리즘이라도, ③넣는 데이터가 다르면 → 다른 ④모델이 나와요</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 세 단어 -->
+  <section class="block" id="three">
+    <div class="kicker">각 단어의 정체</div>
+    <h2 class="title">세 단어, 한 줄 정의</h2>
+    <div class="three">
+      <div class="concept l">
+        <span class="tag">보라 · 큰 분류</span>
+        <h3>학습 방식</h3>
+        <p class="one"><b>무엇을 보고 배우나</b> — 정답(라벨)이 있으면 지도학습, 없으면 비지도학습.</p>
+        <p class="eg">예: 지도학습 · 비지도학습 · 강화학습</p>
+      </div>
+      <div class="concept a">
+        <span class="tag">파랑 · 방법</span>
+        <h3>알고리즘</h3>
+        <p class="one"><b>어떻게 배우나</b> — 학습하는 절차·방법. 요리의 <b>레시피</b>에 해당해요.</p>
+        <p class="eg">예: kNN · 결정트리 · 선형회귀 · 로지스틱회귀 · K-평균</p>
+      </div>
+      <div class="concept m">
+        <span class="tag">초록 · 결과물</span>
+        <h3>모델</h3>
+        <p class="one"><b>배운 결과물</b> — 알고리즘이 데이터로 학습을 <b>끝낸 뒤</b> 나온, 예측하는 완제품.</p>
+        <p class="eg">예: 펭귄 분류 모델 · 성적 예측 모델</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 요리 비유 -->
+  <section class="block" id="cook">
+    <div class="kicker">가장 헷갈리는 둘 — 알고리즘 ≠ 모델</div>
+    <h2 class="title">🍳 요리로 이해하기</h2>
+    <div class="grid2">
+      <div>
+        <div class="analogy">
+          <b class="h">쉬운 비유</b>
+          <span class="k-algo">알고리즘</span>은 <b>레시피</b>(종이에 적힌 방법)예요. 여기에 <span class="k-data">데이터</span>라는 <b>재료</b>를 넣고
+          <b>학습(요리)</b>을 하면, <span class="k-model">모델</span>이라는 <b>완성된 요리</b>가 나와요.
+          레시피만으로는 먹을 수 없듯, <b>알고리즘만으로는 예측을 못 해요.</b> 데이터로 학습을 끝내야 <b>모델</b>이 됩니다.
+        </div>
+        <div class="keypoint">
+          🔑 <b>핵심:</b> 같은 <span class="k-algo">레시피(알고리즘)</span>라도 <span class="k-data">재료(데이터)</span>가 다르면
+          <span class="k-model">다른 요리(모델)</span>가 나와요.<br>
+          → <span class="k-algo">kNN</span> + 펭귄 데이터 = <span class="k-model">펭귄 분류 모델</span> /
+          <span class="k-algo">kNN</span> + 붓꽃 데이터 = <span class="k-model">붓꽃 분류 모델</span>
+        </div>
+      </div>
+      <div class="viz-box">
+        <svg viewBox="0 0 320 250" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arw2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#9AA8A0"/></marker>
+          </defs>
+          <!-- 레시피 -->
+          <rect x="20" y="20" width="120" height="70" rx="12" fill="var(--algo-bg)" stroke="var(--algo)" stroke-width="2"/>
+          <text x="80" y="48" text-anchor="middle" font-size="22">📋</text>
+          <text x="80" y="72" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--algo)">알고리즘(레시피)</text>
+          <!-- 재료 -->
+          <rect x="180" y="20" width="120" height="70" rx="12" fill="var(--data-bg)" stroke="var(--data)" stroke-width="2"/>
+          <text x="240" y="48" text-anchor="middle" font-size="22">🥕</text>
+          <text x="240" y="72" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--data)">데이터(재료)</text>
+          <!-- 화살표 아래로 -->
+          <line x1="80" y1="92" x2="150" y2="130" stroke="#9AA8A0" stroke-width="2.5" marker-end="url(#arw2)"/>
+          <line x1="240" y1="92" x2="170" y2="130" stroke="#9AA8A0" stroke-width="2.5" marker-end="url(#arw2)"/>
+          <!-- 학습 -->
+          <rect x="95" y="135" width="130" height="48" rx="12" fill="var(--paper)" stroke="var(--ink-soft)" stroke-dasharray="4 4"/>
+          <text x="160" y="164" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink-soft)">🍳 학습(요리)</text>
+          <!-- 화살표 -->
+          <line x1="160" y1="185" x2="160" y2="205" stroke="#9AA8A0" stroke-width="2.5" marker-end="url(#arw2)"/>
+          <!-- 모델 -->
+          <rect x="80" y="208" width="160" height="36" rx="12" fill="var(--model-bg)" stroke="var(--model)" stroke-width="2.5"/>
+          <text x="160" y="231" text-anchor="middle" font-size="13" font-weight="700" fill="var(--model)">🍲 모델(완성된 요리)</text>
+        </svg>
+        <div class="viz-cap">레시피 + 재료 → 요리 → 완성. 모델은 "학습을 끝낸 결과"예요.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 지도 vs 비지도 -->
+  <section class="block" id="sup">
+    <div class="kicker">학습 방식을 가르는 기준</div>
+    <h2 class="title">지도학습 vs 비지도학습 — 정답이 있나?</h2>
+    <p class="lead-p">가장 큰 갈림길은 딱 하나예요: <b>데이터에 정답(라벨)이 붙어 있는가?</b></p>
+    <div class="cards2">
+      <div class="card" style="border-top:4px solid var(--algo)">
+        <span class="tag" style="background:var(--algo-bg); color:var(--algo);">지도학습 (정답 O)</span>
+        <h3>정답지를 보며 배워요</h3>
+        <svg viewBox="0 0 300 96" style="margin-top:8px">
+          <g font-family="JetBrains Mono, monospace" font-size="11">
+            <rect x="0" y="0" width="300" height="24" rx="6" fill="var(--algo-bg)"/>
+            <text x="10" y="16" fill="var(--algo)" font-weight="700">특징(부리·몸무게)</text>
+            <text x="238" y="16" fill="var(--algo)" font-weight="700">정답</text>
+            <rect x="0" y="28" width="300" height="22" rx="6" fill="var(--paper)" stroke="var(--border)"/>
+            <text x="10" y="43" fill="var(--ink-soft)">39mm · 3.2kg</text><text x="238" y="43" fill="var(--ink)">아델리</text>
+            <rect x="0" y="54" width="300" height="22" rx="6" fill="var(--paper)" stroke="var(--border)"/>
+            <text x="10" y="69" fill="var(--ink-soft)">50mm · 5.1kg</text><text x="238" y="69" fill="var(--ink)">젠투</text>
+          </g>
+        </svg>
+        <p><b style="color:var(--ink)">분류</b>(갈래 맞히기)와 <b style="color:var(--ink)">회귀</b>(숫자 맞히기)가 여기 속해요. 예: kNN·결정트리·선형회귀·로지스틱회귀.</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--data)">
+        <span class="tag" style="background:var(--data-bg); color:var(--data);">비지도학습 (정답 X)</span>
+        <h3>정답 없이 스스로 묶어요</h3>
+        <svg viewBox="0 0 300 96" style="margin-top:8px">
+          <circle cx="55" cy="35" r="6" fill="var(--data)"/><circle cx="75" cy="55" r="6" fill="var(--data)"/><circle cx="45" cy="60" r="6" fill="var(--data)"/>
+          <circle cx="165" cy="30" r="6" fill="var(--learn)"/><circle cx="185" cy="50" r="6" fill="var(--learn)"/><circle cx="155" cy="58" r="6" fill="var(--learn)"/>
+          <circle cx="250" cy="45" r="6" fill="var(--model)"/><circle cx="235" cy="65" r="6" fill="var(--model)"/><circle cx="265" cy="66" r="6" fill="var(--model)"/>
+          <ellipse cx="58" cy="50" rx="32" ry="26" fill="none" stroke="var(--data)" stroke-dasharray="3 4"/>
+          <ellipse cx="168" cy="46" rx="32" ry="26" fill="none" stroke="var(--learn)" stroke-dasharray="3 4"/>
+          <ellipse cx="250" cy="58" rx="30" ry="24" fill="none" stroke="var(--model)" stroke-dasharray="3 4"/>
+        </svg>
+        <p><b style="color:var(--ink)">군집</b>(비슷한 것끼리 묶기)이 대표예요. 사람이 정답을 안 줘도 스스로 무리를 찾아요. 예: K-평균.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 한눈에 지도 -->
+  <section class="block" id="map">
+    <div class="kicker">전부 연결해서 보기</div>
+    <h2 class="title">한눈에 지도 — 방식 → 문제 → 알고리즘 → 모델</h2>
+    <p class="lead-p">왼쪽에서 오른쪽으로 읽으면 관계가 한 줄로 이어져요.</p>
+    <div class="tbl-wrap">
+      <table class="map">
+        <thead><tr>
+          <th><span class="pill l">학습 방식</span></th><th>문제 유형</th>
+          <th><span class="pill a">알고리즘(방법)</span></th><th><span class="pill m">완성되는 모델(예)</span></th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td rowspan="2"><b style="color:var(--learn)">지도학습</b><br><span style="color:var(--ink-soft);font-size:12.5px">정답 O</span></td>
+            <td><b>분류</b><br><span style="color:var(--ink-soft);font-size:12.5px">갈래 맞히기</span></td>
+            <td>kNN · 결정트리 · 로지스틱회귀</td>
+            <td><span style="color:var(--model)">스팸 분류 모델</span>, 펭귄 분류 모델</td>
+          </tr>
+          <tr>
+            <td><b>회귀</b><br><span style="color:var(--ink-soft);font-size:12.5px">숫자 맞히기</span></td>
+            <td>선형회귀</td>
+            <td><span style="color:var(--model)">성적 예측 모델</span>, 판매량 예측 모델</td>
+          </tr>
+          <tr>
+            <td><b style="color:var(--data)">비지도학습</b><br><span style="color:var(--ink-soft);font-size:12.5px">정답 X</span></td>
+            <td><b>군집</b><br><span style="color:var(--ink-soft);font-size:12.5px">비슷한 것끼리</span></td>
+            <td>K-평균</td>
+            <td><span style="color:var(--model)">고객 그룹 모델</span>, 모둠 구성 모델</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <a class="crosslink" href="ml-algorithms.html">→ 각 알고리즘을 그림으로 더 자세히 보기 : 「알고리즘 지도(5개 비교)」</a>
+  </section>
+
+  <!-- 자주 하는 오해 -->
+  <section class="block" id="myth">
+    <div class="kicker">시험·발표 전에 꼭</div>
+    <h2 class="title">자주 하는 오해 3가지</h2>
+    <div class="myth">
+      <div class="row" style="border-left-color:var(--model)">
+        <div class="q">❌ "모델이랑 알고리즘이 같은 말 아니에요?"</div>
+        <div class="a">→ 달라요. <span class="k-algo">알고리즘</span>은 <b>배우는 방법</b>, <span class="k-model">모델</span>은 <b>학습을 끝낸 결과물</b>. 레시피(방법)와 완성된 요리(결과)의 차이예요.</div>
+      </div>
+      <div class="row" style="border-left-color:var(--learn)">
+        <div class="q">❌ "지도학습도 알고리즘 이름 아니에요?"</div>
+        <div class="a">→ 아니에요. <span class="k-learn">지도/비지도</span>는 <b>정답 유무로 나눈 큰 분류</b>이고, 그 안에 kNN·결정트리 같은 <span class="k-algo">구체적 알고리즘</span>이 들어 있어요.</div>
+      </div>
+      <div class="row" style="border-left-color:var(--algo)">
+        <div class="q">❌ "로지스틱 <b>회귀</b>니까 숫자를 예측하는 회귀죠?"</div>
+        <div class="a">→ 이름만 회귀예요. 실제로는 확률을 계산해 <b>둘 중 하나로 나누는 분류</b> 알고리즘입니다.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>정보 수업 자료 · 개념 지도(모델·알고리즘·학습 방식) — Ⅱ. 인공지능과 학습</footer>
+
+</body>
+</html>
