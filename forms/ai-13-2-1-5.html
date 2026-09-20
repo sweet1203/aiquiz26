@@ -28,6 +28,22 @@
     .hint { color:var(--muted); font-size:.92rem; margin:8px 0 0; }
     .toast { min-height:28px; margin-top:12px; color:var(--warn); font-weight:700; }
     @media (max-width:640px) { main { margin:20px auto; } .card { padding:20px; border-radius:20px; } .row { grid-template-columns:1fr; gap:0; } }
+    /* ---- 지표 포인트 자료 ---- */
+    .pointbox { margin:0 0 22px; padding:18px; border:1px solid #dbeafe; border-radius:18px; background:#f8fbff; }
+    .pointbox h2 { margin:0 0 4px; font-size:1.12rem; }
+    .pointbox .sub { color:var(--muted); font-size:.9rem; margin:0 0 12px; }
+    .cmgrid { display:grid; grid-template-columns:auto 1fr 1fr; gap:6px; margin:8px 0 2px; font-size:.82rem; text-align:center; }
+    .cmgrid div { padding:9px 6px; border-radius:9px; background:#fff; border:1px solid var(--line); }
+    .cmgrid .hd { background:#eef4ff; font-weight:700; border:0; display:flex; align-items:center; justify-content:center; }
+    .cmgrid .tp, .cmgrid .tn { background:#e7f7ee; }
+    .cmgrid .fp, .cmgrid .fn { background:#fdeaee; }
+    .metric { margin:10px 0; padding:12px 14px; border-radius:14px; background:#fff; border:1px solid var(--line); border-left:5px solid var(--accent); }
+    .metric .name { font-weight:800; }
+    .metric p { margin:4px 0 0; font-size:.95rem; }
+    .metric .formula { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.85rem; color:var(--muted); margin-top:5px; }
+    .twocase { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+    @media (max-width:640px) { .twocase { grid-template-columns:1fr; } }
+    .twocase .c { padding:12px; border-radius:12px; border:1px solid var(--line); background:#fff; font-size:.92rem; }
   </style>
 </head>
 <body>
@@ -36,6 +52,42 @@
       <p class="eyebrow">인공지능 기초 · 생기부 기록용 질문폼</p>
       <h1>모델 학습과 성능 평가</h1>
       <p class="meta">Ⅱ. 인공지능과 학습 · 2-1-5 · 76~81쪽</p>
+
+      <section class="pointbox">
+        <h2>📌 30초 정리 — 정확도·정밀도·재현율</h2>
+        <p class="sub">예시 하나로 감을 잡고 아래 질문에 답해요. <b>스팸 분류</b> — 실제 스팸 10개, 정상 90개일 때</p>
+        <div class="cmgrid">
+          <div class="hd"></div><div class="hd">모델: 스팸 👎</div><div class="hd">모델: 정상 👍</div>
+          <div class="hd">진짜 스팸</div><div class="tp"><b>TP 6</b><br>맞게 잡음</div><div class="fn"><b>FN 4</b><br>놓침 😵</div>
+          <div class="hd">진짜 정상</div><div class="fp"><b>FP 2</b><br>헛알람 😅</div><div class="tn"><b>TN 88</b><br>잘 통과</div>
+        </div>
+        <p class="sub" style="margin:6px 0 0">TP=제대로 잡음 · FP=아닌데 잡음(헛알람) · FN=맞는데 놓침 · TN=제대로 통과</p>
+
+        <div class="metric" style="border-left-color:#2563eb">
+          <div class="name">✔ 정확도 (Accuracy) — "얼마나 자주 맞히나"</div>
+          <p>전체 100개 중 맞게 판정한 비율.</p>
+          <div class="formula">(TP+TN) / 전체 = (6+88)/100 = 0.94</div>
+          <p style="color:var(--muted)">⚠ 스팸이 원래 드물면, 전부 "정상"이라 찍어도 정확도가 높게 나와요 → <b>정확도만 믿으면 안 됨.</b></p>
+        </div>
+        <div class="metric" style="border-left-color:#1e9e5a">
+          <div class="name">🎯 정밀도 (Precision) — "찍은 게 진짜일 확률"</div>
+          <p>모델이 "스팸!"이라 한 것 중 진짜 스팸 비율.</p>
+          <div class="formula">TP / (TP+FP) = 6/8 = 0.75</div>
+          <p style="color:var(--muted)">→ 낮으면 <b>헛알람(FP)</b>이 많다는 뜻. <b>잘못 잡으면 곤란할 때</b> 중요.</p>
+        </div>
+        <div class="metric" style="border-left-color:#e8871e">
+          <div class="name">🔍 재현율 (Recall) — "놓치지 않는 능력"</div>
+          <p>진짜 스팸 중 모델이 잡아낸 비율.</p>
+          <div class="formula">TP / (TP+FN) = 6/10 = 0.60</div>
+          <p style="color:var(--muted)">→ 낮으면 <b>놓침(FN)</b>이 많다는 뜻. <b>놓치면 큰일 날 때</b> 중요.</p>
+        </div>
+
+        <div class="twocase">
+          <div class="c">🩺 <b>질병 진단</b> → <b style="color:#e8871e">재현율</b> 중요<br><span style="color:var(--muted)">환자를 "정상"이라 놓치면(FN) 치료를 못 받아 위험. 조금 과하게 잡더라도 놓치면 안 됨.</span></div>
+          <div class="c">📧 <b>스팸 분류</b> → <b style="color:#1e9e5a">정밀도</b> 중요<br><span style="color:var(--muted)">중요한 정상 메일을 스팸으로 잘못 버리면(FP) 손해. 확실할 때만 스팸 처리.</span></div>
+        </div>
+      </section>
+
       <p class="warning">Apps Script 웹 앱 URL이 아직 설정되지 않았습니다. 선생님이 배포 URL을 넣은 뒤 사용하세요.</p>
       <form id="reflectionForm" method="post" action="https://script.google.com/macros/s/AKfycbyXgCq6W2zzT7fxPiblqG6wA-e3CpCgztuRKrIQkExMn6oQJ9oxd-U--dVB-5H3_fZF/exec" target="hiddenSubmitFrame">
         <input type="hidden" name="course" value="인공지능 기초">
