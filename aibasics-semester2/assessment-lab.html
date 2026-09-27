@@ -91,6 +91,20 @@
   </div>
 </details>
 
+<details class="guide" open>
+  <summary>🧩 코드 보기 — 빈칸(<code>____</code>)에 아래에서 골라 <b>직접 입력</b>하세요 (붙여넣기 불가)</summary>
+  <div class="g">
+    코드 틀은 오른쪽 에디터에 있습니다. <b>빈칸만</b> 아래 보기를 보고 채우면 실행됩니다.<br><br>
+    <b>① 목표·열 이름</b> — <code>df.head()</code> 로 열을 확인해 그대로 입력<br>
+    　·　예: <code>target = 'use_bike'</code> ／ <code>수치열 = ['temperature', 'humidity', 'distance_km']</code><br>
+    <b>② 그래프 종류</b> — <code>'box'</code> (상자그림) ／ <code>'scatter'</code> (산점도)<br>
+    <b>③ 분할 비율(7:3)</b> — <code>test_size=0.3</code><br>
+    <b>④ 모델 학습</b> — <code>model.fit(X_train, y_train)</code><br>
+    <br>
+    <b>참고 함수</b>(이미 틀에 들어 있음) — <code>df.isnull().sum()</code> · <code>df.dropna(axis=0)</code> · <code>df.corr()</code> · <code>train_test_split(...)</code> · <code>confusion_matrix(y_test, pred)</code> · <code>classification_report(y_test, pred)</code>
+  </div>
+</details>
+
 <div class="wrap">
   <div class="card">
     <h2>코드 (직접 입력 · 붙여넣기 불가)</h2>
@@ -145,34 +159,52 @@ def run_user(code):
     return [buf.getvalue(), imgs]
 </script>
 
-<!-- 스캐폴드(시작 코드) -->
-<script id="scaffold-py" type="text/plain"># 업로드한 CSV가 df 에 들어 있습니다.  (붙여넣기는 막혀 있어요 — 직접 타이핑)
-# 아래 순서대로 작성하고, 각 단계 결과를 print / 그래프로 남기세요.
+<!-- 스캐폴드(시작 코드: 빈칸 채우기형) -->
+<script id="scaffold-py" type="text/plain"># 업로드한 CSV가 df 에 들어 있습니다.  '____' 빈칸만 '코드 보기'를 참고해 채우세요.
+import matplotlib.pyplot as plt
+
+# ① 내 데이터의 열 이름 채우기 (df.head() 로 먼저 확인)
+target = '____'                 # 예측 목표(종속변수) 열 이름
+수치열 = ['____', '____', '____']   # 수치형 독립변수 열 이름들
 
 # ===== 요소1 =====
-# 1) 결측치 개수 확인 + 결측 있는 세 열 처리
-print(df.head())
+# 1) 결측치 확인 → 결측 있는 행 삭제
 print(df.isnull().sum())
+df = df.dropna(axis=0)
+print('처리 후:', df.shape)
 
-# 2) 이상치 확인 (상자그림 등)
+# 2) 이상치 — 상자그림 (② 그래프 종류 채우기)
+df[수치열].plot(kind='____')
+plt.title('outliers'); plt.show()
 
+# 3) 변수 유형·역할 분류 → 아래 주석에 직접 적기
+#    수치형: ____ / 범주형: ____ / 독립변수: ____ / 종속변수: ____
 
-# 3) 변수 유형·역할 분류 (수치형/범주형, 독립/종속)  ← 표나 주석으로 정리
-
-
-# 4) 핵심변수 찾기 (산점도·상관 히트맵)  ★가장 중요
-
+# 4) 핵심변수 찾기 — 상관 히트맵 (★가장 중요)
+corr = df[수치열 + [target]].corr()
+plt.figure(); plt.imshow(corr, cmap='coolwarm', vmin=-1, vmax=1); plt.colorbar()
+plt.xticks(range(len(corr)), corr.columns, rotation=45, ha='right')
+plt.yticks(range(len(corr)), corr.columns); plt.title('correlation'); plt.show()
+print(corr[target])             # 값이 가장 큰 변수 → 핵심변수: ____
 
 # ===== 요소2 =====
-# 5) 훈련:테스트 = 7:3 분할 + 모델 학습
-# from sklearn.model_selection import train_test_split
-# from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import confusion_matrix, classification_report
 
-# 6) 혼동행렬 (TP·FP·FN·TN)
-# from sklearn.metrics import confusion_matrix
+X = df[수치열]
+y = df[target]
+# 5) 훈련:테스트 = 7:3 분할 (③ 비율 채우기)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=____, random_state=7)
 
-# 7) 정확도·정밀도·재현율
-# from sklearn.metrics import accuracy_score, precision_score, recall_score
+model = DecisionTreeClassifier(random_state=7)
+model.____(X_train, y_train)    # ④ 모델 학습 (fit)
+pred = model.predict(X_test)
+
+# 6~7) 혼동행렬 · 정확도/정밀도/재현율
+print(confusion_matrix(y_test, pred))
+print(classification_report(y_test, pred, digits=3))
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
