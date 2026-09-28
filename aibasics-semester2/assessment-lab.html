@@ -101,7 +101,7 @@
     <b>③ 분할 비율(7:3)</b> — <code>test_size=0.3</code><br>
     <b>④ 모델 학습</b> — <code>model.fit(X_train, y_train)</code><br>
     <br>
-    <b>참고 함수</b>(이미 틀에 들어 있음) — <code>df.isnull().sum()</code> · <code>df.dropna(axis=0)</code> · <code>df.corr()</code> · <code>train_test_split(...)</code> · <code>confusion_matrix(y_test, pred)</code> · <code>classification_report(y_test, pred)</code>
+    <b>참고 함수</b>(이미 틀에 들어 있음) — <code>df.isnull().sum()</code> · <code>df[열].fillna(df[열].mean())</code> · <code>df.corr()</code> · <code>train_test_split(...)</code> · <code>confusion_matrix(y_test, pred)</code> · <code>classification_report(y_test, pred)</code>
   </div>
 </details>
 
@@ -168,10 +168,11 @@ target = '____'                 # 예측 목표(종속변수) 열 이름
 수치열 = ['____', '____', '____']   # 수치형 독립변수 열 이름들
 
 # ===== 요소1 =====
-# 1) 결측치 확인 → 결측 있는 행 삭제
+# 1) 결측치 확인 → 수치형은 평균으로 채우기 (중앙값·행삭제 등 다른 방법도 가능)
 print(df.isnull().sum())
-df = df.dropna(axis=0)
-print('처리 후:', df.shape)
+for c in 수치열:
+    df[c] = df[c].fillna(df[c].mean())
+print('처리 후 결측:', df[수치열].isnull().sum().sum())
 
 # 2) 이상치 — 상자그림 (② 그래프 종류 채우기)
 df[수치열].plot(kind='____')
@@ -196,9 +197,9 @@ X = df[수치열]
 y = df[target]
 # 5) 훈련:테스트 = 7:3 분할 (③ 비율 채우기)
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=____, random_state=7)
+    X, y, test_size=____, random_state=7, stratify=y)
 
-model = DecisionTreeClassifier(random_state=7)
+model = DecisionTreeClassifier(random_state=7, max_depth=4)
 model.____(X_train, y_train)    # ④ 모델 학습 (fit)
 pred = model.predict(X_test)
 
