@@ -68,8 +68,23 @@
   </div>
   <div><label>학번</label><input id="studentNo" inputmode="numeric" maxlength="5" placeholder="예: 20101" style="width:110px"></div>
   <div><label>이름</label><input id="studentName" placeholder="이름" style="width:110px"></div>
-  <div><label>내 CSV 파일 올리기</label><input id="csvFile" class="file" type="file" accept=".csv,text/csv"></div>
-  <div id="csvInfo">아직 CSV를 올리지 않았어요.</div>
+  <div><label>내 데이터 번호 (선생님이 배정)</label>
+    <select id="dataNo">
+      <option value="" selected disabled>번호 선택</option>
+      <option value="01">1번 · 공유자전거</option>
+      <option value="02">2번 · 온라인쇼핑</option>
+      <option value="03">3번 · 도서관</option>
+      <option value="04">4번 · 영상콘텐츠</option>
+      <option value="05">5번 · 대중교통</option>
+      <option value="06">6번 · 식물생육</option>
+      <option value="07">7번 · 건물에너지</option>
+      <option value="08">8번 · 여행서비스</option>
+      <option value="09">9번 · 스포츠시설</option>
+      <option value="10">10번 · 배달서비스</option>
+    </select>
+  </div>
+  <div><label>또는 파일 올리기</label><input id="csvFile" class="file" type="file" accept=".csv,text/csv"></div>
+  <div id="csvInfo">번호를 선택하거나 CSV를 올리세요.</div>
 </div>
 
 <details class="guide">
@@ -239,8 +254,22 @@ cm.on("beforeChange",(c,ch)=>{ if(ch.origin==="paste"){ ch.cancel(); flash(); } 
 
 $("#reset").addEventListener("click",()=>{ if(confirm("작성한 코드를 지우고 스캐폴드로 되돌릴까요?")) cm.setValue(scaffoldPy); });
 
-// ── CSV 업로드 ──
+// ── 데이터 불러오기 (번호 선택 / 파일 업로드) ──
 let csvName = "", csvLoaded = false;
+const TOPIC = {"01":"공유자전거","02":"온라인쇼핑","03":"도서관","04":"영상콘텐츠","05":"대중교통","06":"식물생육","07":"건물에너지","08":"여행서비스","09":"스포츠시설","10":"배달서비스"};
+$("#dataNo").addEventListener("change", async e=>{
+  const num = e.target.value; if(!num) return;
+  if(!pyodide){ $("#csvInfo").textContent = "⏳ 파이썬 준비 후 다시 선택하세요."; return; }
+  $("#csvInfo").textContent = "⏳ 데이터 불러오는 중…";
+  try{
+    const text = await fetch("data/" + num + ".csv").then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); });
+    pyodide.globals.set("CSV_TEXT", text);
+    const dim = pyodide.runPython("load_csv(CSV_TEXT)").toJs();
+    csvLoaded = true; csvName = `${num}번(${TOPIC[num]||""})`;
+    $("#csvFile").value = "";
+    $("#csvInfo").textContent = `✅ ${csvName} — ${dim[0]}행 × ${dim[1]}열 불러옴`;
+  }catch(err){ csvLoaded=false; $("#csvInfo").textContent = "⚠ 불러오기 실패: " + err; }
+});
 $("#csvFile").addEventListener("change", async e=>{
   const f = e.target.files[0]; if(!f) return;
   const text = await f.text(); csvName = f.name;
