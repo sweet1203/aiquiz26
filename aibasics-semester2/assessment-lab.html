@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>1차 수행평가 · 데이터 전처리와 모델 분석</title>
 <style>
-  :root{--bg:#f4f7fb;--panel:#1e293b;--line:#334155;--ink:#e2e8f0;--sub:#94a3b8;
-    --accent:#0891b2;--accent2:#059669;--warn:#b42318;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  :root{--bg:#f4f7fb;--panel:#1e293b;--line:#334155;--ink:#e2e8f0;--sub:#94a3b8;--accent:#0891b2;--accent2:#059669;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:#0f172a;font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","맑은 고딕",system-ui,sans-serif;}
   header{background:linear-gradient(135deg,#0891b2,#059669);color:#fff;padding:18px 22px;}
@@ -21,98 +20,116 @@
   details.guide summary{cursor:pointer;padding:11px 22px;font-weight:700;font-size:.9rem;color:#0f172a;}
   details.guide .g{padding:0 22px 14px;font-size:.86rem;color:#334155;line-height:1.7;}
   details.guide code{background:#eef2f7;padding:1px 5px;border-radius:4px;font-size:.82rem;}
-  .wrap{max-width:1500px;margin:0 auto;padding:16px 22px 10px;}
-  .cell{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:16px;}
-  .cell-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;background:#0b1220;color:var(--ink);font-size:.95rem;font-weight:700;border-bottom:1px solid var(--line);}
+  .wrap{max-width:1500px;margin:0 auto;padding:14px 22px 6px;}
+  .cell{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:12px;}
+  .cell-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;background:#0b1220;color:var(--ink);font-size:.9rem;font-weight:700;border-bottom:1px solid var(--line);}
   .cell-body{display:grid;grid-template-columns:1fr 1fr;gap:0;}
   @media(max-width:900px){.cell-body{grid-template-columns:1fr;}}
-  .CodeMirror{min-height:230px;height:auto;font-family:var(--mono);font-size:14px;line-height:1.5;}
-  .CodeMirror-scroll{min-height:230px;}
+  .CodeMirror{min-height:110px;height:auto;font-family:var(--mono);font-size:13.5px;line-height:1.5;}
+  .CodeMirror-scroll{min-height:110px;}
   .editor-ta{display:none;}
-  .out{min-height:230px;max-height:420px;overflow:auto;padding:12px 14px;background:#fff;border-left:1px solid var(--line);}
-  .out pre{margin:0 0 10px;font-family:var(--mono);font-size:12.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:#0f172a;background:#f1f5f9;padding:10px;border-radius:8px;}
-  .out img{max-width:100%;border:1px solid #e2e8f0;border-radius:8px;margin:0 0 10px;display:block;}
-  .out .ph{color:#94a3b8;font-size:.85rem;}
-  button{background:var(--accent);color:#fff;border:0;font-weight:700;font-size:.88rem;padding:8px 15px;border-radius:9px;cursor:pointer;}
+  .out{min-height:110px;max-height:360px;overflow:auto;padding:10px 12px;background:#fff;border-left:1px solid var(--line);}
+  .out pre{margin:0 0 8px;font-family:var(--mono);font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:#0f172a;background:#f1f5f9;padding:9px;border-radius:8px;}
+  .out img{max-width:100%;border:1px solid #e2e8f0;border-radius:8px;margin:0 0 8px;display:block;}
+  .out .ph{color:#94a3b8;font-size:.82rem;}
+  button{background:var(--accent);color:#fff;border:0;font-weight:700;font-size:.85rem;padding:7px 14px;border-radius:9px;cursor:pointer;}
   button:disabled{opacity:.45;cursor:default;} button.ghost{background:#334155;} button.save{background:var(--accent2);}
-  .seosul{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:16px 18px;margin:6px 0 16px;max-width:1500px;}
-  .seosul h2{margin:0 0 4px;font-size:1.05rem;color:#0f172a;}
-  .seosul p{margin:4px 0 10px;font-size:.85rem;color:#64748b;line-height:1.6;}
-  .seosul textarea{width:100%;min-height:150px;border:1px solid #cbd5e1;border-radius:12px;padding:12px 14px;font:inherit;font-size:.95rem;line-height:1.6;resize:vertical;}
-  .submitbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;max-width:1500px;margin:0 auto;padding:0 22px 24px;}
+  .formcell{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin:0 auto 12px;max-width:1500px;}
+  .formcell.wrapmargin{margin-left:22px;margin-right:22px;}
+  .formcell h3{margin:0 0 4px;font-size:.98rem;color:#0f172a;}
+  .formcell p{margin:3px 0 8px;font-size:.82rem;color:#64748b;line-height:1.6;}
+  .formcell textarea{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;font:inherit;font-size:.95rem;line-height:1.6;resize:vertical;}
+  #reason{min-height:70px;} #seosul{min-height:150px;}
+  .submitbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;max-width:1500px;margin:0 auto;padding:6px 22px 24px;}
   .refwrap{max-width:1500px;margin:0 auto;padding:0 22px 44px;}
   .refwrap h2{font-size:1rem;color:#334155;margin:0 0 6px;}
-  #refcode{background:#0b1220;color:#dbeafe;border:1px solid var(--line);border-radius:12px;padding:14px 16px;
-    font-family:var(--mono);font-size:12.5px;line-height:1.55;white-space:pre;overflow-x:auto;
-    user-select:none;-webkit-user-select:none;-moz-user-select:none;}
+  #refcode{background:#0b1220;color:#dbeafe;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.55;white-space:pre;overflow-x:auto;user-select:none;-webkit-user-select:none;-moz-user-select:none;}
 </style>
 </head>
 <body>
 <header>
   <h1>🧪 1차 수행평가 · 데이터 전처리와 모델 분석</h1>
-  <p><b>위에서부터 순서대로</b> 셀을 실행하세요. · 🚫 생성형 AI 사용 금지</p>
+  <p><b>①번부터 순서대로</b> 실행하세요. · 🚫 생성형 AI 사용 금지</p>
 </header>
-
-<div class="bar">
-  <span id="status">⏳ 파이썬 환경 불러오는 중… (처음 한 번, 조금 걸려요)</span>
-</div>
-
+<div class="bar"><span id="status">⏳ 파이썬 환경 불러오는 중… (처음 한 번, 조금 걸려요)</span></div>
 <div class="id-row">
-  <div><label>반</label>
-    <select id="className"><option value="" selected disabled>반 선택</option><option>인공지능C</option><option>인공지능F</option><option>인공지능G</option></select>
-  </div>
+  <div><label>반</label><select id="className"><option value="" selected disabled>반 선택</option><option>인공지능C</option><option>인공지능F</option><option>인공지능G</option></select></div>
   <div><label>학번</label><input id="studentNo" inputmode="numeric" maxlength="5" placeholder="예: 20101" style="width:110px"></div>
   <div><label>이름</label><input id="studentName" placeholder="이름" style="width:110px"></div>
   <div><label>내 데이터 번호 (선생님이 배정)</label>
-    <select id="dataNo">
-      <option value="" selected disabled>번호 선택</option>
-      <option value="01">1번</option><option value="02">2번</option><option value="03">3번</option>
-      <option value="04">4번</option><option value="05">5번</option><option value="06">6번</option>
-      <option value="07">7번</option><option value="08">8번</option><option value="09">9번</option>
-      <option value="10">10번</option>
-    </select>
+    <select id="dataNo"><option value="" selected disabled>번호 선택</option>
+    <option value="01">1번</option><option value="02">2번</option><option value="03">3번</option><option value="04">4번</option><option value="05">5번</option>
+    <option value="06">6번</option><option value="07">7번</option><option value="08">8번</option><option value="09">9번</option><option value="10">10번</option></select>
   </div>
   <div id="csvInfo">번호를 선택하세요.</div>
 </div>
-
-<details class="guide">
-  <summary>📋 과제 안내 (요소1 40점 + 요소2 60점) — 셀을 순서대로</summary>
-  <div class="g">
-    <b>셀 ①</b> 데이터 불러와 확인 + 열 이름 정하기(target·수치열)<br>
-    <b>셀 ②</b> 결측치 확인·처리 → 이상치 상자그림<br>
-    <b>셀 ③</b> 핵심변수(상관 히트맵) → 모델 학습 → 혼동행렬·정확도/정밀도/재현율<br>
-    <b>서술</b> 아래 칸에 요소2 서술(5문장 이상) 작성<br>
-    → 다 하면 <b>「📤 온라인 제출」</b>. (그래프까지 남기려면 <b>「💾 파일로 저장」</b>도)
-  </div>
-</details>
 <details class="guide" open>
   <summary>🧩 코드 보기 — 빈칸(<code>____</code>)에 골라 직접 입력</summary>
-  <div class="g">
-    <b>열 이름</b>: <code>df.head()</code>로 확인해 그대로 (예 <code>target = 'use_bike'</code>, <code>수치열 = ['temperature','humidity','distance_km']</code>)<br>
-    <b>그래프</b>: <code>'box'</code>(상자그림) · <b>분할</b>: <code>test_size=0.3</code> · <b>학습</b>: <code>model.fit(X_train, y_train)</code>
-  </div>
+  <div class="g"><b>열 이름</b>: <code>df.head()</code>로 확인 (예 <code>target='use_bike'</code>, <code>수치열=['temperature','humidity','distance_km']</code>) · <b>그래프</b> <code>'box'</code> · <b>결측</b> <code>fillna</code> · <b>비율</b> <code>0.3</code> · <b>지표</b> <code>(TP+TN)/(TP+TN+FP+FN)</code>, <code>TP/(TP+FP)</code>, <code>TP/(TP+FN)</code></div>
 </details>
 
 <div class="wrap">
   <section class="cell">
-    <div class="cell-head"><span>① 데이터 불러오기 · 확인</span><button class="run" data-i="0" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>① 라이브러리 불러오기 (그대로 실행)</span><button class="run" data-i="0" disabled>▶ 실행</button></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta0"></textarea><div class="out" id="out0"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>② 결측치 처리 · 이상치 확인</span><button class="run" data-i="1" disabled>▶ 실행</button></div>
-    <div class="cell-body"><textarea class="editor-ta" id="ta1"></textarea><div class="out" id="out1"><span class="ph">셀 ①을 먼저 실행하세요</span></div></div>
+    <div class="cell-head"><span>② 데이터 확인</span><button class="run" data-i="1" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta1"></textarea><div class="out" id="out1"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>③ 핵심변수 · 모델 · 평가</span><button class="run" data-i="2" disabled>▶ 실행</button></div>
-    <div class="cell-body"><textarea class="editor-ta" id="ta2"></textarea><div class="out" id="out2"><span class="ph">셀 ①②를 먼저 실행하세요</span></div></div>
+    <div class="cell-head"><span>③ 변수 정하기 — 수치형 독립변수 · 종속변수</span><button class="run" data-i="2" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta2"></textarea><div class="out" id="out2"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>④ 결측치 확인</span><button class="run" data-i="3" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta3"></textarea><div class="out" id="out3"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑤ 결측치 처리</span><button class="run" data-i="4" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta4"></textarea><div class="out" id="out4"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑥ 이상치 확인 — 상자그림</span><button class="run" data-i="5" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta5"></textarea><div class="out" id="out5"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑦ 핵심변수 찾기 — 상관 히트맵 (그대로 실행)</span><button class="run" data-i="6" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta6"></textarea><div class="out" id="out6"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑧ 핵심변수 정하기</span><button class="run" data-i="7" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta7"></textarea><div class="out" id="out7"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑨ 모델 학습 — 훈련 : 테스트 = 7 : 3</span><button class="run" data-i="8" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta8"></textarea><div class="out" id="out8"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑩ 정확도 출력 (그대로 실행)</span><button class="run" data-i="9" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta9"></textarea><div class="out" id="out9"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑪ 혼동행렬 출력 (그대로 실행)</span><button class="run" data-i="10" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta10"></textarea><div class="out" id="out10"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑫ 지표 계산 — 계산식을 채우세요</span><button class="run" data-i="11" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta11"></textarea><div class="out" id="out11"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
 </div>
 
-<div class="seosul">
-  <h2>✍️ 요소2 서술 (5문장 이상)</h2>
-  <p>혼동행렬의 <b>FP·FN</b>과 <b>핵심변수</b>를 연결해, 어떤 오류·지표(정밀도/재현율)를 더 중요하게 봐야 할지 <b>자기 수치를 넣어</b> 쓰세요.</p>
-  <textarea id="seosul" data-no-paste="true" placeholder="여기에 직접 작성하세요 (5문장 이상)"></textarea>
-</div>
+<section class="formcell wrapmargin">
+  <h3>⑧-1. 핵심변수 선택 이유</h3>
+  <p>⑧에서 고른 핵심변수를 <b>왜</b> 골랐는지 그래프(상관) 근거로 쓰세요.</p>
+  <textarea id="reason" placeholder="예) OOO가 정답과 상관이 가장 컸다. …"></textarea>
+</section>
+
+<section class="formcell wrapmargin">
+  <h3>⑬. 요소2 서술 (5문장 이상)</h3>
+  <p>혼동행렬(FP·FN)과 지표(정밀도/재현율), 핵심변수를 연결해 <b>자기 수치를 넣어</b> 5문장 이상 쓰세요.</p>
+  <textarea id="seosul" placeholder="여기에 직접 작성하세요 (5문장 이상)"></textarea>
+</section>
 
 <div class="submitbar">
   <button id="submit" class="save" disabled>📤 온라인 제출</button>
@@ -120,119 +137,116 @@
   <button id="reset" class="ghost">스캐폴드 되돌리기</button>
 </div>
 
-<div class="refwrap">
-  <h2>참고 코드</h2>
-  <pre id="refcode"></pre>
-</div>
+<div class="refwrap"><h2>참고 코드</h2><pre id="refcode">import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import confusion_matrix, classification_report
 
-<!-- 파이썬 준비 코드 -->
+df.head()
+
+target = &#x27;____&#x27;
+수치열 = [&#x27;____&#x27;, &#x27;____&#x27;, &#x27;____&#x27;]
+
+print(df.isnull().sum())
+df = df.fillna(df.mean(numeric_only=True))
+
+df[수치열].plot(kind=&#x27;box&#x27;); plt.show()
+
+corr = df[수치열 + [target]].corr()
+plt.imshow(corr); plt.colorbar(); plt.show()
+print(corr[target])
+
+핵심변수 = &#x27;____&#x27;
+
+X = df[수치열]; y = df[target]
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=7, stratify=y)
+model = DecisionTreeClassifier(random_state=7, max_depth=4)
+model.fit(X_train, y_train)
+print(&#x27;정확도:&#x27;, round(model.score(X_test, y_test), 3))
+
+pred = model.predict(X_test)
+cm = confusion_matrix(y_test, pred, labels=[0,1])
+print(cm)
+
+TN, FP = cm[0]; FN, TP = cm[1]
+정확도 = (TP+TN)/(TP+TN+FP+FN)
+정밀도 = TP/(TP+FP)
+재현율 = TP/(TP+FN)
+print(정확도, 정밀도, 재현율)</pre></div>
+
 <script id="setup-py" type="text/plain">
 import io, sys, base64, traceback
 import pandas as pd
 import matplotlib
 matplotlib.use("AGG")
 import matplotlib.pyplot as plt
-
 df = None
 _ENV = {"pd": pd, "plt": plt, "io": io}
-
 def load_csv(text):
     global df
-    df = pd.read_csv(io.StringIO(text))
-    _ENV["df"] = df
+    df = pd.read_csv(io.StringIO(text)); _ENV["df"] = df
     return [int(df.shape[0]), int(df.shape[1])]
-
 def run_user(code):
     buf = io.StringIO(); old = sys.stdout; sys.stdout = buf
     plt.close("all"); imgs = []
     try:
-        if df is None:
-            print("⚠ 먼저 데이터 번호를 선택하세요.")
+        if df is None: print("⚠ 먼저 데이터 번호를 선택하세요.")
         else:
             exec(code, _ENV)
             for num in plt.get_fignums():
-                fig = plt.figure(num); b = io.BytesIO()
-                fig.savefig(b, format="png", bbox_inches="tight", dpi=110)
+                fig = plt.figure(num); b = io.BytesIO(); fig.savefig(b, format="png", bbox_inches="tight", dpi=110)
                 imgs.append(base64.b64encode(b.getvalue()).decode())
-    except Exception:
-        buf.write(traceback.format_exc())
-    finally:
-        sys.stdout = old; plt.close("all")
+    except Exception: buf.write(traceback.format_exc())
+    finally: sys.stdout = old; plt.close("all")
     return [buf.getvalue(), imgs]
 </script>
-
-<!-- 셀별 스캐폴드 -->
-<script id="sc0" type="text/plain"># 데이터 확인 + 열 이름 정하기
-print(df.head())
-print('열 이름:', list(df.columns))
-print(df.dtypes)
-
-target = '____'                 # 예측 목표(종속변수) 열 이름
-수치열 = ['____', '____', '____']   # 수치형 독립변수 3개
-</script>
-<script id="sc1" type="text/plain">import matplotlib.pyplot as plt
-print(df.isnull().sum())
-for c in 수치열:
-    df[c] = df[c].fillna(df[c].mean())
-print('처리 후 결측:', df[수치열].isnull().sum().sum())
-
-df[수치열].plot(kind='____')
-plt.title('outliers'); plt.show()
-</script>
-<script id="sc2" type="text/plain">import matplotlib.pyplot as plt
-corr = df[수치열 + [target]].corr()
-plt.figure(); plt.imshow(corr, cmap='coolwarm', vmin=-1, vmax=1); plt.colorbar()
-plt.xticks(range(len(corr)), corr.columns, rotation=45, ha='right')
-plt.yticks(range(len(corr)), corr.columns); plt.title('correlation'); plt.show()
-print(corr[target])
-
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import confusion_matrix, classification_report
-X = df[수치열]; y = df[target]
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=____, random_state=7, stratify=y)
-model = DecisionTreeClassifier(random_state=7, max_depth=4)
-model.____(X_train, y_train)
-pred = model.predict(X_test)
-print(confusion_matrix(y_test, pred))
-print(classification_report(y_test, pred, digits=3))
-</script>
-
-<!-- 참고 코드 (연습 2-2, 주석 제거) -->
-<script id="refcode-src" type="text/plain">import pandas as pd, numpy as np
+<script id="sc0" type="text/plain">import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import confusion_matrix, classification_report
-
-print(df.isnull().sum())
-df['____'] = df['____'].fillna(df['____'].____())
-print('처리 후 결측:', df.isnull().sum().sum())
-
-수치열 = ['____', '____', '____']
-df[수치열].plot(kind='____', figsize=(7,4))
-plt.title('outliers'); plt.show()
-
-corr = df[수치열 + ['____']].corr(numeric_only=True)
-plt.imshow(corr); plt.colorbar(); plt.show()
-print(corr['____'].sort_values(ascending=False))
-
-X = df[수치열]
-y = df['____']
+print('준비 완료')</script>
+<script id="sc1" type="text/plain"># 데이터를 확인하세요.
+____</script>
+<script id="sc2" type="text/plain">target = '____'                 # 종속변수(정답) 열 이름
+수치열 = ['____', '____', '____']   # 수치형 독립변수 3개</script>
+<script id="sc3" type="text/plain"># 결측치가 몇 개인지 확인하세요
+print(df.isnull().____())</script>
+<script id="sc4" type="text/plain"># 수치형을 평균으로 채웁니다 (삭제하려면  df = df.dropna()  로)
+df = df.____(df.mean(numeric_only=True))
+print('처리 후 결측:', df[수치열].isnull().sum().sum())</script>
+<script id="sc5" type="text/plain"># 그래프 종류를 채우세요
+df[수치열].plot(kind='____')
+plt.title('이상치'); plt.show()</script>
+<script id="sc6" type="text/plain">corr = df[수치열 + [target]].corr()
+plt.imshow(corr, cmap='coolwarm', vmin=-1, vmax=1); plt.colorbar()
+plt.xticks(range(len(corr)), corr.columns, rotation=45, ha='right')
+plt.yticks(range(len(corr)), corr.columns); plt.show()
+print(corr[target])          # 값의 크기(절댓값)가 큰 변수가 핵심변수</script>
+<script id="sc7" type="text/plain"># 위에서 상관이 가장 큰 변수를 핵심변수로 정하세요
+핵심변수 = '____'
+print('내 핵심변수:', 핵심변수)</script>
+<script id="sc8" type="text/plain">X = df[수치열]; y = df[target]
+# 테스트 비율을 채우세요 (7:3 이면 0.3)
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=____, random_state=7, stratify=y)
 model = DecisionTreeClassifier(random_state=7, max_depth=4)
-model.____(X_train, y_train)
-print('시험 정확도:', round(model.score(X_test, y_test), 3))
-
-pred = model.____(X_test)
-cm = confusion_matrix(y_test, pred, labels=[0,1])
+model.fit(X_train, y_train)
+print('학습 완료')</script>
+<script id="sc9" type="text/plain">print('정확도:', round(model.score(X_test, y_test), 3))</script>
+<script id="sc10" type="text/plain">pred = model.predict(X_test)
+cm = confusion_matrix(y_test, pred, labels=[0, 1])
+print('           예측0  예측1')
 print('실제0(TN,FP):', cm[0])
-print('실제1(FN,TP):', cm[1])
-print(classification_report(y_test, pred, digits=3))
-</script>
+print('실제1(FN,TP):', cm[1])</script>
+<script id="sc11" type="text/plain">TN, FP = cm[0]
+FN, TP = cm[1]
+정확도 = ____        # (TP+TN) / (TP+TN+FP+FN)
+정밀도 = ____        # TP / (TP+FP)
+재현율 = ____        # TP / (TP+FN)
+print('정확도', round(정확도,3), '| 정밀도', round(정밀도,3), '| 재현율', round(재현율,3))</script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
@@ -244,137 +258,98 @@ print(classification_report(y_test, pred, digits=3))
 const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbxEkiGsfRXp_3Cig33keU2BeAhRVaCj3XQAIoiyqePhlnfYP5IfuRTO7Xn5eLW-4M3KJA/exec";
 const $ = s => document.querySelector(s);
 const status = $("#status");
-const scaffolds = [$("#sc0").textContent.replace(/^\n/,""), $("#sc1").textContent.replace(/^\n/,""), $("#sc2").textContent.replace(/^\n/,"")];
-const outs = [$("#out0"), $("#out1"), $("#out2")];
+const NC = 12;
+const scaffolds = [...Array(NC)].map((_,i)=> $("#sc"+i).textContent.replace(/^\n/,""));
+const outs = [...Array(NC)].map((_,i)=> $("#out"+i));
 const runBtns = [...document.querySelectorAll(".run")];
-const lastCells = [null, null, null];
-
-// 참고 코드 표시 (읽기 전용)
-$("#refcode").textContent = $("#refcode-src").textContent.replace(/^\n/,"").trimEnd();
-
-// ── 복사·붙여넣기·잘라내기·드래그 무음 차단 ──
+const lastCells = [...Array(NC)].map(()=>null);
+$("#refcode").textContent = $("#refcode").textContent.replace(/^\n/,"").trimEnd();
 function block(e){ e.preventDefault(); e.stopPropagation(); return false; }
-
-// ── CodeMirror 3개 ──
-const cms = ["ta0","ta1","ta2"].map((id,i)=>{
-  const cm = CodeMirror.fromTextArea($("#"+id), {mode:"python",theme:"material-darker",lineNumbers:true,indentUnit:4,tabSize:4});
+const cms = [...Array(NC)].map((_,i)=>{
+  const cm = CodeMirror.fromTextArea($("#ta"+i), {mode:"python",theme:"material-darker",lineNumbers:true,indentUnit:4,tabSize:4});
   cm.setValue(scaffolds[i]); cm.setSize("100%",null);
   const w = cm.getWrapperElement();
   ["paste","drop","copy","cut","contextmenu"].forEach(ev=> w.addEventListener(ev, block, true));
-  cm.on("beforeChange",(c,ch)=>{ if(ch.origin==="paste"){ ch.cancel(); } });
+  cm.on("beforeChange",(c,ch)=>{ if(ch.origin==="paste") ch.cancel(); });
   return cm;
 });
-$("#reset").addEventListener("click",()=>{ if(confirm("세 셀 코드를 되돌릴까요?")) cms.forEach((cm,i)=>cm.setValue(scaffolds[i])); });
-
-// ── 서술 차단 ──
-(function(){ const t=$("#seosul"); let last="";
-  t.addEventListener("input",()=>last=t.value);
+$("#reset").addEventListener("click",()=>{ if(confirm("모든 셀을 되돌릴까요?")) cms.forEach((cm,i)=>cm.setValue(scaffolds[i])); });
+function guardForm(t){ let last=""; t.addEventListener("input",()=>last=t.value);
   ["copy","cut","contextmenu"].forEach(ev=> t.addEventListener(ev, block));
-  t.addEventListener("paste",e=>{e.preventDefault();t.value=last;});
-  t.addEventListener("drop",e=>e.preventDefault());
-  t.addEventListener("beforeinput",e=>{ if(/insertFrom(Paste|Drop|Yank)/.test(e.inputType||"")) e.preventDefault(); });
-})();
-
-// ── 참고 코드 복사 차단 ──
+  t.addEventListener("paste",e=>{e.preventDefault();t.value=last;}); t.addEventListener("drop",e=>e.preventDefault());
+  t.addEventListener("beforeinput",e=>{ if(/insertFrom(Paste|Drop|Yank)/.test(e.inputType||"")) e.preventDefault(); }); }
+guardForm($("#reason")); guardForm($("#seosul"));
 ["copy","cut","contextmenu","selectstart","dragstart"].forEach(ev=> $("#refcode").addEventListener(ev, block));
 
-// ── 데이터 불러오기 (번호 선택) ──
 let csvName="", csvLoaded=false;
-function afterLoad(name,dim){ csvLoaded=true; csvName=name; $("#csvInfo").textContent=`✅ ${name} — ${dim[0]}행 × ${dim[1]}열 불러옴`;
-  $("#submit").disabled=false; $("#save").disabled=false; }
+function afterLoad(name,dim){ csvLoaded=true; csvName=name; $("#csvInfo").textContent=`✅ ${name} — ${dim[0]}행 × ${dim[1]}열 불러옴`; $("#submit").disabled=false; $("#save").disabled=false; }
 $("#dataNo").addEventListener("change", async e=>{
   const num=e.target.value; if(!num) return;
   if(!pyodide){ $("#csvInfo").textContent="⏳ 파이썬 준비 후 다시 선택"; return; }
   $("#csvInfo").textContent="⏳ 불러오는 중…";
   try{ const text=await fetch("data/"+num+".csv").then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.text();});
-    pyodide.globals.set("CSV_TEXT",text); const dim=pyodide.runPython("load_csv(CSV_TEXT)").toJs();
-    afterLoad(`${num}번`,dim);
+    pyodide.globals.set("CSV_TEXT",text); const dim=pyodide.runPython("load_csv(CSV_TEXT)").toJs(); afterLoad(num+"번",dim);
   }catch(err){ csvLoaded=false; $("#csvInfo").textContent="⚠ 실패: "+err; }
 });
-
-// ── Pyodide ──
 let pyodide;
-async function boot(){
-  try{ pyodide=await loadPyodide(); status.textContent="📦 pandas · matplotlib · scikit-learn 불러오는 중…";
-    await pyodide.loadPackage(["pandas","matplotlib","scikit-learn"]);
-    pyodide.runPython($("#setup-py").textContent);
-    status.textContent="✅ 준비 완료 — 번호를 선택하고 셀 ①부터 실행";
-    runBtns.forEach(b=>b.disabled=false);
-  }catch(err){ status.textContent="⚠️ 불러오기 실패: "+err; }
-}
+async function boot(){ try{ pyodide=await loadPyodide(); status.textContent="📦 pandas · matplotlib · scikit-learn 불러오는 중…";
+  await pyodide.loadPackage(["pandas","matplotlib","scikit-learn"]); pyodide.runPython($("#setup-py").textContent);
+  status.textContent="✅ 준비 완료 — 번호를 선택하고 ①부터 실행"; runBtns.forEach(b=>b.disabled=false);
+}catch(err){ status.textContent="⚠️ 불러오기 실패: "+err; } }
 boot();
-
-// ── 셀 실행 ──
 async function runCell(i){
   if(!pyodide) return;
   if(!csvLoaded){ alert("먼저 데이터 번호를 선택하세요."); return; }
   const btn=runBtns[i]; btn.disabled=true; outs[i].innerHTML="<span class='ph'>실행 중…</span>";
-  try{
-    pyodide.globals.set("user_code", cms[i].getValue());
-    const arr=pyodide.runPython("run_user(user_code)").toJs();
-    const text=arr[0], imgs=arr[1]; outs[i].innerHTML="";
+  try{ pyodide.globals.set("user_code", cms[i].getValue());
+    const arr=pyodide.runPython("run_user(user_code)").toJs(); const text=arr[0], imgs=arr[1]; outs[i].innerHTML="";
     if(text&&text.trim()){ const pre=document.createElement("pre"); pre.textContent=text; outs[i].appendChild(pre); }
     (imgs||[]).forEach(b=>{ const im=document.createElement("img"); im.src="data:image/png;base64,"+b; outs[i].appendChild(im); });
-    if(!text.trim()&&(!imgs||!imgs.length)) outs[i].innerHTML="<span class='ph'>출력이 없습니다. print(...)로 남겨 보세요.</span>";
-    lastCells[i]={code:cms[i].getValue(), text, imgs:imgs||[]};
-    status.textContent=`✅ 셀 ${i+1} 완료`;
+    if(!text.trim()&&(!imgs||!imgs.length)) outs[i].innerHTML="<span class='ph'>출력 없음</span>";
+    lastCells[i]={code:cms[i].getValue(), text, imgs:imgs||[]}; status.textContent=`✅ ${i+1}번 완료`;
   }catch(err){ const pre=document.createElement("pre"); pre.style.color="#b91c1c"; pre.textContent=String(err); outs[i].innerHTML=""; outs[i].appendChild(pre); }
   finally{ btn.disabled=false; }
 }
 runBtns.forEach(b=> b.addEventListener("click", ()=>runCell(+b.dataset.i)));
-
 function gather(){
-  const titles=["① 불러오기·확인","② 결측·이상치","③ 핵심변수·모델·평가"];
-  const code=cms.map((cm,i)=>`# ===== ${titles[i]} =====\n`+cm.getValue()).join("\n\n");
-  const result=lastCells.map((c,i)=>`[셀 ${i+1}] ${titles[i]}\n`+(c?c.text:"(실행 안 함)")).join("\n\n");
-  return {code, result, seosul:$("#seosul").value};
+  const code=cms.map((cm,i)=>`# [${i+1}]\n`+cm.getValue()).join("\n\n");
+  const result=lastCells.map((c,i)=>`[${i+1}] `+(c?c.text.trim():"(실행 안 함)")).join("\n");
+  return {code, result, reason:$("#reason").value, seosul:$("#seosul").value};
 }
-
-// ── 온라인 제출 ──
 $("#submit").addEventListener("click", ()=>{
   const cls=$("#className").value, no=$("#studentNo").value.trim(), name=$("#studentName").value.trim();
   if(!cls||!no||!name){ alert("반·학번·이름을 먼저 입력하세요."); return; }
   if(!csvLoaded){ alert("데이터 번호를 선택하세요."); return; }
-  if(!lastCells[2]){ if(!confirm("셀 ③(모델·평가)을 아직 실행하지 않았습니다. 그래도 제출할까요?")) return; }
-  if(!SUBMIT_URL){ alert("아직 온라인 제출 주소가 설정되지 않았습니다."); return; }
+  if(!lastCells[NC-1]){ if(!confirm("마지막 셀을 아직 실행하지 않았습니다. 그래도 제출할까요?")) return; }
   if(!confirm(`${cls} ${no} ${name} · ${csvName} 으로 제출할까요?`)) return;
   const g=gather();
   const form=document.createElement("form"); form.method="POST"; form.action=SUBMIT_URL; form.target="hiddenSubmitFrame";
   const add=(k,v)=>{ const i=document.createElement("input"); i.type="hidden"; i.name=k; i.value=v==null?"":String(v); form.appendChild(i); };
   add("course","인공지능 기초"); add("kind","assessment-lab"); add("className",cls); add("studentNo",no); add("studentName",name);
-  add("dataNo",csvName); add("code",g.code); add("result",g.result); add("seosul",g.seosul);
+  add("dataNo",csvName); add("code",g.code); add("result",g.result); add("reason",g.reason); add("seosul",g.seosul);
   add("submittedAt",new Date().toISOString()); add("userAgent",navigator.userAgent);
   document.body.appendChild(form); form.submit(); form.remove();
-  $("#submit").disabled=true; status.textContent="📤 제출했습니다 — 선생님 안내에 따라 창을 닫아도 됩니다";
-  setTimeout(()=>{ $("#submit").disabled=false; }, 4000);
+  $("#submit").disabled=true; status.textContent="📤 제출했습니다"; setTimeout(()=>{ $("#submit").disabled=false; }, 4000);
 });
-
-// ── 파일로 저장 ──
 $("#save").addEventListener("click", ()=>{
   const cls=$("#className").value, no=$("#studentNo").value.trim(), name=$("#studentName").value.trim();
   if(!cls||!no||!name){ alert("반·학번·이름을 먼저 입력하세요."); return; }
   const esc=s=>(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   const when=new Date().toLocaleString("ko-KR");
-  const titles=["① 불러오기·확인","② 결측·이상치","③ 핵심변수·모델·평가"];
   let cellsHtml="";
   cms.forEach((cm,i)=>{ const c=lastCells[i];
-    cellsHtml+=`<h2>${titles[i]}</h2><h3>코드</h3><pre>${esc(cm.getValue())}</pre><h3>실행 결과</h3><pre>${esc(c?c.text:"(실행 안 함)")}</pre>`;
-    if(c&&c.imgs.length) cellsHtml+=c.imgs.map(b=>`<img src="data:image/png;base64,${b}" style="max-width:100%;border:1px solid #ddd;border-radius:8px;margin:6px 0;display:block">`).join("");
-  });
-  const html=`<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>수행제출 ${esc(no)} ${esc(name)}</title>
-<style>body{font-family:system-ui,'Malgun Gothic',sans-serif;max-width:900px;margin:24px auto;padding:0 16px;color:#0f172a}
-table{border-collapse:collapse;margin:8px 0}td,th{border:1px solid #cbd5e1;padding:6px 12px;text-align:left}
-pre{background:#f1f5f9;padding:12px;border-radius:8px;white-space:pre-wrap;word-break:break-word;font-size:13px}
-h2{font-size:1.05rem;margin-top:22px;border-bottom:2px solid #0891b2;padding-bottom:4px}h3{font-size:.9rem;color:#475569;margin:12px 0 4px}</style></head><body>
+    cellsHtml+=`<h3>[${i+1}]</h3><pre>${esc(cm.getValue())}</pre><pre>${esc(c?c.text:"(실행 안 함)")}</pre>`;
+    if(c&&c.imgs.length) cellsHtml+=c.imgs.map(b=>`<img src="data:image/png;base64,${b}" style="max-width:100%;border:1px solid #ddd;border-radius:8px;margin:6px 0;display:block">`).join(""); });
+  const doc=`<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>수행제출 ${esc(no)} ${esc(name)}</title>
+<style>body{font-family:system-ui,'Malgun Gothic',sans-serif;max-width:900px;margin:24px auto;padding:0 16px}table{border-collapse:collapse}td,th{border:1px solid #cbd5e1;padding:6px 12px}pre{background:#f1f5f9;padding:10px;border-radius:8px;white-space:pre-wrap;word-break:break-word;font-size:12.5px}h3{margin:14px 0 3px;font-size:.9rem;color:#475569}h2{border-bottom:2px solid #0891b2;padding-bottom:4px;font-size:1.05rem}</style></head><body>
 <h1>1차 수행평가 제출물</h1>
-<table><tr><th>반</th><td>${esc(cls)}</td><th>학번</th><td>${esc(no)}</td><th>이름</th><td>${esc(name)}</td></tr>
-<tr><th>데이터</th><td>${esc(csvName)}</td><th>작성 시각</th><td colspan="3">${esc(when)}</td></tr></table>
-${cellsHtml}
-<h2>요소2 서술</h2><pre>${esc($("#seosul").value)||"(미작성)"}</pre>
-</body></html>`;
-  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));
+<table><tr><th>반</th><td>${esc(cls)}</td><th>학번</th><td>${esc(no)}</td><th>이름</th><td>${esc(name)}</td></tr><tr><th>데이터</th><td>${esc(csvName)}</td><th>시각</th><td colspan=3>${esc(when)}</td></tr></table>
+<h2>코드·실행</h2>${cellsHtml}
+<h2>핵심변수 선택 이유</h2><pre>${esc($("#reason").value)||"(미작성)"}</pre>
+<h2>요소2 서술</h2><pre>${esc($("#seosul").value)||"(미작성)"}</pre></body></html>`;
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([doc],{type:"text/html"}));
   a.download=`수행제출_${no}_${name}.html`; document.body.appendChild(a); a.click(); a.remove();
-  status.textContent="💾 저장됨 — 코들에 업로드하세요";
+  status.textContent="💾 저장됨";
 });
 </script>
 </body>
