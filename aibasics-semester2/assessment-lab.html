@@ -127,7 +127,8 @@
     <div class="hint">💡 업로드한 CSV가 <code>df</code>에 들어갑니다. (Tab=들여쓰기)</div>
     <div class="runrow">
       <button id="run" disabled>▶ 실행</button>
-      <button id="save" class="save" disabled>💾 제출물 저장</button>
+      <button id="submit" class="save" disabled>📤 온라인 제출</button>
+      <button id="save" class="ghost" disabled>💾 파일로 저장</button>
       <button id="reset" class="ghost">스캐폴드 되돌리기</button>
     </div>
   </div>
@@ -228,9 +229,13 @@ print(classification_report(y_test, pred, digits=3))
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"></script>
+<iframe name="hiddenSubmitFrame" title="submit" style="display:none"></iframe>
 <script>
+// ▼▼ 선생님: 아래 따옴표 안에 Apps Script 웹앱 배포 URL을 넣으세요 (…/exec) ▼▼
+const SUBMIT_URL = "";
+// ▲▲ 비어 있으면 온라인 제출 대신 '파일로 저장'을 안내합니다 ▲▲
 const $ = s => document.querySelector(s);
-const out = $("#out"), runBtn = $("#run"), saveBtn = $("#save"), status = $("#status");
+const out = $("#out"), runBtn = $("#run"), saveBtn = $("#save"), submitBtn = $("#submit"), status = $("#status");
 const setupPy = $("#setup-py").textContent;
 const scaffoldPy = $("#scaffold-py").textContent.replace(/^\n/,"");
 
@@ -309,7 +314,7 @@ runBtn.addEventListener("click", async ()=>{
     (imgs||[]).forEach(b64=>{ const img=document.createElement("img"); img.src="data:image/png;base64,"+b64; out.appendChild(img); });
     if(!text.trim() && (!imgs||!imgs.length)) out.innerHTML="<p style='color:#94a3b8'>출력이 없습니다. print(...) 로 결과를 남겨 보세요.</p>";
     lastRun = { code: cm.getValue(), text, imgs: imgs||[] };
-    saveBtn.disabled = false;
+    saveBtn.disabled = false; submitBtn.disabled = false;
     status.textContent="✅ 완료 — 다 했으면 「제출물 저장」";
   }catch(err){
     const pre=document.createElement("pre"); pre.style.color="#b91c1c"; pre.textContent=String(err); out.appendChild(pre);
@@ -318,6 +323,25 @@ runBtn.addEventListener("click", async ()=>{
 });
 
 // ── 제출물 저장 (HTML 다운로드) ──
+// ── 온라인 제출 (Apps Script로 전송) ──
+submitBtn.addEventListener("click", ()=>{
+  const cls=$("#className").value, no=$("#studentNo").value.trim(), name=$("#studentName").value.trim();
+  if(!cls||!no||!name){ alert("반·학번·이름을 먼저 입력하세요."); return; }
+  if(!lastRun){ alert("먼저 코드를 실행하세요."); return; }
+  if(!SUBMIT_URL){ alert("아직 온라인 제출 주소가 설정되지 않았습니다.\n'💾 파일로 저장'을 눌러 코들에 제출하세요."); return; }
+  if(!confirm(`${cls} ${no} ${name} · ${csvName} 으로 제출할까요?`)) return;
+  const form = document.createElement("form");
+  form.method="POST"; form.action=SUBMIT_URL; form.target="hiddenSubmitFrame";
+  const add=(k,v)=>{ const i=document.createElement("input"); i.type="hidden"; i.name=k; i.value=v==null?"":String(v); form.appendChild(i); };
+  add("course","인공지능 기초"); add("kind","assessment-lab");
+  add("className",cls); add("studentNo",no); add("studentName",name);
+  add("dataNo",csvName); add("code",lastRun.code); add("result",lastRun.text);
+  add("submittedAt",new Date().toISOString()); add("userAgent",navigator.userAgent);
+  document.body.appendChild(form); form.submit(); form.remove();
+  submitBtn.disabled=true; status.textContent="📤 제출했습니다 — 선생님 안내에 따라 창을 닫아도 됩니다";
+  setTimeout(()=>{ submitBtn.disabled=false; }, 4000);
+});
+
 saveBtn.addEventListener("click", ()=>{
   const cls=$("#className").value, no=$("#studentNo").value.trim(), name=$("#studentName").value.trim();
   if(!cls||!no||!name){ alert("반·학번·이름을 먼저 입력하세요."); return; }
