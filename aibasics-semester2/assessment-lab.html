@@ -173,11 +173,13 @@ TP/(TP+FP)
 TP/(TP+FN)</pre></div>
 
 <script id="setup-py" type="text/plain">
-import io, sys, base64, traceback
+import io, sys, base64, traceback, ast
 import pandas as pd
+pd.set_option("display.width", 200); pd.set_option("display.max_columns", 30)
 import matplotlib
 matplotlib.use("AGG")
 import matplotlib.pyplot as plt
+from matplotlib.artist import Artist
 df = None
 _ENV = {"pd": pd, "plt": plt, "io": io}
 def load_csv(text):
@@ -190,7 +192,13 @@ def run_user(code):
     try:
         if df is None: print("⚠ 먼저 데이터 번호를 선택하세요.")
         else:
-            exec(code, _ENV)
+            tree = ast.parse(code)
+            last = tree.body.pop() if tree.body and isinstance(tree.body[-1], ast.Expr) else None
+            exec(compile(tree, "<cell>", "exec"), _ENV)
+            if last is not None:
+                val = eval(compile(ast.Expression(last.value), "<cell>", "eval"), _ENV)
+                if val is not None and not isinstance(val, Artist) and not (isinstance(val, list) and val and isinstance(val[0], Artist)):
+                    print(val)
             for num in plt.get_fignums():
                 fig = plt.figure(num); b = io.BytesIO(); fig.savefig(b, format="png", bbox_inches="tight", dpi=110)
                 imgs.append(base64.b64encode(b.getvalue()).decode())
