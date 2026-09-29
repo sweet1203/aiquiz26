@@ -116,7 +116,7 @@
 
 <section class="formcell">
   <h3>⑧-1. 핵심변수 선택 이유</h3>
-  <p>⑧에서 고른 핵심변수를 <b>왜</b> 골랐는지 그래프(상관) 근거로 쓰세요.</p>
+  <p>⑧에서 고른 핵심변수 <b>1개</b>를 <b>왜</b> 골랐는지 그래프(상관) 근거로 쓰세요.</p>
   <textarea id="reason" placeholder="예) OOO가 정답과 상관이 가장 컸다. …"></textarea>
 </section>
 <section class="formcell">
@@ -235,11 +235,12 @@ for i in range(len(corr)):
         plt.text(j, i, round(corr.iloc[i, j], 2), ha='center', va='center', fontsize=8)
 plt.title('correlation'); plt.show()
 print(corr[target])</script>
-<script id="sc7" type="text/plain"># 위에서 상관이 가장 큰 변수를 핵심변수로 정하세요
+<script id="sc7" type="text/plain"># 위에서 상관이 가장 큰 변수를 핵심변수로 정하세요 (1개만 작성)
 핵심변수 = '____'
 print('내 핵심변수:', 핵심변수)
 # ↓ 다 정했으면 아래로 내려 '⑧-1 핵심변수 선택 이유'를 작성하세요</script>
-<script id="sc8" type="text/plain">X = df[수치열]; y = df[target]
+<script id="sc8" type="text/plain"># 모델에는 수치열 3개를 모두 넣습니다
+X = df[수치열]; y = df[target]
 # 테스트 비율을 채우세요 (7:3 이면 0.3)
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=____, random_state=7, stratify=y)
