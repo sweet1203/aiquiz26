@@ -174,8 +174,11 @@ print(cm)
 TN, FP = cm[0]
 FN, TP = cm[1]
 TP/(TP+FN)
+TN/(TN+FP)
 (TP+TN)/(TP+TN+FP+FN)
-TP/(TP+FP)</pre></div>
+TN/(TN+FN)
+TP/(TP+FP)
+(TP+FP)/(TP+TN+FP+FN)</pre></div>
 
 <script id="setup-py" type="text/plain">
 import io, sys, base64, traceback, ast
@@ -250,7 +253,6 @@ print('내 핵심변수:', 핵심변수)
 <script id="sc8" type="text/plain"># 모델에는 수치열 3개를 모두 넣습니다
 X = df[수치열]
 y = df[target]
-# 테스트 비율을 채우세요 (7:3 이면 0.3)
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, ____, random_state=7, stratify=y)
 model = DecisionTreeClassifier(random_state=7, max_depth=4)
@@ -277,7 +279,7 @@ print('정확도', round(정확도,2), '| 정밀도', round(정밀도,2), '| 재
 <iframe name="hiddenSubmitFrame" title="submit" style="display:none"></iframe>
 <script>
 const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbxEkiGsfRXp_3Cig33keU2BeAhRVaCj3XQAIoiyqePhlnfYP5IfuRTO7Xn5eLW-4M3KJA/exec";
-const DESC = {"01": {"n": "공유자전거", "q": "기온·습도·거리 등을 보고 자전거를 이용할지(1)/안 할지(0)", "c": [["temperature", "기온"], ["humidity", "습도"], ["distance_km", "이동 거리(km)"], ["weather", "날씨(범주)"], ["time_period", "시간대(범주)"], ["use_bike", "1이면 이용, 0이면 이용 안 함"]]}, "02": {"n": "온라인쇼핑", "q": "방문자가 구매할지(1)/안 할지(0)", "c": [["page_time_min", "머문 시간(분)"], ["cart_items", "장바구니 담은 수"], ["discount_pct", "할인율(%)"], ["device", "기기(범주)"], ["region", "지역(범주)"], ["purchase", "1이면 구매, 0이면 구매 안 함"]]}, "03": {"n": "도서관", "q": "방문자가 책을 대출할지(1)/안 할지(0)", "c": [["visit_count", "방문 횟수"], ["stay_minutes", "머문 시간(분)"], ["late_fee", "연체료"], ["member_type", "회원 유형(범주)"], ["weekday", "요일(범주)"], ["borrowed", "1이면 대출, 0이면 대출 안 함"]]}, "04": {"n": "영상콘텐츠", "q": "그 콘텐츠를 선택(시청)할지(1)/안 할지(0)", "c": [["watch_min", "시청 시간(분)"], ["pause_count", "일시정지 횟수"], ["rating", "평점"], ["genre", "장르(범주)"], ["time_slot", "시간대(범주)"], ["selected", "1이면 선택, 0이면 선택 안 함"]]}, "05": {"n": "대중교통", "q": "그 운행이 혼잡할지(1)/아닐지(0)", "c": [["passengers", "승객 수"], ["delay_min", "지연 시간(분)"], ["distance_km", "거리(km)"], ["line_type", "노선 유형(범주)"], ["hour_band", "시간대(범주)"], ["crowded", "1이면 혼잡, 0이면 혼잡 안 함"]]}, "06": {"n": "식물생육", "q": "식물이 정상적으로 자랄지(1)/아닐지(0)", "c": [["light_lux", "빛의 밝기(lux)"], ["moisture_pct", "토양 수분(%)"], ["temp_c", "온도(℃)"], ["soil_type", "토양 종류(범주)"], ["season", "계절(범주)"], ["healthy", "1이면 정상 생육, 0이면 비정상"]]}, "07": {"n": "건물에너지", "q": "에너지를 과다 사용할지(1)/아닐지(0)", "c": [["usage_kwh", "전력 사용량(kWh)"], ["outdoor_temp", "외부 기온"], ["area_sqm", "면적(㎡)"], ["building_type", "건물 유형(범주)"], ["month", "월(범주)"], ["overuse", "1이면 과다 사용, 0이면 정상"]]}, "08": {"n": "여행서비스", "q": "서비스를 재이용할지(1)/안 할지(0)", "c": [["stay_days", "숙박 일수"], ["review_score", "리뷰 점수"], ["price_k", "가격(천원)"], ["transport", "이동수단(범주)"], ["season", "계절(범주)"], ["reuse", "1이면 재이용, 0이면 재이용 안 함"]]}, "09": {"n": "스포츠시설", "q": "시설을 계속 이용할지(1)/그만둘지(0)", "c": [["visits_month", "월 방문 횟수"], ["duration_min", "이용 시간(분)"], ["fee_k", "요금(천원)"], ["facility", "시설 종류(범주)"], ["weekday", "요일(범주)"], ["continue_use", "1이면 지속 이용, 0이면 중단"]]}, "10": {"n": "배달서비스", "q": "주문할지(1)/안 할지(0)", "c": [["order_amount", "주문 금액"], ["distance_km", "거리(km)"], ["wait_min", "예상 대기(분)"], ["weather", "날씨(범주)"], ["payment", "결제수단(범주)"], ["ordered", "1이면 주문, 0이면 주문 안 함"]]}};
+const DESC = {"01": {"n": "공유자전거", "q": "기온·습도·거리 등을 보고 자전거를 이용할지(1)/안 할지(0)", "c": [["temperature", "기온"], ["humidity", "습도"], ["distance_km", "이동 거리(km)"], ["weather", "날씨"], ["time_period", "시간대"], ["use_bike", "1이면 이용, 0이면 이용 안 함"]]}, "02": {"n": "온라인쇼핑", "q": "방문자가 구매할지(1)/안 할지(0)", "c": [["page_time_min", "머문 시간(분)"], ["cart_items", "장바구니 담은 수"], ["discount_pct", "할인율(%)"], ["device", "기기"], ["region", "지역"], ["purchase", "1이면 구매, 0이면 구매 안 함"]]}, "03": {"n": "도서관", "q": "방문자가 책을 대출할지(1)/안 할지(0)", "c": [["visit_count", "방문 횟수"], ["stay_minutes", "머문 시간(분)"], ["late_fee", "연체료"], ["member_type", "회원 유형"], ["weekday", "요일"], ["borrowed", "1이면 대출, 0이면 대출 안 함"]]}, "04": {"n": "영상콘텐츠", "q": "그 콘텐츠를 선택(시청)할지(1)/안 할지(0)", "c": [["watch_min", "시청 시간(분)"], ["pause_count", "일시정지 횟수"], ["rating", "평점"], ["genre", "장르"], ["time_slot", "시간대"], ["selected", "1이면 선택, 0이면 선택 안 함"]]}, "05": {"n": "대중교통", "q": "그 운행이 혼잡할지(1)/아닐지(0)", "c": [["passengers", "승객 수"], ["delay_min", "지연 시간(분)"], ["distance_km", "거리(km)"], ["line_type", "노선 유형"], ["hour_band", "시간대"], ["crowded", "1이면 혼잡, 0이면 혼잡 안 함"]]}, "06": {"n": "식물생육", "q": "식물이 정상적으로 자랄지(1)/아닐지(0)", "c": [["light_lux", "빛의 밝기(lux)"], ["moisture_pct", "토양 수분(%)"], ["temp_c", "온도(℃)"], ["soil_type", "토양 종류"], ["season", "계절"], ["healthy", "1이면 정상 생육, 0이면 비정상"]]}, "07": {"n": "건물에너지", "q": "에너지를 과다 사용할지(1)/아닐지(0)", "c": [["usage_kwh", "전력 사용량(kWh)"], ["outdoor_temp", "외부 기온"], ["area_sqm", "면적(㎡)"], ["building_type", "건물 유형"], ["month", "월"], ["overuse", "1이면 과다 사용, 0이면 정상"]]}, "08": {"n": "여행서비스", "q": "서비스를 재이용할지(1)/안 할지(0)", "c": [["stay_days", "숙박 일수"], ["review_score", "리뷰 점수"], ["price_k", "가격(천원)"], ["transport", "이동수단"], ["season", "계절"], ["reuse", "1이면 재이용, 0이면 재이용 안 함"]]}, "09": {"n": "스포츠시설", "q": "시설을 계속 이용할지(1)/그만둘지(0)", "c": [["visits_month", "월 방문 횟수"], ["duration_min", "이용 시간(분)"], ["fee_k", "요금(천원)"], ["facility", "시설 종류"], ["weekday", "요일"], ["continue_use", "1이면 지속 이용, 0이면 중단"]]}, "10": {"n": "배달서비스", "q": "주문할지(1)/안 할지(0)", "c": [["order_amount", "주문 금액"], ["distance_km", "거리(km)"], ["wait_min", "예상 대기(분)"], ["weather", "날씨"], ["payment", "결제수단"], ["ordered", "1이면 주문, 0이면 주문 안 함"]]}};
 const $ = s => document.querySelector(s);
 const status = $("#status");
 const NC = 12;
