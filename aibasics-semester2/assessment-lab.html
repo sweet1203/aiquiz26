@@ -73,7 +73,7 @@
     <div class="cell-body"><textarea class="editor-ta" id="ta1"></textarea><div class="out" id="out1"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>③ 변수 정하기 — 수치형 독립변수 · 종속변수</span><button class="run" data-i="2" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>③ 변수 정하기 — 수치형 독립변수 · 종속변수 → 열 이름은 영어로 작성하세요.</span><button class="run" data-i="2" disabled>▶ 실행</button></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta2"></textarea><div class="out" id="out2"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
@@ -89,7 +89,7 @@
     <div class="cell-body"><textarea class="editor-ta" id="ta5"></textarea><div class="out" id="out5"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑦ 핵심변수 찾기 — 상관 히트맵 (그대로 실행)</span><button class="run" data-i="6" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>⑦ 핵심변수 찾기 — 상관 히트맵</span><button class="run" data-i="6" disabled>▶ 실행</button></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta6"></textarea><div class="out" id="out6"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
@@ -147,30 +147,35 @@ target = &#x27;is_virginica&#x27;
 수치열 = [&#x27;sepal_len&#x27;, &#x27;sepal_wid&#x27;, &#x27;petal_len&#x27;, &#x27;petal_wid&#x27;]
 print(df.isnull().sum())
 df = df.fillna(df.mean(numeric_only=True))
-df[수치열].plot(kind=&#x27;box&#x27;); plt.title(&#x27;outliers&#x27;); plt.show()
+df[수치열].plot(kind=&#x27;box&#x27;)
+plt.title(&#x27;outliers&#x27;)
+plt.show()
 corr = df[수치열 + [target]].corr()
-plt.imshow(corr, cmap=&#x27;coolwarm&#x27;, vmin=-1, vmax=1); plt.colorbar()
+plt.imshow(corr, cmap=&#x27;coolwarm&#x27;, vmin=-1, vmax=1)
+plt.colorbar()
 plt.xticks(range(len(corr)), corr.columns, rotation=45, ha=&#x27;right&#x27;)
 plt.yticks(range(len(corr)), corr.columns)
 for i in range(len(corr)):
     for j in range(len(corr)):
         plt.text(j, i, round(corr.iloc[i, j], 2), ha=&#x27;center&#x27;, va=&#x27;center&#x27;)
-plt.title(&#x27;correlation&#x27;); plt.show()
+plt.title(&#x27;correlation&#x27;)
+plt.show()
 print(corr[target])
 핵심변수 = &#x27;petal_len&#x27;
-X = df[수치열]; y = df[target]
+X = df[수치열]
+y = df[target]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=7, stratify=y)
 model = DecisionTreeClassifier(random_state=7, max_depth=4)
 model.fit(X_train, y_train)
-print(round(model.score(X_test, y_test), 3))
+print(round(model.score(X_test, y_test), 2))
 pred = model.predict(X_test)
 cm = confusion_matrix(y_test, pred, labels=[0, 1])
 print(cm)
 TN, FP = cm[0]
 FN, TP = cm[1]
+TP/(TP+FN)
 (TP+TN)/(TP+TN+FP+FN)
-TP/(TP+FP)
-TP/(TP+FN)</pre></div>
+TP/(TP+FP)</pre></div>
 
 <script id="setup-py" type="text/plain">
 import io, sys, base64, traceback, ast
@@ -219,35 +224,39 @@ ____</script>
 print('target:', target)
 print('수치열:', 수치열)</script>
 <script id="sc3" type="text/plain"># 결측치가 몇 개인지 확인하세요
-print(df.isnull().____())</script>
+print(____________________)</script>
 <script id="sc4" type="text/plain"># 평균으로 결측치를 채우세요.
 df = df.____(df.mean(numeric_only=True))
 print('처리 후 결측:', df[수치열].isnull().sum().sum())</script>
 <script id="sc5" type="text/plain"># 그래프 종류를 채우세요
 df[수치열].plot(kind='____')
-plt.title('outliers'); plt.show()</script>
-<script id="sc6" type="text/plain">corr = df[수치열 + [target]].corr()
-plt.imshow(corr, cmap='coolwarm', vmin=-1, vmax=1); plt.colorbar()
+plt.title('outliers')
+plt.show()</script>
+<script id="sc6" type="text/plain">corr = df[수치열 + [target]]____
+plt.imshow(corr, cmap='coolwarm', vmin=-1, vmax=1)
+plt.colorbar()
 plt.xticks(range(len(corr)), corr.columns, rotation=45, ha='right')
 plt.yticks(range(len(corr)), corr.columns)
 for i in range(len(corr)):
     for j in range(len(corr)):
         plt.text(j, i, round(corr.iloc[i, j], 2), ha='center', va='center', fontsize=8)
-plt.title('correlation'); plt.show()
+plt.title('correlation')
+plt.show()
 print(corr[target])</script>
 <script id="sc7" type="text/plain"># 위에서 상관이 가장 큰 변수를 핵심변수로 정하세요 (1개만 작성)
 핵심변수 = '____'
 print('내 핵심변수:', 핵심변수)
 # ↓ 다 정했으면 아래로 내려 '⑧-1 핵심변수 선택 이유'를 작성하세요</script>
 <script id="sc8" type="text/plain"># 모델에는 수치열 3개를 모두 넣습니다
-X = df[수치열]; y = df[target]
+X = df[수치열]
+y = df[target]
 # 테스트 비율을 채우세요 (7:3 이면 0.3)
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=____, random_state=7, stratify=y)
+    X, y, ____, random_state=7, stratify=y)
 model = DecisionTreeClassifier(random_state=7, max_depth=4)
-model.fit(X_train, y_train)
+model.fit(____, ____)
 print('학습 완료')</script>
-<script id="sc9" type="text/plain">print('정확도:', round(model.score(X_test, y_test), 3))</script>
+<script id="sc9" type="text/plain">print('정확도:', round(model.score(X_test, y_test), 2))</script>
 <script id="sc10" type="text/plain">pred = model.predict(X_test)
 cm = confusion_matrix(y_test, pred, labels=[0, 1])
 print('           예측0  예측1')
@@ -258,7 +267,7 @@ FN, TP = cm[1]
 정확도 = ____
 정밀도 = ____
 재현율 = ____
-print('정확도', round(정확도,3), '| 정밀도', round(정밀도,3), '| 재현율', round(재현율,3))</script>
+print('정확도', round(정확도,2), '| 정밀도', round(정밀도,2), '| 재현율', round(재현율,2))</script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
