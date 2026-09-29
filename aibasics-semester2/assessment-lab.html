@@ -73,7 +73,7 @@
     <div class="cell-body"><textarea class="editor-ta" id="ta1"></textarea><div class="out" id="out1"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>③ 변수 정하기 — 수치형 독립변수 · 종속변수 → 열 이름은 영어로 작성하세요.</span><button class="run" data-i="2" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>③ 변수 정하기 — 종속변수 · 수치형 독립변수 · 범주형 독립변수 → 열 이름은 영어로 작성하세요.</span><button class="run" data-i="2" disabled>▶ 실행</button></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta2"></textarea><div class="out" id="out2"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
@@ -226,9 +226,11 @@ print('준비 완료')</script>
 <script id="sc1" type="text/plain"># 데이터를 확인하세요.
 ____</script>
 <script id="sc2" type="text/plain">target = '____'                 # 종속변수(정답) 열 이름
-수치열 = ['____', '____', '____']   # 수치형 독립변수 3개
+수치열 = ['____', '____', '____']   # 수치형 독립변수
+범주열 = ['____', '____']           # 범주형 독립변수
 print('target:', target)
-print('수치열:', 수치열)</script>
+print('수치열:', 수치열)
+print('범주열:', 범주열)</script>
 <script id="sc3" type="text/plain"># 결측치가 몇 개인지 확인하세요
 print(____________________)</script>
 <script id="sc4" type="text/plain"># 평균으로 결측치를 채우세요.
