@@ -17,7 +17,7 @@
   .id-row select,.id-row input{border:1px solid #cbd5e1;border-radius:9px;padding:8px 10px;font:inherit;background:#fff;}
   #csvInfo{font-size:.82rem;color:#059669;font-weight:700;}
   .ddesc{background:#eff6ff;border-bottom:1px solid #dbeafe;padding:12px 22px;font-size:.86rem;color:#1e3a5f;line-height:1.7;}
-  .ddesc b{color:#0b3a66;} .ddesc .cols{margin-top:6px;font-size:.82rem;color:#334155;}
+  .ddesc b{color:#0b3a66;} .guide{margin:4px 0 10px;padding-left:20px;font-size:.9rem;line-height:1.7;} .ddesc .use{margin-top:6px;} .ddesc .cols{margin-top:6px;font-size:.82rem;color:#334155;}
   .ddesc code{background:#dbeafe;color:#0b3a66;padding:1px 6px;border-radius:5px;font-size:.8rem;}
   .wrap{max-width:1500px;margin:0 auto;padding:14px 22px 6px;}
   .cell{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:12px;}
@@ -122,6 +122,14 @@
 <section class="formcell">
   <h3>⑬. 요소2 서술 (5문장 이상)</h3>
   <p>혼동행렬(FP·FN)과 지표(정밀도/재현율), 핵심변수를 연결해 <b>자기 수치를 넣어</b> 5문장 이상 쓰세요.</p>
+  <p>데이터 설명의 <b>모델 활용 상황</b>을 떠올리며 아래 내용을 담아 쓰세요.</p>
+  <ul class="guide">
+    <li>내 모델의 FP와 FN은 각각 몇 건인가?</li>
+    <li>이 상황에서 FP가 생기면 어떤 일이 벌어지나? (구체적인 사례로)</li>
+    <li>이 상황에서 FN이 생기면 어떤 일이 벌어지나? (구체적인 사례로)</li>
+    <li>둘 중 더 큰 문제는 무엇이고, 그래서 정밀도와 재현율 중 무엇을 더 중요하게 봐야 하나?</li>
+    <li>핵심변수는 예측에 어떻게 작용했나?</li>
+  </ul>
   <textarea id="seosul" placeholder="여기에 직접 작성하세요 (5문장 이상)"></textarea>
 </section>
 
@@ -285,7 +293,7 @@ print('정확도', round(정확도,2), '| 정밀도', round(정밀도,2), '| 재
 <iframe name="hiddenSubmitFrame" title="submit" style="display:none"></iframe>
 <script>
 const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbxEkiGsfRXp_3Cig33keU2BeAhRVaCj3XQAIoiyqePhlnfYP5IfuRTO7Xn5eLW-4M3KJA/exec";
-const DESC = {"01": {"n": "공유자전거", "q": "기온·습도·거리 등을 보고 자전거를 이용할지(1)/안 할지(0)", "c": [["temperature", "기온"], ["humidity", "습도"], ["distance_km", "이동 거리(km)"], ["weather", "날씨"], ["time_period", "시간대"], ["use_bike", "1이면 이용, 0이면 이용 안 함"]]}, "02": {"n": "온라인쇼핑", "q": "방문자가 구매할지(1)/안 할지(0)", "c": [["page_time_min", "머문 시간(분)"], ["cart_items", "장바구니 담은 수"], ["discount_pct", "할인율(%)"], ["device", "기기"], ["region", "지역"], ["purchase", "1이면 구매, 0이면 구매 안 함"]]}, "03": {"n": "도서관", "q": "방문자가 책을 대출할지(1)/안 할지(0)", "c": [["visit_count", "방문 횟수"], ["stay_minutes", "머문 시간(분)"], ["late_fee", "연체료"], ["member_type", "회원 유형"], ["weekday", "요일"], ["borrowed", "1이면 대출, 0이면 대출 안 함"]]}, "04": {"n": "영상콘텐츠", "q": "그 콘텐츠를 선택(시청)할지(1)/안 할지(0)", "c": [["watch_min", "시청 시간(분)"], ["pause_count", "일시정지 횟수"], ["rating", "평점"], ["genre", "장르"], ["time_slot", "시간대"], ["selected", "1이면 선택, 0이면 선택 안 함"]]}, "05": {"n": "대중교통", "q": "그 운행이 혼잡할지(1)/아닐지(0)", "c": [["passengers", "승객 수"], ["delay_min", "지연 시간(분)"], ["distance_km", "거리(km)"], ["line_type", "노선 유형"], ["hour_band", "시간대"], ["crowded", "1이면 혼잡, 0이면 혼잡 안 함"]]}, "06": {"n": "식물생육", "q": "식물이 정상적으로 자랄지(1)/아닐지(0)", "c": [["light_lux", "빛의 밝기(lux)"], ["moisture_pct", "토양 수분(%)"], ["temp_c", "온도(℃)"], ["soil_type", "토양 종류"], ["season", "계절"], ["healthy", "1이면 정상 생육, 0이면 비정상"]]}, "07": {"n": "건물에너지", "q": "에너지를 과다 사용할지(1)/아닐지(0)", "c": [["usage_kwh", "전력 사용량(kWh)"], ["outdoor_temp", "외부 기온"], ["area_sqm", "면적(㎡)"], ["building_type", "건물 유형"], ["month", "월"], ["overuse", "1이면 과다 사용, 0이면 정상"]]}, "08": {"n": "여행서비스", "q": "서비스를 재이용할지(1)/안 할지(0)", "c": [["stay_days", "숙박 일수"], ["review_score", "리뷰 점수"], ["price_k", "가격(천원)"], ["transport", "이동수단"], ["season", "계절"], ["reuse", "1이면 재이용, 0이면 재이용 안 함"]]}, "09": {"n": "스포츠시설", "q": "시설을 계속 이용할지(1)/그만둘지(0)", "c": [["visits_month", "월 방문 횟수"], ["duration_min", "이용 시간(분)"], ["fee_k", "요금(천원)"], ["facility", "시설 종류"], ["weekday", "요일"], ["continue_use", "1이면 지속 이용, 0이면 중단"]]}, "10": {"n": "배달서비스", "q": "주문할지(1)/안 할지(0)", "c": [["order_amount", "주문 금액"], ["distance_km", "거리(km)"], ["wait_min", "예상 대기(분)"], ["weather", "날씨"], ["payment", "결제수단"], ["ordered", "1이면 주문, 0이면 주문 안 함"]]}};
+const DESC = {"01": {"n": "공유자전거", "q": "기온·습도·거리 등을 보고 자전거를 이용할지(1)/안 할지(0)", "c": [["temperature", "기온"], ["humidity", "습도"], ["distance_km", "이동 거리(km)"], ["weather", "날씨"], ["time_period", "시간대"], ["use_bike", "1이면 이용, 0이면 이용 안 함"]], "u": "이용할 사람을 예측해 대여소마다 자전거를 미리 배치합니다."}, "02": {"n": "온라인쇼핑", "q": "방문자가 구매할지(1)/안 할지(0)", "c": [["page_time_min", "머문 시간(분)"], ["cart_items", "장바구니 담은 수"], ["discount_pct", "할인율(%)"], ["device", "기기"], ["region", "지역"], ["purchase", "1이면 구매, 0이면 구매 안 함"]], "u": "구매할 것 같은 방문자에게 할인 쿠폰을 보냅니다."}, "03": {"n": "도서관", "q": "방문자가 책을 대출할지(1)/안 할지(0)", "c": [["visit_count", "방문 횟수"], ["stay_minutes", "머문 시간(분)"], ["late_fee", "연체료"], ["member_type", "회원 유형"], ["weekday", "요일"], ["borrowed", "1이면 대출, 0이면 대출 안 함"]], "u": "대출할 방문자를 예측해 책과 사서 인력을 미리 준비합니다."}, "04": {"n": "영상콘텐츠", "q": "그 콘텐츠를 선택(시청)할지(1)/안 할지(0)", "c": [["watch_min", "시청 시간(분)"], ["pause_count", "일시정지 횟수"], ["rating", "평점"], ["genre", "장르"], ["time_slot", "시간대"], ["selected", "1이면 선택, 0이면 선택 안 함"]], "u": "선택할 것 같은 콘텐츠를 사용자에게 추천합니다."}, "05": {"n": "대중교통", "q": "그 운행이 혼잡할지(1)/아닐지(0)", "c": [["passengers", "승객 수"], ["delay_min", "지연 시간(분)"], ["distance_km", "거리(km)"], ["line_type", "노선 유형"], ["hour_band", "시간대"], ["crowded", "1이면 혼잡, 0이면 혼잡 안 함"]], "u": "혼잡할 것 같은 운행에 차량을 추가로 투입합니다."}, "06": {"n": "식물생육", "q": "식물이 정상적으로 자랄지(1)/아닐지(0)", "c": [["light_lux", "빛의 밝기(lux)"], ["moisture_pct", "토양 수분(%)"], ["temp_c", "온도(℃)"], ["soil_type", "토양 종류"], ["season", "계절"], ["healthy", "1이면 정상 생육, 0이면 비정상"]], "u": "비정상으로 예측된 식물만 골라 따로 관리합니다."}, "07": {"n": "건물에너지", "q": "에너지를 과다 사용할지(1)/아닐지(0)", "c": [["usage_kwh", "전력 사용량(kWh)"], ["outdoor_temp", "외부 기온"], ["area_sqm", "면적(㎡)"], ["building_type", "건물 유형"], ["month", "월"], ["overuse", "1이면 과다 사용, 0이면 정상"]], "u": "과다 사용이 예상되는 건물을 골라 에너지 점검을 나갑니다."}, "08": {"n": "여행서비스", "q": "서비스를 재이용할지(1)/안 할지(0)", "c": [["stay_days", "숙박 일수"], ["review_score", "리뷰 점수"], ["price_k", "가격(천원)"], ["transport", "이동수단"], ["season", "계절"], ["reuse", "1이면 재이용, 0이면 재이용 안 함"]], "u": "재이용하지 않을 것 같은 고객에게 할인 혜택을 주어 다시 오게 합니다."}, "09": {"n": "스포츠시설", "q": "시설을 계속 이용할지(1)/그만둘지(0)", "c": [["visits_month", "월 방문 횟수"], ["duration_min", "이용 시간(분)"], ["fee_k", "요금(천원)"], ["facility", "시설 종류"], ["weekday", "요일"], ["continue_use", "1이면 지속 이용, 0이면 중단"]], "u": "그만둘 것 같은 회원에게 혜택을 주어 계속 다니게 합니다."}, "10": {"n": "배달서비스", "q": "주문할지(1)/안 할지(0)", "c": [["order_amount", "주문 금액"], ["distance_km", "거리(km)"], ["wait_min", "예상 대기(분)"], ["weather", "날씨"], ["payment", "결제수단"], ["ordered", "1이면 주문, 0이면 주문 안 함"]], "u": "주문을 예측해 라이더와 재료를 미리 준비합니다."}};
 const $ = s => document.querySelector(s);
 const status = $("#status");
 const NC = 12;
@@ -316,6 +324,7 @@ function showDesc(num){
   const d=DESC[num]; if(!d){ $("#dataDesc").hidden=true; return; }
   const cols=d.c.map(x=>`<code>${x[0]}</code> = ${x[1]}`).join(" · ");
   $("#dataDesc").innerHTML = `이 데이터는 <b>${d.n}</b> 데이터입니다. &nbsp;해결할 문제: <b>${d.q}</b>`
+    + `<div class="use">모델 활용 상황: <b>${d.u}</b></div>`
     + `<div class="cols">〈열 이름〉 ${cols}</div>`;
   $("#dataDesc").hidden=false;
 }
