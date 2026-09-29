@@ -135,7 +135,6 @@
 
 <div class="submitbar">
   <button id="submit" class="save" disabled>📤 온라인 제출</button>
-  <button id="save" class="ghost" disabled>💾 파일로 저장</button>
   <button id="reset" class="ghost">스캐폴드 되돌리기</button>
 </div>
 
@@ -332,7 +331,7 @@ function showDesc(num){
     + `<div class="cols">〈열 이름〉 ${cols}</div>`;
   $("#dataDesc").hidden=false;
 }
-function afterLoad(name,dim){ csvLoaded=true; csvName=name; $("#csvInfo").textContent=`✅ ${name} — ${dim[0]}행 × ${dim[1]}열 불러옴`; $("#submit").disabled=false; $("#save").disabled=false; }
+function afterLoad(name,dim){ csvLoaded=true; csvName=name; $("#csvInfo").textContent=`✅ ${name} — ${dim[0]}행 × ${dim[1]}열 불러옴`; $("#submit").disabled=false; }
 $("#dataNo").addEventListener("change", async e=>{
   const num=e.target.value; if(!num) return; showDesc(num);
   if(!pyodide){ $("#csvInfo").textContent="⏳ 파이썬 준비 후 다시 선택"; return; }
@@ -378,26 +377,9 @@ $("#submit").addEventListener("click", ()=>{
   add("course","인공지능 기초"); add("kind","assessment-lab"); add("className",cls); add("studentNo",no); add("studentName",name);
   add("dataNo",csvName); add("code",g.code); add("result",g.result); add("reason",g.reason); add("seosul",g.seosul);
   add("submittedAt",new Date().toISOString()); add("userAgent",navigator.userAgent);
+  add("cells",JSON.stringify(cms.map((cm,i)=>({code:cm.getValue(), text:lastCells[i]?lastCells[i].text:"(실행 안 함)", imgs:lastCells[i]?lastCells[i].imgs:[]}))));
   document.body.appendChild(form); form.submit(); form.remove();
   $("#submit").disabled=true; status.textContent="📤 제출했습니다"; setTimeout(()=>{ $("#submit").disabled=false; }, 4000);
-});
-$("#save").addEventListener("click", ()=>{
-  const cls=$("#className").value, no=$("#studentNo").value.trim(), name=$("#studentName").value.trim();
-  if(!cls||!no||!name){ alert("반·학번·이름을 먼저 입력하세요."); return; }
-  const esc=s=>(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  const when=new Date().toLocaleString("ko-KR"); let cellsHtml="";
-  cms.forEach((cm,i)=>{ const c=lastCells[i];
-    cellsHtml+=`<h3>[${i+1}]</h3><pre>${esc(cm.getValue())}</pre><pre>${esc(c?c.text:"(실행 안 함)")}</pre>`;
-    if(c&&c.imgs.length) cellsHtml+=c.imgs.map(b=>`<img src="data:image/png;base64,${b}" style="max-width:100%;border:1px solid #ddd;border-radius:8px;margin:6px 0;display:block">`).join(""); });
-  const doc=`<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>수행제출 ${esc(no)} ${esc(name)}</title>
-<style>body{font-family:system-ui,'Malgun Gothic',sans-serif;max-width:900px;margin:24px auto;padding:0 16px}table{border-collapse:collapse}td,th{border:1px solid #cbd5e1;padding:6px 12px}pre{background:#f1f5f9;padding:10px;border-radius:8px;white-space:pre-wrap;word-break:break-word;font-size:12.5px}h3{margin:14px 0 3px;font-size:.9rem;color:#475569}h2{border-bottom:2px solid #0891b2;padding-bottom:4px;font-size:1.05rem}</style></head><body>
-<h1>1차 수행평가 제출물</h1>
-<table><tr><th>반</th><td>${esc(cls)}</td><th>학번</th><td>${esc(no)}</td><th>이름</th><td>${esc(name)}</td></tr><tr><th>데이터</th><td>${esc(csvName)}</td><th>시각</th><td colspan=3>${esc(when)}</td></tr></table>
-<h2>코드·실행</h2>${cellsHtml}
-<h2>핵심변수 선택 이유</h2><pre>${esc($("#reason").value)||"(미작성)"}</pre>
-<h2>요소2 서술</h2><pre>${esc($("#seosul").value)||"(미작성)"}</pre></body></html>`;
-  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([doc],{type:"text/html"}));
-  a.download=`수행제출_${no}_${name}.html`; document.body.appendChild(a); a.click(); a.remove(); status.textContent="💾 저장됨";
 });
 </script>
 </body>
