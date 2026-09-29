@@ -155,9 +155,9 @@ target = &#x27;is_virginica&#x27;
 수치열 = [&#x27;sepal_len&#x27;, &#x27;sepal_wid&#x27;, &#x27;petal_len&#x27;, &#x27;petal_wid&#x27;]
 print(df.isnull().sum())
 df = df.dropna()
-df = df.fillna(df.median(numeric_only=True))
-df = df.fillna(df.mean(numeric_only=True))
-df = df.fillna(df.mode().iloc[0])
+df[&#x27;sepal_len&#x27;] = df[&#x27;sepal_len&#x27;].fillna(df[&#x27;sepal_len&#x27;].median())
+df[&#x27;sepal_len&#x27;] = df[&#x27;sepal_len&#x27;].fillna(df[&#x27;sepal_len&#x27;].mean())
+df[&#x27;sepal_len&#x27;] = df[&#x27;sepal_len&#x27;].fillna(df[&#x27;sepal_len&#x27;].mode()[0])
 df[수치열].plot(kind=&#x27;box&#x27;)
 plt.title(&#x27;outliers&#x27;)
 plt.show()
@@ -243,7 +243,8 @@ print('범주열:', 범주열)</script>
 print(____________________)</script>
 <script id="sc4" type="text/plain"># 수치형 데이터의 결측치만 처리합니다.
 # 평균으로 결측치를 채우세요.
-df = df.____(df.____(numeric_only=True))
+df['____'] = df['____'].fillna(df['____'].____())
+df['____'] = df['____'].fillna(df['____'].____())
 print('처리 후 결측:', df[수치열].isnull().sum().sum())</script>
 <script id="sc5" type="text/plain"># 그래프 종류를 채우세요
 df[수치열].plot(kind='____')
