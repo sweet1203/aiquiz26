@@ -317,6 +317,10 @@ function guardForm(t){ let last=""; t.addEventListener("input",()=>last=t.value)
   t.addEventListener("paste",e=>{e.preventDefault();t.value=last;}); t.addEventListener("drop",e=>e.preventDefault());
   t.addEventListener("beforeinput",e=>{ if(/insertFrom(Paste|Drop|Yank)/.test(e.inputType||"")) e.preventDefault(); }); }
 guardForm($("#reason")); guardForm($("#seosul"));
+let dirty=false;
+cms.forEach(cm=>cm.on("change",()=>{dirty=true;}));
+["#reason","#seosul"].forEach(sel=>$(sel).addEventListener("input",()=>{dirty=true;}));
+window.addEventListener("beforeunload",e=>{ if(dirty){ e.preventDefault(); e.returnValue=""; } });
 ["copy","cut","contextmenu","selectstart","dragstart"].forEach(ev=> $("#refcode").addEventListener(ev, block));
 
 let csvName="", csvLoaded=false;
