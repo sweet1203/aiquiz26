@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>(테스트) 1차 수행평가 · 데이터 전처리와 모델 분석</title>
+<style>
+  :root{--bg:#f4f7fb;--panel:#1e293b;--line:#334155;--ink:#e2e8f0;--sub:#94a3b8;--accent:#0891b2;--accent2:#059669;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:#0f172a;font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","맑은 고딕",system-ui,sans-serif;}
+  header{background:linear-gradient(135deg,#0891b2,#059669);color:#fff;padding:18px 22px;}
+  header h1{margin:0;font-size:1.3rem;} header p{margin:5px 0 0;opacity:.92;font-size:.88rem;}
+  .bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 22px;background:#fff;border-bottom:1px solid #e2e8f0;font-size:.86rem;}
+  #status{font-weight:700;}
+  .id-row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;padding:14px 22px;background:#fff;border-bottom:1px solid #e2e8f0;}
+  .id-row label{display:block;font-size:.75rem;color:#64748b;font-weight:700;margin-bottom:3px;}
+  .id-row select,.id-row input{border:1px solid #cbd5e1;border-radius:9px;padding:8px 10px;font:inherit;background:#fff;}
+  #csvInfo{font-size:.82rem;color:#059669;font-weight:700;}
+  .ddesc{background:#eff6ff;border-bottom:1px solid #dbeafe;padding:12px 22px;font-size:.86rem;color:#1e3a5f;line-height:1.7;}
+  .ddesc b{color:#0b3a66;} .guide{margin:4px 0 10px;padding-left:20px;font-size:.9rem;line-height:1.7;} .ddesc .use{margin-top:6px;} .ddesc .cols{margin-top:6px;font-size:.82rem;color:#334155;}
+  .ddesc code{background:#dbeafe;color:#0b3a66;padding:1px 6px;border-radius:5px;font-size:.8rem;}
+  .wrap{max-width:1500px;margin:0 auto;padding:14px 22px 6px;}
+  .cell{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:12px;}
+  .cell-head .btns{display:flex;gap:6px;flex-shrink:0;} .repair{background:transparent;color:#f59e0b;border:1px solid #f59e0b;border-radius:8px;padding:6px 10px;font-weight:700;cursor:pointer;font-size:.85rem;} .repair:disabled{opacity:.4;cursor:default;}
+  .cell-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;background:#0b1220;color:var(--ink);font-size:.9rem;font-weight:700;border-bottom:1px solid var(--line);}
+  .cell-body{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+  @media(max-width:900px){.cell-body{grid-template-columns:1fr;}}
+  .CodeMirror{min-height:110px;height:auto;font-family:var(--mono);font-size:13.5px;line-height:1.5;}
+  .CodeMirror-scroll{min-height:110px;}
+  .editor-ta{display:none;}
+  .out{min-height:110px;max-height:360px;overflow:auto;padding:10px 12px;background:#fff;border-left:1px solid var(--line);}
+  .out pre{margin:0 0 8px;font-family:var(--mono);font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:#0f172a;background:#f1f5f9;padding:9px;border-radius:8px;}
+  .out img{max-width:100%;border:1px solid #e2e8f0;border-radius:8px;margin:0 0 8px;display:block;}
+  .out .ph{color:#94a3b8;font-size:.82rem;}
+  button{background:var(--accent);color:#fff;border:0;font-weight:700;font-size:.85rem;padding:7px 14px;border-radius:9px;cursor:pointer;}
+  button:disabled{opacity:.45;cursor:default;} button.ghost{background:#334155;} button.save{background:var(--accent2);}
+  .formcell{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin:0 22px 12px;}
+  .formcell h3{margin:0 0 4px;font-size:.98rem;color:#0f172a;}
+  .formcell p{margin:3px 0 8px;font-size:.82rem;color:#64748b;line-height:1.6;}
+  .formcell textarea{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;font:inherit;font-size:.95rem;line-height:1.6;resize:vertical;}
+  #reason{min-height:70px;} #seosul{min-height:150px;}
+  .submitbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;max-width:1500px;margin:0 auto;padding:6px 22px 24px;}
+  .refwrap{max-width:1500px;margin:0 auto;padding:0 22px 44px;}
+  .refwrap h2{font-size:1rem;color:#334155;margin:0 0 6px;}
+  #refcode{background:#0b1220;color:#dbeafe;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.5;white-space:pre;overflow-x:auto;user-select:none;-webkit-user-select:none;-moz-user-select:none;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧪 1차 수행평가 · 데이터 전처리와 모델 분석 <span style="background:#f59e0b;color:#1f2937;border-radius:6px;padding:2px 8px;font-size:.7em;vertical-align:middle">테스트 버전</span></h1>
+  <p><b>①번부터 순서대로</b> 실행하세요. · 🚫 생성형 AI 사용 금지</p>
+</header>
+<div class="bar"><span id="status">⏳ 파이썬 환경 불러오는 중… (처음 한 번, 조금 걸려요)</span></div>
+<div class="id-row">
+  <div><label>반</label><select id="className"><option value="" selected disabled>반 선택</option><option>인공지능C</option><option>인공지능F</option><option>인공지능G</option></select></div>
+  <div><label>학번</label><input id="studentNo" inputmode="numeric" maxlength="5" placeholder="예: 20101" style="width:110px"></div>
+  <div><label>이름</label><input id="studentName" placeholder="이름" style="width:110px"></div>
+  <div><label>내 데이터 번호 (선생님이 배정)</label>
+    <select id="dataNo"><option value="" selected disabled>번호 선택</option>
+    <option value="01">1번</option><option value="02">2번</option><option value="03">3번</option><option value="04">4번</option><option value="05">5번</option>
+    <option value="06">6번</option><option value="07">7번</option><option value="08">8번</option><option value="09">9번</option><option value="10">10번</option></select>
+  </div>
+  <div id="csvInfo">번호를 선택하세요.</div>
+</div>
+<div id="dataDesc" class="ddesc" hidden></div>
+
+<div class="wrap">
+  <section class="cell">
+    <div class="cell-head"><span>① 라이브러리 불러오기 (그대로 실행)</span><button class="run" data-i="0" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta0"></textarea><div class="out" id="out0"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>② 데이터 확인</span><button class="run" data-i="1" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta1"></textarea><div class="out" id="out1"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>③ 변수 정하기 — 종속변수 · 수치형 독립변수 · 범주형 독립변수 → 열 이름은 영어로 작성하세요.</span><span class="btns"><button class="repair" data-i="2" disabled title="막혔을 때 이 단계를 복구하고 다음으로 진행">🛟 복구</button><button class="run" data-i="2" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta2"></textarea><div class="out" id="out2"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>④ 결측치 확인</span><button class="run" data-i="3" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta3"></textarea><div class="out" id="out3"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑤ 결측치 처리</span><button class="run" data-i="4" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta4"></textarea><div class="out" id="out4"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑥ 이상치 확인 — 상자그림</span><button class="run" data-i="5" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta5"></textarea><div class="out" id="out5"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑦ 핵심변수 찾기 — 상관 히트맵</span><button class="run" data-i="6" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta6"></textarea><div class="out" id="out6"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑧ 핵심변수 정하기</span><button class="run" data-i="7" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta7"></textarea><div class="out" id="out7"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑨ 모델 학습 — 훈련 : 테스트 = 7 : 3</span><span class="btns"><button class="repair" data-i="8" disabled title="막혔을 때 이 단계를 복구하고 다음으로 진행">🛟 복구</button><button class="run" data-i="8" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta8"></textarea><div class="out" id="out8"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑩ 정확도 출력 (그대로 실행)</span><button class="run" data-i="9" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta9"></textarea><div class="out" id="out9"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑪ 혼동행렬 출력 (그대로 실행)</span><button class="run" data-i="10" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta10"></textarea><div class="out" id="out10"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑫ 지표 계산 — 계산식을 채우세요</span><button class="run" data-i="11" disabled>▶ 실행</button></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta11"></textarea><div class="out" id="out11"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+</div>
+
+<section class="formcell">
+  <h3>⑧-1. 핵심변수 선택 이유</h3>
+  <textarea id="reason" placeholder="여기에 직접 작성하세요"></textarea>
+</section>
+<section class="formcell">
+  <h3>⑬. 요소2 서술 (5문장 이상)</h3>
+  <p>모델 활용 상황을 바탕으로, 혼동행렬의 <b>FP·FN이 이 데이터에서 각각 무엇을 뜻하는지 예시를 들어</b> 설명하고, 자기 모델의 혼동행렬 결과와 정확도·정밀도·재현율 값을 넣어 <b>어느 오류와 지표를 우선해야 할지</b> 핵심변수와 연결하여 5문장 이상의 완성된 글로 설명하시오. (핵심변수가 예측에 어떻게 작용하는지를 포함할 것)</p>
+  <textarea id="seosul" placeholder="여기에 직접 작성하세요 (5문장 이상)"></textarea>
+</section>
+
+<div class="submitbar">
+  <button id="submit" class="save" disabled>📤 온라인 제출</button>
+  <button id="reset" class="ghost">스캐폴드 되돌리기</button>
+</div>
+
+<div class="refwrap"><h2>참고 코드</h2><pre id="refcode">import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import confusion_matrix, classification_report
+iris = load_iris(as_frame=True)
+df = iris.frame.copy()
+df.columns = [&#x27;sepal_len&#x27;, &#x27;sepal_wid&#x27;, &#x27;petal_len&#x27;, &#x27;petal_wid&#x27;, &#x27;target&#x27;]
+df[&#x27;is_virginica&#x27;] = (df[&#x27;target&#x27;] == 2).astype(int)
+df = df.drop(columns=[&#x27;target&#x27;])
+print(df.head())
+target = &#x27;is_virginica&#x27;
+수치열 = [&#x27;sepal_len&#x27;, &#x27;sepal_wid&#x27;, &#x27;petal_len&#x27;, &#x27;petal_wid&#x27;]
+print(df.isnull().sum())
+df = df.dropna()
+df = df.fillna(df.median(numeric_only=True))
+df = df.fillna(df.mean(numeric_only=True))
+df = df.fillna(df.mode().iloc[0])
+df[수치열].plot(kind=&#x27;box&#x27;)
+plt.title(&#x27;outliers&#x27;)
+plt.show()
+corr = df[수치열 + [target]].corr()
+plt.imshow(corr, cmap=&#x27;coolwarm&#x27;, vmin=-1, vmax=1)
+plt.colorbar()
+plt.xticks(range(len(corr)), corr.columns, rotation=45, ha=&#x27;right&#x27;)
+plt.yticks(range(len(corr)), corr.columns)
+for i in range(len(corr)):
+    for j in range(len(corr)):
+        plt.text(j, i, round(corr.iloc[i, j], 2), ha=&#x27;center&#x27;, va=&#x27;center&#x27;)
+plt.title(&#x27;correlation&#x27;)
+plt.show()
+print(corr[target])
+핵심변수 = &#x27;petal_len&#x27;
+X = df[수치열]
+y = df[target]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=7, stratify=y)
+model = DecisionTreeClassifier(random_state=7, max_depth=4)
+model.fit(X_train, y_train)
+print(round(model.score(X_test, y_test), 2))
+pred = model.predict(X_test)
+cm = confusion_matrix(y_test, pred, labels=[0, 1])
+print(cm)
+TN, FP = cm[0]
+FN, TP = cm[1]
+TP/(TP+FN)
+TN/(TN+FP)
+(TP+TN)/(TP+TN+FP+FN)
+TN/(TN+FN)
+TP/(TP+FP)
+(TP+FP)/(TP+TN+FP+FN)</pre></div>
+
+<script id="setup-py" type="text/plain">
+import io, sys, base64, traceback, ast
+import pandas as pd
+pd.set_option("display.width", 200); pd.set_option("display.max_columns", 30)
+import matplotlib
+matplotlib.use("AGG")
+import matplotlib.pyplot as plt
+from matplotlib.artist import Artist
+df = None
+_ENV = {"pd": pd, "plt": plt, "io": io}
+def load_csv(text):
+    global df
+    df = pd.read_csv(io.StringIO(text)); _ENV["df"] = df
+    return [int(df.shape[0]), int(df.shape[1])]
+def run_user(code):
+    buf = io.StringIO(); old = sys.stdout; sys.stdout = buf
+    plt.close("all"); imgs = []
+    try:
+        if df is None: print("⚠ 먼저 데이터 번호를 선택하세요.")
+        else:
+            tree = ast.parse(code)
+            last = tree.body.pop() if tree.body and isinstance(tree.body[-1], ast.Expr) else None
+            exec(compile(tree, "<cell>", "exec"), _ENV)
+            if last is not None:
+                val = eval(compile(ast.Expression(last.value), "<cell>", "eval"), _ENV)
+                if val is not None and not isinstance(val, Artist) and not (isinstance(val, list) and val and isinstance(val[0], Artist)):
+                    print(val)
+            for num in plt.get_fignums():
+                fig = plt.figure(num); b = io.BytesIO(); fig.savefig(b, format="png", bbox_inches="tight", dpi=110)
+                imgs.append(base64.b64encode(b.getvalue()).decode())
+    except Exception: buf.write(traceback.format_exc())
+    finally: sys.stdout = old; plt.close("all")
+    return [buf.getvalue(), imgs]
+</script>
+<script id="sc0" type="text/plain">import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import confusion_matrix, classification_report
+df.info()
+print('준비 완료')</script>
+<script id="sc1" type="text/plain"># 데이터를 확인하세요.
+____</script>
+<script id="sc2" type="text/plain">target = '____'                 # 종속변수(정답) 열 이름
+수치열 = ['____', '____', '____']   # 수치형 독립변수
+범주열 = ['____', '____']           # 범주형 독립변수
+print('target:', target)
+print('수치열:', 수치열)
+print('범주열:', 범주열)</script>
+<script id="sc3" type="text/plain"># 결측치가 열별로 몇 개 있는지 출력하세요.
+print(____________________)</script>
+<script id="sc4" type="text/plain"># 수치형 데이터의 결측치만 처리합니다.
+# 평균으로 결측치를 채우세요.
+df = ____________________
+print('처리 후 결측:', df[수치열].isnull().sum().sum())</script>
+<script id="sc5" type="text/plain"># 그래프 종류를 채우세요
+df[수치열].plot(kind='____')
+plt.title('outliers')
+plt.show()</script>
+<script id="sc6" type="text/plain">corr = df[수치열 + [target]]____
+plt.imshow(corr, cmap='coolwarm', vmin=-1, vmax=1)
+plt.colorbar()
+plt.xticks(range(len(corr)), corr.columns, rotation=45, ha='right')
+plt.yticks(range(len(corr)), corr.columns)
+for i in range(len(corr)):
+    for j in range(len(corr)):
+        plt.text(j, i, round(corr.iloc[i, j], 2), ha='center', va='center', fontsize=8)
+plt.title('correlation')
+plt.show()
+print(corr[target])</script>
+<script id="sc7" type="text/plain"># 핵심변수를 정하세요 (1개만 작성)
+핵심변수 = '____'
+print('내 핵심변수:', 핵심변수)
+# ↓ 다 정했으면 아래로 내려 '⑧-1 핵심변수 선택 이유'를 작성하세요</script>
+<script id="sc8" type="text/plain"># 모델에는 수치열 3개를 모두 넣습니다
+X = df[수치열]
+y = df[target]
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, ____, random_state=7, stratify=y)
+model = DecisionTreeClassifier(random_state=7, max_depth=4)
+model.fit(____, ____)
+print('학습 완료')</script>
+<script id="sc9" type="text/plain">print('정확도:', round(model.score(X_test, y_test), 2))</script>
+<script id="sc10" type="text/plain">pred = model.predict(X_test)
+cm = confusion_matrix(y_test, pred, labels=[0, 1])
+print('           예측0  예측1')
+print('실제0(TN,FP):', cm[0])
+print('실제1(FN,TP):', cm[1])</script>
+<script id="sc11" type="text/plain">TN, FP = cm[0]
+FN, TP = cm[1]
+정확도 = ____
+정밀도 = ____
+재현율 = ____
+print('정확도', round(정확도,2), '| 정밀도', round(정밀도,2), '| 재현율', round(재현율,2))</script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"></script>
+<iframe name="hiddenSubmitFrame" title="submit" style="display:none"></iframe>
+<script>
+const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbxEkiGsfRXp_3Cig33keU2BeAhRVaCj3XQAIoiyqePhlnfYP5IfuRTO7Xn5eLW-4M3KJA/exec";
+const DESC = {"01": {"n": "공유자전거", "q": "기온·습도·거리 등을 보고 자전거를 이용할지(1)/안 할지(0)", "c": [["temperature", "기온"], ["humidity", "습도"], ["distance_km", "이동 거리(km)"], ["weather", "날씨"], ["time_period", "시간대"], ["use_bike", "1이면 이용, 0이면 이용 안 함"]], "u": "이용할 사람을 예측해 대여소마다 자전거를 미리 배치합니다."}, "02": {"n": "온라인쇼핑", "q": "방문자가 구매할지(1)/안 할지(0)", "c": [["page_time_min", "머문 시간(분)"], ["cart_items", "장바구니 담은 수"], ["discount_pct", "할인율(%)"], ["device", "기기"], ["region", "지역"], ["purchase", "1이면 구매, 0이면 구매 안 함"]], "u": "구매할 것 같은 방문자에게 할인 쿠폰을 보냅니다."}, "03": {"n": "도서관", "q": "방문자가 책을 대출할지(1)/안 할지(0)", "c": [["visit_count", "방문 횟수"], ["stay_minutes", "머문 시간(분)"], ["late_fee", "연체료"], ["member_type", "회원 유형"], ["weekday", "요일"], ["borrowed", "1이면 대출, 0이면 대출 안 함"]], "u": "대출할 방문자를 예측해 책과 사서 인력을 미리 준비합니다."}, "04": {"n": "영상콘텐츠", "q": "그 콘텐츠를 선택(시청)할지(1)/안 할지(0)", "c": [["watch_min", "시청 시간(분)"], ["pause_count", "일시정지 횟수"], ["rating", "평점"], ["genre", "장르"], ["time_slot", "시간대"], ["selected", "1이면 선택, 0이면 선택 안 함"]], "u": "선택할 것 같은 콘텐츠를 사용자에게 추천합니다."}, "05": {"n": "대중교통", "q": "그 운행이 혼잡할지(1)/아닐지(0)", "c": [["passengers", "승객 수"], ["delay_min", "지연 시간(분)"], ["distance_km", "거리(km)"], ["line_type", "노선 유형"], ["hour_band", "시간대"], ["crowded", "1이면 혼잡, 0이면 혼잡 안 함"]], "u": "혼잡할 것 같은 운행에 차량을 추가로 투입합니다."}, "06": {"n": "식물생육", "q": "식물이 정상적으로 자랄지(1)/아닐지(0)", "c": [["light_lux", "빛의 밝기(lux)"], ["moisture_pct", "토양 수분(%)"], ["temp_c", "온도(℃)"], ["soil_type", "토양 종류"], ["season", "계절"], ["healthy", "1이면 정상 생육, 0이면 비정상"]], "u": "비정상으로 예측된 식물만 골라 따로 관리합니다."}, "07": {"n": "건물에너지", "q": "에너지를 과다 사용할지(1)/아닐지(0)", "c": [["usage_kwh", "전력 사용량(kWh)"], ["outdoor_temp", "외부 기온"], ["area_sqm", "면적(㎡)"], ["building_type", "건물 유형"], ["month", "월"], ["overuse", "1이면 과다 사용, 0이면 정상"]], "u": "과다 사용이 예상되는 건물을 골라 에너지 점검을 나갑니다."}, "08": {"n": "여행서비스", "q": "서비스를 재이용할지(1)/안 할지(0)", "c": [["stay_days", "숙박 일수"], ["review_score", "리뷰 점수"], ["price_k", "가격(천원)"], ["transport", "이동수단"], ["season", "계절"], ["reuse", "1이면 재이용, 0이면 재이용 안 함"]], "u": "재이용하지 않을 것 같은 고객에게 할인 혜택을 주어 다시 오게 합니다."}, "09": {"n": "스포츠시설", "q": "시설을 계속 이용할지(1)/그만둘지(0)", "c": [["visits_month", "월 방문 횟수"], ["duration_min", "이용 시간(분)"], ["fee_k", "요금(천원)"], ["facility", "시설 종류"], ["weekday", "요일"], ["continue_use", "1이면 지속 이용, 0이면 중단"]], "u": "그만둘 것 같은 회원에게 혜택을 주어 계속 다니게 합니다."}, "10": {"n": "배달서비스", "q": "주문할지(1)/안 할지(0)", "c": [["order_amount", "주문 금액"], ["distance_km", "거리(km)"], ["wait_min", "예상 대기(분)"], ["weather", "날씨"], ["payment", "결제수단"], ["ordered", "1이면 주문, 0이면 주문 안 함"]], "u": "주문을 예측해 라이더와 재료를 미리 준비합니다."}};
+const $ = s => document.querySelector(s);
+const status = $("#status");
+const NC = 12;
+const scaffolds = [...Array(NC)].map((_,i)=> $("#sc"+i).textContent.replace(/^\n/,""));
+const outs = [...Array(NC)].map((_,i)=> $("#out"+i));
+const runBtns = [...document.querySelectorAll(".run")];
+const repairBtns = [...document.querySelectorAll(".repair")];
+const META = {"01":["use_bike",["temperature","humidity","distance_km"],["weather","time_period"]],"02":["purchase",["page_time_min","cart_items","discount_pct"],["device","region"]],"03":["borrowed",["visit_count","stay_minutes","late_fee"],["member_type","weekday"]],"04":["selected",["watch_min","pause_count","rating"],["genre","time_slot"]],"05":["crowded",["passengers","delay_min","distance_km"],["line_type","hour_band"]],"06":["healthy",["light_lux","moisture_pct","temp_c"],["soil_type","season"]],"07":["overuse",["usage_kwh","outdoor_temp","area_sqm"],["building_type","month"]],"08":["reuse",["stay_days","review_score","price_k"],["transport","season"]],"09":["continue_use",["visits_month","duration_min","fee_k"],["facility","weekday"]],"10":["ordered",["order_amount","distance_km","wait_min"],["weather","payment"]]};
+const REPAIR_NAME = {2:"③", 8:"⑨"};
+const repairs = new Set();
+async function repairCell(i){
+  if(!pyodide){ return; }
+  if(!csvLoaded){ alert("먼저 데이터 번호를 선택하세요."); return; }
+  if(!confirm(`${REPAIR_NAME[i]} 단계를 복구할까요?\n복구하면 다음 셀을 이어서 실행할 수 있고, 복구를 사용한 기록이 제출물에 남습니다.`)) return;
+  const m = META[$("#dataNo").value];
+  let py;
+  if(i===2){ py = `target = ${JSON.stringify(m[0])}\n수치열 = ${JSON.stringify(m[1])}\n범주열 = ${JSON.stringify(m[2])}`; }
+  else { py = "from sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nX = df[수치열]\ny = df[target]\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=7, stratify=y)\nmodel = DecisionTreeClassifier(random_state=7, max_depth=4)\nmodel.fit(X_train, y_train)"; }
+  try{ pyodide.globals.set("repair_code", py); pyodide.runPython("exec(repair_code, _ENV)"); }
+  catch(err){
+    const need = /NameError/.test(String(err)) && i===8;
+    outs[i].innerHTML = `<pre style="color:#b91c1c">${need ? "먼저 ③ 변수 정하기를 실행하거나 복구하세요." : "복구하지 못했습니다. 선생님께 알려 주세요."}</pre>`;
+    return;
+  }
+  repairs.add(REPAIR_NAME[i]);
+  outs[i].innerHTML = '<pre style="color:#b45309">🛟 복구됨 — 다음 셀로 진행하세요. (복구를 사용한 기록이 제출물에 남습니다)</pre>';
+  lastCells[i] = {code:cms[i].getValue(), text:"[복구 사용] 이 단계는 복구 기능으로 진행함", imgs:[]};
+  status.textContent = `🛟 ${REPAIR_NAME[i]} 복구됨`;
+}
+const repairMark = i => (REPAIR_NAME[i] && repairs.has(REPAIR_NAME[i])) ? "[복구 사용] " : "";
+
+const lastCells = [...Array(NC)].map(()=>null);
+$("#refcode").textContent = $("#refcode").textContent.replace(/^\n/,"").trimEnd();
+function block(e){ e.preventDefault(); e.stopPropagation(); return false; }
+const cms = [...Array(NC)].map((_,i)=>{
+  const cm = CodeMirror.fromTextArea($("#ta"+i), {mode:"python",theme:"material-darker",lineNumbers:true,indentUnit:4,tabSize:4});
+  cm.setValue(scaffolds[i]); cm.setSize("100%",null);
+  const w = cm.getWrapperElement();
+  ["paste","drop","copy","cut","contextmenu"].forEach(ev=> w.addEventListener(ev, block, true));
+  cm.on("beforeChange",(c,ch)=>{ if(ch.origin==="paste") ch.cancel(); });
+  return cm;
+});
+$("#reset").addEventListener("click",()=>{ if(confirm("모든 셀을 되돌릴까요?")) cms.forEach((cm,i)=>cm.setValue(scaffolds[i])); });
+function guardForm(t){ let last=""; t.addEventListener("input",()=>last=t.value);
+  ["copy","cut","contextmenu"].forEach(ev=> t.addEventListener(ev, block));
+  t.addEventListener("paste",e=>{e.preventDefault();t.value=last;}); t.addEventListener("drop",e=>e.preventDefault());
+  t.addEventListener("beforeinput",e=>{ if(/insertFrom(Paste|Drop|Yank)/.test(e.inputType||"")) e.preventDefault(); }); }
+guardForm($("#reason")); guardForm($("#seosul"));
+let dirty=false;
+cms.forEach(cm=>cm.on("change",()=>{dirty=true;}));
+["#reason","#seosul"].forEach(sel=>$(sel).addEventListener("input",()=>{dirty=true;}));
+window.addEventListener("beforeunload",e=>{ if(dirty){ e.preventDefault(); e.returnValue=""; } });
+["copy","cut","contextmenu","selectstart","dragstart"].forEach(ev=> $("#refcode").addEventListener(ev, block));
+
+let csvName="", csvLoaded=false;
+function showDesc(num){
+  const d=DESC[num]; if(!d){ $("#dataDesc").hidden=true; return; }
+  const cols=d.c.map(x=>`<code>${x[0]}</code> = ${x[1]}`).join(" · ");
+  $("#dataDesc").innerHTML = `이 데이터는 <b>${d.n}</b> 데이터입니다. &nbsp;해결할 문제: <b>${d.q}</b>`
+    + `<div class="use">모델 활용 상황: <b>${d.u}</b></div>`
+    + `<div class="cols">〈열 이름〉 ${cols}</div>`;
+  $("#dataDesc").hidden=false;
+}
+function afterLoad(name,dim){ csvLoaded=true; csvName=name; $("#csvInfo").textContent=`✅ ${name} — ${dim[0]}행 × ${dim[1]}열 불러옴`; $("#submit").disabled=false; }
+$("#dataNo").addEventListener("change", async e=>{
+  const num=e.target.value; if(!num) return; showDesc(num);
+  if(!pyodide){ $("#csvInfo").textContent="⏳ 파이썬 준비 후 다시 선택"; return; }
+  $("#csvInfo").textContent="⏳ 불러오는 중…";
+  try{ const text=await fetch("data/"+num+".csv").then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.text();});
+    pyodide.globals.set("CSV_TEXT",text); const dim=pyodide.runPython("load_csv(CSV_TEXT)").toJs(); afterLoad(num+"번",dim);
+  }catch(err){ csvLoaded=false; $("#csvInfo").textContent="⚠ 실패: "+err; }
+});
+let pyodide;
+async function boot(){ try{ pyodide=await loadPyodide(); status.textContent="📦 pandas · matplotlib · scikit-learn 불러오는 중…";
+  await pyodide.loadPackage(["pandas","matplotlib","scikit-learn"]); pyodide.runPython($("#setup-py").textContent);
+  status.textContent="✅ 준비 완료 — 번호를 선택하고 ①부터 실행"; runBtns.forEach(b=>b.disabled=false); repairBtns.forEach(b=>b.disabled=false);
+}catch(err){ status.textContent="⚠️ 불러오기 실패: "+err; } }
+boot();
+async function runCell(i){
+  if(!pyodide) return;
+  if(!csvLoaded){ alert("먼저 데이터 번호를 선택하세요."); return; }
+  const btn=runBtns[i]; btn.disabled=true; outs[i].innerHTML="<span class='ph'>실행 중…</span>";
+  try{ pyodide.globals.set("user_code", cms[i].getValue());
+    const arr=pyodide.runPython("run_user(user_code)").toJs(); const text=arr[0], imgs=arr[1]; outs[i].innerHTML="";
+    if(text&&text.trim()){ const pre=document.createElement("pre"); pre.textContent=text; outs[i].appendChild(pre); }
+    (imgs||[]).forEach(b=>{ const im=document.createElement("img"); im.src="data:image/png;base64,"+b; outs[i].appendChild(im); });
+    if(!text.trim()&&(!imgs||!imgs.length)) outs[i].innerHTML="<span class='ph'>출력 없음</span>";
+    lastCells[i]={code:cms[i].getValue(), text, imgs:imgs||[]}; status.textContent=`✅ ${i+1}번 완료`;
+  }catch(err){ const pre=document.createElement("pre"); pre.style.color="#b91c1c"; pre.textContent=String(err); outs[i].innerHTML=""; outs[i].appendChild(pre); }
+  finally{ btn.disabled=false; }
+}
+runBtns.forEach(b=> b.addEventListener("click", ()=>runCell(+b.dataset.i)));
+repairBtns.forEach(b=> b.addEventListener("click", ()=>repairCell(+b.dataset.i)));
+function gather(){
+  const code=cms.map((cm,i)=>`# [${i+1}]\n`+cm.getValue()).join("\n\n");
+  const result=(repairs.size?`[복구 사용: ${[...repairs].join(", ")}]\n`:"")+lastCells.map((c,i)=>`[${i+1}] `+repairMark(i)+(c?c.text.trim():"(실행 안 함)")).join("\n");
+  return {code, result, reason:$("#reason").value, seosul:$("#seosul").value};
+}
+$("#submit").addEventListener("click", ()=>{
+  const cls=$("#className").value, no=$("#studentNo").value.trim(), name=$("#studentName").value.trim();
+  if(!cls||!no||!name){ alert("반·학번·이름을 먼저 입력하세요."); return; }
+  if(!csvLoaded){ alert("데이터 번호를 선택하세요."); return; }
+  if(!lastCells[NC-1]){ if(!confirm("마지막 셀을 아직 실행하지 않았습니다. 그래도 제출할까요?")) return; }
+  if(!confirm(`${cls} ${no} ${name} · ${csvName} 으로 제출할까요?`)) return;
+  const g=gather();
+  const form=document.createElement("form"); form.method="POST"; form.action=SUBMIT_URL; form.target="hiddenSubmitFrame";
+  const add=(k,v)=>{ const i=document.createElement("input"); i.type="hidden"; i.name=k; i.value=v==null?"":String(v); form.appendChild(i); };
+  add("course","인공지능 기초"); add("kind","assessment-lab"); add("className",cls); add("studentNo",no); add("studentName",name);
+  add("dataNo",csvName); add("code",g.code); add("result",g.result); add("reason",g.reason); add("seosul",g.seosul);
+  add("submittedAt",new Date().toISOString()); add("userAgent",navigator.userAgent);
+  add("cells",JSON.stringify(cms.map((cm,i)=>({code:cm.getValue(), text:repairMark(i)+(lastCells[i]?lastCells[i].text:"(실행 안 함)"), imgs:lastCells[i]?lastCells[i].imgs:[]}))));
+  document.body.appendChild(form); form.submit(); form.remove();
+  $("#submit").disabled=true; status.textContent="📤 제출했습니다"; setTimeout(()=>{ $("#submit").disabled=false; }, 4000);
+});
+</script>
+</body>
+</html>
