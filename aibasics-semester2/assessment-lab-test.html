@@ -22,6 +22,7 @@
   .wrap{max-width:1500px;margin:0 auto;padding:14px 22px 6px;}
   .cell{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:12px;}
   .hint{margin-top:8px;padding:8px 12px;border-radius:8px;background:#fef3c7;color:#92400e;font-size:.88rem;font-weight:600;}
+  .reset1{background:transparent;color:#94a3b8;border:1px solid #475569;border-radius:8px;padding:6px 10px;font-weight:700;cursor:pointer;font-size:.85rem;} .reset1:disabled{opacity:.4;cursor:default;}
   .cell-head .btns{display:flex;gap:6px;flex-shrink:0;} .repair{background:transparent;color:#f59e0b;border:1px solid #f59e0b;border-radius:8px;padding:6px 10px;font-weight:700;cursor:pointer;font-size:.85rem;} .repair:disabled{opacity:.4;cursor:default;}
   .cell-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;background:#0b1220;color:var(--ink);font-size:.9rem;font-weight:700;border-bottom:1px solid var(--line);}
   .cell-body{display:grid;grid-template-columns:1fr 1fr;gap:0;}
@@ -67,51 +68,51 @@
 
 <div class="wrap">
   <section class="cell">
-    <div class="cell-head"><span>① 라이브러리 불러오기 (그대로 실행)</span><button class="run" data-i="0" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>① 라이브러리 불러오기 (그대로 실행)</span><span class="btns"><button class="reset1" data-i="0" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="0" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta0"></textarea><div class="out" id="out0"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>② 데이터 확인</span><button class="run" data-i="1" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>② 데이터 확인</span><span class="btns"><button class="reset1" data-i="1" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="1" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta1"></textarea><div class="out" id="out1"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>③ 변수 정하기 — 종속변수 · 수치형 독립변수 · 범주형 독립변수 → 열 이름은 영어로 작성하세요.</span><span class="btns"><button class="repair" data-i="2" disabled title="막혔을 때 이 단계를 복구하고 다음으로 진행">🛟 복구</button><button class="run" data-i="2" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>③ 변수 정하기 — 종속변수 · 수치형 독립변수 · 범주형 독립변수 → 열 이름은 영어로 작성하세요.</span><span class="btns"><button class="reset1" data-i="2" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="2" disabled title="막혔을 때 이 단계를 복구하고 다음으로 진행">🛟 복구</button><button class="run" data-i="2" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta2"></textarea><div class="out" id="out2"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>④ 결측치 확인</span><button class="run" data-i="3" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>④ 결측치 확인</span><span class="btns"><button class="reset1" data-i="3" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="3" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta3"></textarea><div class="out" id="out3"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑤ 결측치 처리</span><button class="run" data-i="4" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>⑤ 결측치 처리</span><span class="btns"><button class="reset1" data-i="4" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="4" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta4"></textarea><div class="out" id="out4"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑥ 이상치 확인 — 상자그림</span><button class="run" data-i="5" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>⑥ 이상치 확인 — 상자그림</span><span class="btns"><button class="reset1" data-i="5" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="5" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta5"></textarea><div class="out" id="out5"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑦ 핵심변수 찾기 — 상관 히트맵</span><button class="run" data-i="6" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>⑦ 핵심변수 찾기 — 상관 히트맵</span><span class="btns"><button class="reset1" data-i="6" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="6" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta6"></textarea><div class="out" id="out6"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑧ 핵심변수 정하기</span><button class="run" data-i="7" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>⑧ 핵심변수 정하기</span><span class="btns"><button class="reset1" data-i="7" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="7" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta7"></textarea><div class="out" id="out7"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑨ 모델 학습 — 훈련 : 테스트 = 7 : 3</span><span class="btns"><button class="repair" data-i="8" disabled title="막혔을 때 이 단계를 복구하고 다음으로 진행">🛟 복구</button><button class="run" data-i="8" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>⑨ 모델 학습 — 훈련 : 테스트 = 7 : 3</span><span class="btns"><button class="reset1" data-i="8" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="8" disabled title="막혔을 때 이 단계를 복구하고 다음으로 진행">🛟 복구</button><button class="run" data-i="8" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta8"></textarea><div class="out" id="out8"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑩ 정확도 출력 (그대로 실행)</span><button class="run" data-i="9" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>⑩ 정확도 출력 (그대로 실행)</span><span class="btns"><button class="reset1" data-i="9" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="9" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta9"></textarea><div class="out" id="out9"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑪ 혼동행렬 출력 (그대로 실행)</span><button class="run" data-i="10" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>⑪ 혼동행렬 출력 (그대로 실행)</span><span class="btns"><button class="reset1" data-i="10" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="10" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta10"></textarea><div class="out" id="out10"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑫ 지표 계산 — 계산식을 채우세요</span><button class="run" data-i="11" disabled>▶ 실행</button></div>
+    <div class="cell-head"><span>⑫ 지표 계산 — 계산식을 채우세요</span><span class="btns"><button class="reset1" data-i="11" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="11" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta11"></textarea><div class="out" id="out11"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
 </div>
@@ -371,7 +372,7 @@ $("#dataNo").addEventListener("change", async e=>{
 let pyodide;
 async function boot(){ try{ pyodide=await loadPyodide(); status.textContent="📦 pandas · matplotlib · scikit-learn 불러오는 중…";
   await pyodide.loadPackage(["pandas","matplotlib","scikit-learn"]); pyodide.runPython($("#setup-py").textContent);
-  status.textContent="✅ 준비 완료 — 번호를 선택하고 ①부터 실행"; runBtns.forEach(b=>b.disabled=false); repairBtns.forEach(b=>b.disabled=false);
+  status.textContent="✅ 준비 완료 — 번호를 선택하고 ①부터 실행"; runBtns.forEach(b=>b.disabled=false); repairBtns.forEach(b=>b.disabled=false); document.querySelectorAll(".reset1").forEach(b=>b.disabled=false);
 }catch(err){ status.textContent="⚠️ 불러오기 실패: "+err; } }
 boot();
 async function runCell(i){
@@ -390,6 +391,14 @@ async function runCell(i){
 }
 runBtns.forEach(b=> b.addEventListener("click", ()=>runCell(+b.dataset.i)));
 repairBtns.forEach(b=> b.addEventListener("click", ()=>repairCell(+b.dataset.i)));
+const resetBtns = [...document.querySelectorAll(".reset1")];
+resetBtns.forEach(b=> b.addEventListener("click", ()=>{
+  const i=+b.dataset.i;
+  if(!confirm(`${i+1}번 셀의 코드를 처음 상태로 되돌릴까요?\n이 셀에 작성한 내용이 지워집니다.`)) return;
+  cms[i].setValue(scaffolds[i]); cms[i].focus();
+  status.textContent=`↺ ${i+1}번 셀을 처음 코드로 되돌렸습니다`;
+}));
+
 function gather(){
   const code=cms.map((cm,i)=>`# [${i+1}]\n`+cm.getValue()).join("\n\n");
   const result=(repairs.size?`[복구 사용: ${[...repairs].join(", ")}]\n`:"")+lastCells.map((c,i)=>`[${i+1}] `+repairMark(i)+(c?c.text.trim():"(실행 안 함)")).join("\n");
