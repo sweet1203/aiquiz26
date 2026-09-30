@@ -84,7 +84,7 @@
     <div class="cell-body"><textarea class="editor-ta" id="ta3"></textarea><div class="out" id="out3"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑤ 결측치 처리</span><span class="btns"><button class="reset1" data-i="4" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="4" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>⑤ 결측치 처리</span><span class="btns"><button class="reset1" data-i="4" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="4" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (제출물에 기록됨)">모르겠음</button><button class="run" data-i="4" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta4"></textarea><div class="out" id="out4"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
@@ -296,7 +296,7 @@ const outs = [...Array(NC)].map((_,i)=> $("#out"+i));
 const runBtns = [...document.querySelectorAll(".run")];
 const repairBtns = [...document.querySelectorAll(".repair")];
 const META = {"01":["use_bike",["temperature","humidity","distance_km"],["weather","time_period"]],"02":["purchase",["page_time_min","cart_items","discount_pct"],["device","region"]],"03":["borrowed",["visit_count","stay_minutes","late_fee"],["member_type","weekday"]],"04":["selected",["watch_min","pause_count","rating"],["genre","time_slot"]],"05":["crowded",["passengers","delay_min","distance_km"],["line_type","hour_band"]],"06":["healthy",["light_lux","moisture_pct","temp_c"],["soil_type","season"]],"07":["overuse",["usage_kwh","outdoor_temp","area_sqm"],["building_type","month"]],"08":["reuse",["stay_days","review_score","price_k"],["transport","season"]],"09":["continue_use",["visits_month","duration_min","fee_k"],["facility","weekday"]],"10":["ordered",["order_amount","distance_km","wait_min"],["weather","payment"]]};
-const REPAIR_NAME = {2:"③", 8:"⑨"};
+const REPAIR_NAME = {2:"③", 4:"⑤", 8:"⑨"};
 const repairs = new Set();
 async function repairCell(i){
   if(!pyodide){ return; }
@@ -304,7 +304,8 @@ async function repairCell(i){
   if(!confirm(`${REPAIR_NAME[i]} 단계를 '모르겠음'으로 넘어갈까요?\n이 단계가 채워져 다음 셀을 이어서 실행할 수 있고, '모르겠음'을 누른 기록이 제출물에 남습니다.`)) return;
   const m = META[$("#dataNo").value];
   let py;
-  if(i===2){ py = `target = ${JSON.stringify(m[0])}\n수치열 = ${JSON.stringify(m[1])}\n범주열 = ${JSON.stringify(m[2])}`; }
+  if(i===4){ pyodide.runPython("load_csv(CSV_TEXT)"); py = "df = df.fillna(df.mean(numeric_only=True))"; }
+  else if(i===2){ py = `target = ${JSON.stringify(m[0])}\n수치열 = ${JSON.stringify(m[1])}\n범주열 = ${JSON.stringify(m[2])}`; }
   else { py = "from sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nX = df[수치열]\ny = df[target]\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=7, stratify=y)\nmodel = DecisionTreeClassifier(random_state=7, max_depth=4)\nmodel.fit(X_train, y_train)"; }
   try{ pyodide.globals.set("repair_code", py); pyodide.runPython("exec(repair_code, _ENV)"); }
   catch(err){
@@ -319,6 +320,8 @@ async function repairCell(i){
 }
 function cascadeHint(i,text){
   if(!/Traceback/.test(text)) return "";
+  let dfOk=true; try{ dfOk=pyodide.runPython("isinstance(_ENV.get('df'), pd.DataFrame)"); }catch(e){}
+  if(i>=5 && !dfOk) return "💡 ⑤에서 df가 데이터표가 아닌 다른 값으로 바뀌었습니다. ⑤를 확인하세요. 막히면 ⑤의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
   if(i>=3 && i<=8 && (/KeyError|not in index|are in the \[columns\]/.test(text) || /NameError: name '(target|수치열|범주열)'/.test(text)))
     return "💡 ③ 변수 정하기의 열 이름을 확인하세요. 막히면 ③의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
   if(i>=9 && i<=10 && /NameError: name '(model|X_train|X_test|y_train|y_test)'/.test(text))
