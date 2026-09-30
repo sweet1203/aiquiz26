@@ -314,7 +314,7 @@ async function repairCell(i){
   }
   repairs.add(REPAIR_NAME[i]);
   outs[i].innerHTML = '<pre style="color:#b45309">‘모르겠음’으로 넘어갔습니다 — 다음 셀로 진행하세요. (제출물에 기록됩니다)</pre>';
-  lastCells[i] = {code:cms[i].getValue(), text:"[모르겠음] 이 단계는 '모르겠음'으로 진행함", imgs:[]};
+  lastCells[i] = {code:cms[i].getValue(), text:"이 단계는 '모르겠음'으로 진행함", imgs:[]};
   status.textContent = `${REPAIR_NAME[i]} 모르겠음으로 진행`;
 }
 function cascadeHint(i,text){
