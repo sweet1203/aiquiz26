@@ -194,8 +194,10 @@ import matplotlib.pyplot as plt
 from matplotlib.artist import Artist
 df = None
 _ENV = {"pd": pd, "plt": plt, "io": io}
-def load_csv(text):
+def load_csv(text, reset=True):
     global df
+    if reset:
+        _ENV.clear(); _ENV.update({"pd": pd, "plt": plt, "io": io})
     df = pd.read_csv(io.StringIO(text)); _ENV["df"] = df
     return [int(df.shape[0]), int(df.shape[1])]
 def run_user(code):
@@ -304,13 +306,16 @@ async function repairCell(i){
   if(!confirm(`${REPAIR_NAME[i]} 단계를 '모르겠음'으로 넘어갈까요?\n이 단계가 채워져 다음 셀을 이어서 실행할 수 있고, '모르겠음'을 누른 기록이 제출물에 남습니다.`)) return;
   const m = META[$("#dataNo").value];
   let py;
-  if(i===4){ pyodide.runPython("load_csv(CSV_TEXT)"); py = "df = df.fillna(df.mean(numeric_only=True))"; }
+  if(i===4){ pyodide.runPython("load_csv(CSV_TEXT, False)"); py = "df = df.fillna(df.mean(numeric_only=True))"; }
   else if(i===2){ py = `target = ${JSON.stringify(m[0])}\n수치열 = ${JSON.stringify(m[1])}\n범주열 = ${JSON.stringify(m[2])}`; }
   else { py = "from sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nX = df[수치열]\ny = df[target]\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=7, stratify=y)\nmodel = DecisionTreeClassifier(random_state=7, max_depth=4)\nmodel.fit(X_train, y_train)"; }
   try{ pyodide.globals.set("repair_code", py); pyodide.runPython("exec(repair_code, _ENV)"); }
   catch(err){
-    const need = /NameError/.test(String(err)) && i===8;
-    outs[i].innerHTML = `<pre style="color:#b91c1c">${need ? "먼저 ③ 변수 정하기를 실행하거나 ③의 '모르겠음'을 누르세요." : "진행하지 못했습니다. 선생님께 알려 주세요."}</pre>`;
+    const es = String(err); let msg = "진행하지 못했습니다. 선생님께 알려 주세요.";
+    if(i===8 && /NameError/.test(es)) msg = "먼저 ③ 변수 정하기를 실행하거나 ③의 '모르겠음'을 누르세요.";
+    else if(i===8 && (/KeyError|not in index|could not convert|contains NaN/.test(es))) msg = "③의 열 이름이 맞지 않습니다. ③의 '모르겠음'을 먼저 누르세요.";
+    else if(i===8 && (/least populated|too few|should be greater|TypeError|AttributeError/.test(es))) msg = "데이터가 올바르지 않습니다. ⑤의 '모르겠음'으로 원래 데이터를 다시 불러오세요.";
+    outs[i].innerHTML = `<pre style="color:#b91c1c">${msg}</pre>`;
     return;
   }
   repairs.add(REPAIR_NAME[i]);
@@ -318,17 +323,22 @@ async function repairCell(i){
   lastCells[i] = {code:cms[i].getValue(), text:"이 단계는 '모르겠음'으로 진행함", imgs:[]};
   status.textContent = `${REPAIR_NAME[i]} 모르겠음으로 진행`;
 }
+function pyVal(code, dflt){ try{ return pyodide.runPython(code); }catch(e){ return dflt; } }
 function cascadeHint(i,text){
-  let dfOk=true; try{ dfOk=pyodide.runPython("isinstance(_ENV.get('df'), pd.DataFrame)"); }catch(e){}
+  const dfOk = pyVal("isinstance(_ENV.get('df'), pd.DataFrame)", true);
+  const rows = dfOk ? pyVal("len(_ENV['df'])", ORIG_ROWS) : ORIG_ROWS;
+  const badType = pyVal("any(c in _ENV['df'].columns and _ENV['df'][c].dtype == object for c in list(_ENV.get('수치열', [])) + [_ENV.get('target')] if isinstance(c, str))", false);
   if(i===4 && !dfOk) return "⚠ ⑤를 실행한 뒤 df가 데이터표가 아닌 다른 값으로 바뀌었습니다. 결측치를 채운 데이터표가 df에 들어가야 합니다. 막히면 ⑤의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
   if(i>=5 && !dfOk) return "💡 ⑤에서 df가 데이터표가 아닌 다른 값으로 바뀌었습니다. ⑤를 확인하세요. 막히면 ⑤의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
+  if(i>=1 && ORIG_ROWS && rows<ORIG_ROWS) return `⚠ df의 행 수가 원래 ${ORIG_ROWS}개에서 ${rows}개로 줄었습니다. 데이터를 줄이는 코드가 df에 저장되지 않았는지 확인하세요. 막히면 ⑤의 ‘모르겠음’을 누르면 원래 데이터를 다시 불러와 결측치를 채웁니다.`;
   if(!/Traceback/.test(text)) return "";
-  if(false) return "💡 ⑤에서 df가 데이터표가 아닌 다른 값으로 바뀌었습니다. ⑤를 확인하세요. 막히면 ⑤의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
-  if(i>=3 && i<=8 && (/KeyError|not in index|are in the \[columns\]/.test(text) || /NameError: name '(target|수치열|범주열)'/.test(text)))
-    return "💡 ③ 변수 정하기의 열 이름을 확인하세요. 막히면 ③의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
+  if(/NameError: name '(train_test_split|DecisionTreeClassifier|confusion_matrix|classification_report)'/.test(text)) return "💡 ① 라이브러리 불러오기를 먼저 실행하세요.";
+  if(i>=3 && i<=8 && (/KeyError|not in index|are in the \[columns\]/.test(text) || /NameError: name '(target|수치열|범주열)'/.test(text) || badType))
+    return "💡 ③ 변수 정하기를 확인하세요. 종속변수와 수치형 독립변수에 맞는 열 이름이 들어가야 합니다. 막히면 ③의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
   if(i>=9 && i<=10 && /NameError: name '(model|X_train|X_test|y_train|y_test)'/.test(text))
     return "💡 ⑨ 모델 학습을 먼저 실행하세요. 막히면 ⑨의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
   if(i===11 && /NameError: name '(cm|TN|FP|FN|TP)'/.test(text)) return "💡 ⑪ 혼동행렬을 먼저 실행하세요.";
+  if(REPAIR_NAME[i]) return "💡 막히면 이 셀의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
   return "";
 }
 const repairMark = i => (REPAIR_NAME[i] && repairs.has(REPAIR_NAME[i])) ? "[모르겠음] " : "";
@@ -365,7 +375,8 @@ function showDesc(num){
     + `<div class="cols">〈열 이름〉 ${cols}</div>`;
   $("#dataDesc").hidden=false;
 }
-function afterLoad(name,dim){ csvLoaded=true; csvName=name; $("#csvInfo").textContent=`✅ ${name} — ${dim[0]}행 × ${dim[1]}열 불러옴`; $("#submit").disabled=false; }
+let ORIG_ROWS=0;
+function afterLoad(name,dim){ csvLoaded=true; ORIG_ROWS=dim[0]; csvName=name; $("#csvInfo").textContent=`✅ ${name} — ${dim[0]}행 × ${dim[1]}열 불러옴`; $("#submit").disabled=false; }
 $("#dataNo").addEventListener("change", async e=>{
   const num=e.target.value; if(!num) return; showDesc(num);
   if(!pyodide){ $("#csvInfo").textContent="⏳ 파이썬 준비 후 다시 선택"; return; }
