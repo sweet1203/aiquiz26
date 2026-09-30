@@ -21,6 +21,7 @@
   .ddesc code{background:#dbeafe;color:#0b3a66;padding:1px 6px;border-radius:5px;font-size:.8rem;}
   .wrap{max-width:1500px;margin:0 auto;padding:14px 22px 6px;}
   .cell{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:12px;}
+  .hint{margin-top:8px;padding:8px 12px;border-radius:8px;background:#fef3c7;color:#92400e;font-size:.88rem;font-weight:600;}
   .cell-head .btns{display:flex;gap:6px;flex-shrink:0;} .repair{background:transparent;color:#f59e0b;border:1px solid #f59e0b;border-radius:8px;padding:6px 10px;font-weight:700;cursor:pointer;font-size:.85rem;} .repair:disabled{opacity:.4;cursor:default;}
   .cell-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;background:#0b1220;color:var(--ink);font-size:.9rem;font-weight:700;border-bottom:1px solid var(--line);}
   .cell-body{display:grid;grid-template-columns:1fr 1fr;gap:0;}
@@ -315,6 +316,15 @@ async function repairCell(i){
   lastCells[i] = {code:cms[i].getValue(), text:"[복구 사용] 이 단계는 복구 기능으로 진행함", imgs:[]};
   status.textContent = `🛟 ${REPAIR_NAME[i]} 복구됨`;
 }
+function cascadeHint(i,text){
+  if(!/Traceback/.test(text)) return "";
+  if(i>=3 && i<=8 && (/KeyError|not in index|are in the \[columns\]/.test(text) || /NameError: name '(target|수치열|범주열)'/.test(text)))
+    return "💡 ③ 변수 정하기의 열 이름을 확인하세요. 막히면 ③의 🛟 복구를 눌러 다음으로 진행할 수 있습니다.";
+  if(i>=9 && i<=10 && /NameError: name '(model|X_train|X_test|y_train|y_test)'/.test(text))
+    return "💡 ⑨ 모델 학습을 먼저 실행하세요. 막히면 ⑨의 🛟 복구를 눌러 다음으로 진행할 수 있습니다.";
+  if(i===11 && /NameError: name '(cm|TN|FP|FN|TP)'/.test(text)) return "💡 ⑪ 혼동행렬을 먼저 실행하세요.";
+  return "";
+}
 const repairMark = i => (REPAIR_NAME[i] && repairs.has(REPAIR_NAME[i])) ? "[복구 사용] " : "";
 
 const lastCells = [...Array(NC)].map(()=>null);
@@ -371,6 +381,7 @@ async function runCell(i){
   try{ pyodide.globals.set("user_code", cms[i].getValue());
     const arr=pyodide.runPython("run_user(user_code)").toJs(); const text=arr[0], imgs=arr[1]; outs[i].innerHTML="";
     if(text&&text.trim()){ const pre=document.createElement("pre"); pre.textContent=text; outs[i].appendChild(pre); }
+    { const hint=cascadeHint(i,text||""); if(hint){ const h=document.createElement("div"); h.className="hint"; h.textContent=hint; outs[i].appendChild(h); } }
     (imgs||[]).forEach(b=>{ const im=document.createElement("img"); im.src="data:image/png;base64,"+b; outs[i].appendChild(im); });
     if(!text.trim()&&(!imgs||!imgs.length)) outs[i].innerHTML="<span class='ph'>출력 없음</span>";
     lastCells[i]={code:cms[i].getValue(), text, imgs:imgs||[]}; status.textContent=`✅ ${i+1}번 완료`;
