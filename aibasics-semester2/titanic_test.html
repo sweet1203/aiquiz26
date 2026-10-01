@@ -49,6 +49,7 @@
   <h1>🚢 [2-2차시] 힌트 없이 — Titanic 실전 연습</h1>
   <p><b>①번부터 순서대로</b> 실행하세요. · 코드의 <code>____</code>를 직접 채우세요. · 실제 수행평가와 같은 화면입니다(연습용이라 제출하지 않습니다).</p>
 </header>
+<div style="background:#fef9c3;border-bottom:1px solid #fde68a;color:#713f12;padding:10px 22px;font-size:.9rem;font-weight:600;">📢 여기 있는 내용은 수행평가 연습2를 그대로 만든 것입니다. 실제 수행평가와 빈칸과 문제가 달라질 수 있으니 참고바랍니다.</div>
 <div class="bar"><span id="status">⏳ 파이썬 환경 불러오는 중… (처음 한 번, 조금 걸려요)</span></div>
 <div class="id-row">
   <select id="dataNo" hidden><option value="practice_titanic" selected>practice_titanic</option></select>
@@ -69,31 +70,20 @@
     <div class="cell-head"><span>③ 결측치 확인 (그대로 실행) — 열별 결측을 셉니다</span><span class="btns"><button class="reset1" data-i="2" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="2" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta2"></textarea><div class="out" id="out2"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
-  <section class="formcell" style="margin:0 0 12px">
-    <h3>📌 결측치 처리 방법 3가지</h3>
-    <p><b>① 평균으로 채우기</b> <code>df = df.fillna(df.mean(numeric_only=True))</code> — 수치형 열의 빈칸을 그 열의 평균으로 채웁니다. 데이터 개수가 그대로 유지됩니다. 이상치(너무 크거나 작은 값)가 있으면 평균이 그쪽으로 끌려갈 수 있습니다.</p>
-    <p><b>② 중앙값으로 채우기</b> <code>df = df.fillna(df.median(numeric_only=True))</code> — 수치형 열의 빈칸을 그 열의 중앙값(가운데 값)으로 채웁니다. 데이터 개수가 그대로 유지됩니다. 이상치의 영향을 덜 받습니다.</p>
-    <p><b>③ 결측치가 있는 행 삭제하기</b> <code>df = df.dropna()</code> — 빈칸이 하나라도 있는 행(줄)을 통째로 삭제합니다. 가장 간단하지만 데이터 개수가 줄어듭니다.</p>
-    <p><code>numeric_only=True</code> = 수치형 열만 계산하라는 뜻입니다. (범주형 열은 평균·중앙값을 구할 수 없기 때문)</p>
-  </section>
   <section class="cell">
     <div class="cell-head"><span>④ 결측치 처리 — 수치형 결측을 중앙값으로</span><span class="btns"><button class="reset1" data-i="3" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="3" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="3" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta3"></textarea><div class="out" id="out3"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑤ 이상치 확인 — 수치형 변수의 분포를 그래프로</span><span class="btns"><button class="reset1" data-i="4" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="4" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="4" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>⑤ 변수 정하기 — 종속변수 · 수치형 독립변수 · 범주형 독립변수 → 열 이름은 영어로 작성하세요.</span><span class="btns"><button class="reset1" data-i="4" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="4" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="4" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta4"></textarea><div class="out" id="out4"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
-  <section class="formcell" style="margin:0 0 12px">
-    <h3>변수 유형·역할 분류 (직접 적기)</h3>
-    <textarea id="reason" placeholder="수치형(독립): &#10;범주형(독립): &#10;종속변수(정답): "></textarea>
-  </section>
   <section class="cell">
-    <div class="cell-head"><span>⑥ 핵심변수 찾기 — 상관 히트맵 ⭐</span><span class="btns"><button class="reset1" data-i="5" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="5" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>⑥ 이상치 확인 — 수치형 변수의 분포를 그래프로</span><span class="btns"><button class="reset1" data-i="5" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="5" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta5"></textarea><div class="out" id="out5"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑦ 정답과의 상관 출력</span><span class="btns"><button class="reset1" data-i="6" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="6" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>⑦ 핵심변수 찾기 — 상관 히트맵 ⭐</span><span class="btns"><button class="reset1" data-i="6" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="6" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta6"></textarea><div class="out" id="out6"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
@@ -179,11 +169,16 @@ print('준비 완료')</script>
 # 중앙값으로 결측치를 채우세요.
 df = df.____(df.____(numeric_only=True))
 print(df.isnull().sum())</script>
-<script id="sc4" type="text/plain">수치열 = ['____', '____', '____', '____', '____']   # 수치형 독립변수 5개
-df[수치열].plot(kind='____', figsize=(7,4))
+<script id="sc4" type="text/plain">target = '____'                 # 종속변수(정답) 열 이름
+수치열 = ['____', '____', '____', '____', '____']   # 수치형 독립변수 5개
+범주열 = ['____', '____']           # 범주형 독립변수
+print('target:', target)
+print('수치열:', 수치열)
+print('범주열:', 범주열)</script>
+<script id="sc5" type="text/plain">df[수치열].plot(kind='____', figsize=(7,4))
 plt.title('outliers')
 plt.show()</script>
-<script id="sc5" type="text/plain">corr = df[수치열 + ['____']]____
+<script id="sc6" type="text/plain">corr = df[수치열 + ['____']]____
 plt.imshow(corr, cmap='coolwarm', vmin=-1, vmax=1)
 plt.colorbar()
 plt.xticks(range(len(corr)), corr.columns, rotation=45, ha='right')
@@ -193,7 +188,6 @@ for i in range(len(corr)):
         plt.text(j, i, round(corr.iloc[i, j], 2), ha='center', va='center', fontsize=8)
 plt.title('correlation')
 plt.show()</script>
-<script id="sc6" type="text/plain">print(corr['____'])</script>
 <script id="sc7" type="text/plain"># 위에서 상관이 가장 큰 변수를 핵심변수로 정하세요 (1개만 작성)
 핵심변수 = '____'
 print('내 핵심변수:', 핵심변수)</script>
@@ -240,13 +234,13 @@ async function repairCell(i){
   const m = META[$("#dataNo").value];
   let py;
   if(i===3){ pyodide.runPython("load_csv(CSV_TEXT, False)"); py = "df = df.fillna(df.median(numeric_only=True))"; }
-  else if(i===4){ py = "수치열 = ['pclass', 'age', 'sibsp', 'parch', 'fare']"; }
+  else if(i===4){ py = "target = 'survived'\n수치열 = ['pclass', 'age', 'sibsp', 'parch', 'fare']\n범주열 = ['sex', 'embarked']"; }
   else if(i===8){ py = "from sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nX = df[수치열]\ny = df['survived']\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=7, stratify=y)\nmodel = DecisionTreeClassifier(random_state=7, max_depth=4)\nmodel.fit(X_train, y_train)"; }
   else { py = "from sklearn.metrics import confusion_matrix\npred = model.predict(X_test)\ncm = confusion_matrix(y_test, pred, labels=[0, 1])"; }
   try{ pyodide.globals.set("repair_code", py); pyodide.runPython("exec(repair_code, _ENV)"); }
   catch(err){
     const es = String(err); let msg = "진행하지 못했습니다. 선생님께 알려 주세요.";
-    if(i===8 && /NameError/.test(es)) msg = "먼저 ⑤ 이상치 확인(수치열)을 실행하거나 ⑤의 '모르겠음'을 누르세요.";
+    if(i===8 && /NameError/.test(es)) msg = "먼저 ⑤ 변수 정하기를 실행하거나 ⑤의 '모르겠음'을 누르세요.";
     else if(i===10 && /NameError/.test(es)) msg = "먼저 ⑨ 모델 학습을 실행하거나 ⑨의 '모르겠음'을 누르세요.";
     else if(i===8 && (/KeyError|not in index|could not convert|contains NaN/.test(es))) msg = "⑤의 수치열 열 이름이 맞지 않습니다. ⑤의 '모르겠음'을 먼저 누르세요.";
     else if(/least populated|too few|should be greater|TypeError|AttributeError/.test(es)) msg = "데이터가 올바르지 않습니다. ④의 '모르겠음'으로 원래 데이터를 다시 불러오세요.";
@@ -269,11 +263,10 @@ function cascadeHint(i,text){
   if(i>=1 && ORIG_ROWS && rows<ORIG_ROWS) return `⚠ df의 행 수가 원래 ${ORIG_ROWS}개에서 ${rows}개로 줄었습니다. 이 연습에서는 행을 삭제하지 말고 중앙값으로 채우세요. 막히면 ④의 ‘모르겠음’을 누르면 원래 데이터를 다시 불러와 결측치를 채웁니다.`;
   if(!/Traceback/.test(text)) return "";
   if(/NameError: name '(train_test_split|DecisionTreeClassifier|confusion_matrix|classification_report)'/.test(text)) return "💡 ① 라이브러리 불러오기를 먼저 실행하세요.";
-  if(i===6 && /NameError: name 'corr'/.test(text)) return "💡 ⑥ 상관 히트맵을 먼저 실행하세요.";
   if(i>=5 && i<=8 && (/NameError: name '수치열'/.test(text) || badType))
-    return "💡 ⑤ 이상치 확인 셀의 수치열(수치형 독립변수 열 이름)을 확인하세요. 막히면 ⑤의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
+    return "💡 ⑤ 변수 정하기 셀의 수치열(수치형 독립변수 열 이름)을 확인하세요. 막히면 ⑤의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
   if(i>=5 && i<=8 && /KeyError|not in index|are in the \[columns\]/.test(text))
-    return "💡 열 이름을 확인하세요. 수치열은 ⑤에서, 정답 열 이름은 이 셀에서 씁니다. 수치열이 막히면 ⑤의 ‘모르겠음’을 누를 수 있습니다.";
+    return "💡 열 이름을 확인하세요. 수치열은 ⑤에서 정한 열 이름을 씁니다. 수치열이 막히면 ⑤의 ‘모르겠음’을 누를 수 있습니다.";
   if(i>=9 && i<=10 && /NameError: name '(model|X_train|X_test|y_train|y_test)'/.test(text))
     return "💡 ⑨ 모델 학습을 먼저 실행하세요. 막히면 ⑨의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
   if(i===11 && /NameError: name '(cm|TN|FP|FN|TP|pred)'/.test(text)) return "💡 ⑪ 혼동행렬을 먼저 실행하세요. 막히면 ⑪의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
@@ -297,10 +290,10 @@ function guardForm(t){ let last=""; t.addEventListener("input",()=>last=t.value)
   ["copy","cut","contextmenu"].forEach(ev=> t.addEventListener(ev, block));
   t.addEventListener("paste",e=>{e.preventDefault();t.value=last;}); t.addEventListener("drop",e=>e.preventDefault());
   t.addEventListener("beforeinput",e=>{ if(/insertFrom(Paste|Drop|Yank)/.test(e.inputType||"")) e.preventDefault(); }); }
-guardForm($("#reason")); guardForm($("#seosul"));
+guardForm($("#seosul"));
 let dirty=false;
 cms.forEach(cm=>cm.on("change",()=>{dirty=true;}));
-["#reason","#seosul"].forEach(sel=>$(sel).addEventListener("input",()=>{dirty=true;}));
+["#seosul"].forEach(sel=>$(sel).addEventListener("input",()=>{dirty=true;}));
 window.addEventListener("beforeunload",e=>{ if(dirty){ e.preventDefault(); e.returnValue=""; } });
 
 let csvName="", csvLoaded=false;
@@ -355,7 +348,7 @@ resetBtns.forEach(b=> b.addEventListener("click", ()=>{
 function gather(){
   const code=cms.map((cm,i)=>`# [${i+1}]\n`+cm.getValue()).join("\n\n");
   const result=(repairs.size?`[모르겠음: ${[...repairs].join(", ")}]\n`:"")+lastCells.map((c,i)=>`[${i+1}] `+repairMark(i)+(c?c.text.trim():"(실행 안 함)")).join("\n");
-  return {code, result, reason:$("#reason").value, seosul:$("#seosul").value};
+  return {code, result, reason:"", seosul:$("#seosul").value};
 }
 
 </script>
