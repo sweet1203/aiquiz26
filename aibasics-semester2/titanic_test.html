@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>수행평가 연습 · 타이타닉(titanic)</title>
+<title>수행평가 연습 · 타이타닉(2-2)</title>
 <style>
   :root{--bg:#f4f7fb;--panel:#1e293b;--line:#334155;--ink:#e2e8f0;--sub:#94a3b8;--accent:#0891b2;--accent2:#059669;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
   *{box-sizing:border-box}
@@ -46,8 +46,8 @@
 </head>
 <body>
 <header>
-  <h1>✏️ 수행평가 연습 · 타이타닉(titanic) 데이터</h1>
-  <p><b>①번부터 순서대로</b> 실행하세요. · 실제 수행평가와 같은 화면입니다(연습용이라 제출하지 않습니다).</p>
+  <h1>🚢 [2-2차시] 힌트 없이 — Titanic 실전 연습</h1>
+  <p><b>①번부터 순서대로</b> 실행하세요. · 코드의 <code>____</code>를 직접 채우세요. · 실제 수행평가와 같은 화면입니다(연습용이라 제출하지 않습니다).</p>
 </header>
 <div class="bar"><span id="status">⏳ 파이썬 환경 불러오는 중… (처음 한 번, 조금 걸려요)</span></div>
 <div class="id-row">
@@ -55,7 +55,6 @@
   <div id="csvInfo">⏳ 데이터는 파이썬 준비가 끝나면 자동으로 불러옵니다.</div>
 </div>
 <div id="dataDesc" class="ddesc" hidden></div>
-<script>/* 설명은 처음부터 보이게 */</script>
 
 <div class="wrap">
   <section class="cell">
@@ -63,27 +62,38 @@
     <div class="cell-body"><textarea class="editor-ta" id="ta0"></textarea><div class="out" id="out0"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>② 데이터 확인</span><span class="btns"><button class="reset1" data-i="1" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="1" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>② 데이터 확인 (그대로 실행) — 먼저 열 이름을 꼭 확인하세요</span><span class="btns"><button class="reset1" data-i="1" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="1" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta1"></textarea><div class="out" id="out1"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>③ 변수 정하기 — 종속변수 · 수치형 독립변수 · 범주형 독립변수 → 열 이름은 영어로 작성하세요.</span><span class="btns"><button class="reset1" data-i="2" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="2" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="2" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>③ 결측치 확인 (그대로 실행) — 열별 결측을 셉니다</span><span class="btns"><button class="reset1" data-i="2" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="2" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta2"></textarea><div class="out" id="out2"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
+  <section class="formcell" style="margin:0 0 12px">
+    <h3>📌 결측치 처리 방법 3가지</h3>
+    <p><b>① 평균으로 채우기</b> <code>df = df.fillna(df.mean(numeric_only=True))</code> — 수치형 열의 빈칸을 그 열의 평균으로 채웁니다. 데이터 개수가 그대로 유지됩니다. 이상치(너무 크거나 작은 값)가 있으면 평균이 그쪽으로 끌려갈 수 있습니다.</p>
+    <p><b>② 중앙값으로 채우기</b> <code>df = df.fillna(df.median(numeric_only=True))</code> — 수치형 열의 빈칸을 그 열의 중앙값(가운데 값)으로 채웁니다. 데이터 개수가 그대로 유지됩니다. 이상치의 영향을 덜 받습니다.</p>
+    <p><b>③ 결측치가 있는 행 삭제하기</b> <code>df = df.dropna()</code> — 빈칸이 하나라도 있는 행(줄)을 통째로 삭제합니다. 가장 간단하지만 데이터 개수가 줄어듭니다.</p>
+    <p><code>numeric_only=True</code> = 수치형 열만 계산하라는 뜻입니다. (범주형 열은 평균·중앙값을 구할 수 없기 때문)</p>
+  </section>
   <section class="cell">
-    <div class="cell-head"><span>④ 결측치 확인</span><span class="btns"><button class="reset1" data-i="3" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="3" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>④ 결측치 처리 — 수치형 결측을 중앙값으로</span><span class="btns"><button class="reset1" data-i="3" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="3" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="3" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta3"></textarea><div class="out" id="out3"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑤ 결측치 처리</span><span class="btns"><button class="reset1" data-i="4" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="4" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="4" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>⑤ 이상치 확인 — 수치형 변수의 분포를 그래프로</span><span class="btns"><button class="reset1" data-i="4" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="4" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="4" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta4"></textarea><div class="out" id="out4"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
+  <section class="formcell" style="margin:0 0 12px">
+    <h3>변수 유형·역할 분류 (직접 적기)</h3>
+    <textarea id="reason" placeholder="수치형(독립): &#10;범주형(독립): &#10;종속변수(정답): "></textarea>
+  </section>
   <section class="cell">
-    <div class="cell-head"><span>⑥ 이상치 확인 — 상자그림</span><span class="btns"><button class="reset1" data-i="5" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="5" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>⑥ 핵심변수 찾기 — 상관 히트맵 ⭐</span><span class="btns"><button class="reset1" data-i="5" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="5" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta5"></textarea><div class="out" id="out5"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑦ 핵심변수 찾기 — 상관 히트맵</span><span class="btns"><button class="reset1" data-i="6" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="6" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>⑦ 정답과의 상관 출력</span><span class="btns"><button class="reset1" data-i="6" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="6" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta6"></textarea><div class="out" id="out6"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
@@ -91,7 +101,7 @@
     <div class="cell-body"><textarea class="editor-ta" id="ta7"></textarea><div class="out" id="out7"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑨ 모델 학습 — 훈련 : 테스트 = 7 : 3</span><span class="btns"><button class="reset1" data-i="8" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="8" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="8" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>⑨ 모델 학습 — 훈련 80% : 테스트 20%</span><span class="btns"><button class="reset1" data-i="8" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="8" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="8" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta8"></textarea><div class="out" id="out8"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
@@ -99,7 +109,7 @@
     <div class="cell-body"><textarea class="editor-ta" id="ta9"></textarea><div class="out" id="out9"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑪ 혼동행렬 출력 (그대로 실행)</span><span class="btns"><button class="reset1" data-i="10" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="10" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>⑪ 혼동행렬 + 지표 — 예측하고 출력하세요</span><span class="btns"><button class="reset1" data-i="10" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="10" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="10" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta10"></textarea><div class="out" id="out10"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
@@ -109,12 +119,8 @@
 </div>
 
 <section class="formcell">
-  <h3>⑧-1. 핵심변수 선택 이유</h3>
-  <textarea id="reason" placeholder="여기에 직접 작성하세요"></textarea>
-</section>
-<section class="formcell">
-  <h3>⑬. 요소2 서술 (5문장 이상)</h3>
-  <p>모델 활용 상황을 바탕으로, 혼동행렬의 <b>FP·FN이 이 데이터에서 각각 무엇을 뜻하는지 예시를 들어</b> 설명하고, 자기 모델의 혼동행렬 결과와 정확도·정밀도·재현율 값을 넣어 <b>어느 오류와 지표를 우선해야 할지</b> 핵심변수와 연결하여 5문장 이상의 완성된 글로 설명하시오. (핵심변수가 예측에 어떻게 작용하는지를 포함할 것)</p>
+  <h3>서술 — 직접 써 보기 (5문장 이상)</h3>
+  <p>· 혼동행렬에서 나온 값들과 계산한 지표를 넣어 답하세요.<br>· 핵심변수가 무엇이고 예측에 어떻게 작용했나?<br>· 혼동행렬에서 FP·FN은 각각 몇 건인가?<br>· FP와 FN이 의미하는 예시를 작성하고 이것과 관련하여 <b>정밀도·재현율</b> 중 무엇을 더 중요하게 봐야 하나?<br>· (예) 암에 걸렸지만 의사가 암이 아니라고 하는 상황 vs 암에 안 걸렸지만 의사가 암이라고 한 상황처럼, 주어진 데이터셋에 맞는 예시를 직접 생각해서 작성하고 그와 관련된 정밀도, 재현율 중 어떤 것이 중요한 지표라고 생각하는지 자신의 의견을 작성하시오.</p>
   <textarea id="seosul" placeholder="여기에 직접 작성하세요 (5문장 이상)"></textarea>
 </section>
 
@@ -165,27 +171,19 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import confusion_matrix, classification_report
-df.info()
 print('준비 완료')</script>
-<script id="sc1" type="text/plain"># 데이터를 확인하세요.
-____</script>
-<script id="sc2" type="text/plain">target = '____'                 # 종속변수(정답) 열 이름
-수치열 = ['____', '____', '____', '____', '____']   # 수치형 독립변수
-범주열 = ['____', '____']           # 범주형 독립변수
-print('target:', target)
-print('수치열:', 수치열)
-print('범주열:', 범주열)</script>
-<script id="sc3" type="text/plain"># 결측치가 열별로 몇 개 있는지 출력하세요.
-print(____________________)</script>
-<script id="sc4" type="text/plain"># 수치형 데이터의 결측치만 처리합니다.
-# 평균으로 결측치를 채우세요.
-df = ____________________
-print('처리 후 결측:', df[수치열].isnull().sum().sum())</script>
-<script id="sc5" type="text/plain"># 그래프 종류를 채우세요
-df[수치열].plot(kind='____')
+<script id="sc1" type="text/plain">df.head()</script>
+<script id="sc2" type="text/plain">print(df.isnull().sum())
+#결측치 확인하기</script>
+<script id="sc3" type="text/plain"># 수치형 데이터의 결측치만 처리합니다.
+# 중앙값으로 결측치를 채우세요.
+df = df.____(df.____(numeric_only=True))
+print(df.isnull().sum())</script>
+<script id="sc4" type="text/plain">수치열 = ['____', '____', '____', '____', '____']   # 수치형 독립변수 5개
+df[수치열].plot(kind='____', figsize=(7,4))
 plt.title('outliers')
 plt.show()</script>
-<script id="sc6" type="text/plain">corr = df[수치열 + [target]]____
+<script id="sc5" type="text/plain">corr = df[수치열 + ['____']]____
 plt.imshow(corr, cmap='coolwarm', vmin=-1, vmax=1)
 plt.colorbar()
 plt.xticks(range(len(corr)), corr.columns, rotation=45, ha='right')
@@ -194,26 +192,23 @@ for i in range(len(corr)):
     for j in range(len(corr)):
         plt.text(j, i, round(corr.iloc[i, j], 2), ha='center', va='center', fontsize=8)
 plt.title('correlation')
-plt.show()
-print(corr[target])</script>
-<script id="sc7" type="text/plain"># 핵심변수를 정하세요 (1개만 작성)
+plt.show()</script>
+<script id="sc6" type="text/plain">print(corr['____'])</script>
+<script id="sc7" type="text/plain"># 위에서 상관이 가장 큰 변수를 핵심변수로 정하세요 (1개만 작성)
 핵심변수 = '____'
-print('내 핵심변수:', 핵심변수)
-# ↓ 다 정했으면 아래로 내려 '⑧-1 핵심변수 선택 이유'를 작성하세요</script>
-<script id="sc8" type="text/plain"># 모델에는 수치열 5개를 모두 넣습니다
-X = df[수치열]
-y = df[target]
+print('내 핵심변수:', 핵심변수)</script>
+<script id="sc8" type="text/plain">X = df[수치열]
+y = df['____']
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, ____, random_state=7, stratify=y)
+    X, y, test_size=____, random_state=7, stratify=y)
 model = DecisionTreeClassifier(random_state=7, max_depth=4)
-model.fit(____, ____)
-print('학습 완료')</script>
-<script id="sc9" type="text/plain">print('정확도:', round(model.score(X_test, y_test), 2))</script>
-<script id="sc10" type="text/plain">pred = model.predict(X_test)
-cm = confusion_matrix(y_test, pred, labels=[0, 1])
-print('           예측0  예측1')
+model.____(X_train, y_train)</script>
+<script id="sc9" type="text/plain">print('시험 정확도:', round(model.score(X_test, y_test), 3))</script>
+<script id="sc10" type="text/plain">pred = model.____(X_test)
+cm = confusion_matrix(y_test, pred, labels=[0,1])
 print('실제0(TN,FP):', cm[0])
-print('실제1(FN,TP):', cm[1])</script>
+print('실제1(FN,TP):', cm[1])
+print(classification_report(y_test, pred, digits=3))</script>
 <script id="sc11" type="text/plain">TN, FP = cm[0]
 FN, TP = cm[1]
 정확도 = ____
@@ -227,7 +222,7 @@ print('정확도', round(정확도,2), '| 정밀도', round(정밀도,2), '| 재
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"></script>
 <script>
-const DESC = {"practice_titanic": {"n": "타이타닉 승객", "q": "승객 정보를 보고 생존했는지(1)/아닌지(0)", "c": [["pclass", "객실 등급(1~3등급)"], ["age", "나이"], ["sibsp", "함께 탄 형제자매·배우자 수"], ["parch", "함께 탄 부모·자녀 수"], ["fare", "요금"], ["sex", "성별"], ["embarked", "탑승 항구(C·Q·S)"], ["survived", "1이면 생존, 0이면 사망"]], "u": "생존하지 못할 것으로 예측된 승객부터 구조팀을 먼저 보냅니다."}};
+const DESC = {"practice_titanic": {"n": "타이타닉 승객", "q": "승객 정보를 보고 생존했는지(1)/아닌지(0) 예측하기 = 이진 분류", "c": [["survived", "생존 1/0 · 정답"], ["pclass", "객실 등급"], ["age", "나이"], ["sibsp", "형제자매+배우자 수"], ["parch", "부모+자녀 수"], ["fare", "요금"], ["sex", "성별"], ["embarked", "탑승 항구"]], "u": "생존하지 못할 것으로 예측된 승객부터 구조팀을 먼저 보냅니다."}};
 const $ = s => document.querySelector(s);
 const status = $("#status");
 const NC = 12;
@@ -235,24 +230,26 @@ const scaffolds = [...Array(NC)].map((_,i)=> $("#sc"+i).textContent.replace(/^\n
 const outs = [...Array(NC)].map((_,i)=> $("#out"+i));
 const runBtns = [...document.querySelectorAll(".run")];
 const repairBtns = [...document.querySelectorAll(".repair")];
-const META = {"practice_titanic": ["survived", ["pclass", "age", "sibsp", "parch", "fare"], ["sex", "embarked"]]};
-const REPAIR_NAME = {2:"③", 4:"⑤", 8:"⑨"};
+const META = {};
+const REPAIR_NAME = {3:"④", 4:"⑤", 8:"⑨", 10:"⑪"};
 const repairs = new Set();
 async function repairCell(i){
   if(!pyodide){ return; }
-  if(!csvLoaded){ alert("먼저 데이터 번호를 선택하세요."); return; }
+  if(!csvLoaded){ alert("데이터를 불러오는 중입니다. 잠시 후 다시 누르세요."); return; }
   if(!confirm(`${REPAIR_NAME[i]} 단계를 '모르겠음'으로 넘어갈까요?\n이 단계가 채워져 다음 셀을 이어서 실행할 수 있고, 실제 수행평가에서는 '모르겠음'을 누른 기록이 제출물에 남습니다.`)) return;
   const m = META[$("#dataNo").value];
   let py;
-  if(i===4){ pyodide.runPython("load_csv(CSV_TEXT, False)"); py = "df = df.fillna(df.mean(numeric_only=True))"; }
-  else if(i===2){ py = `target = ${JSON.stringify(m[0])}\n수치열 = ${JSON.stringify(m[1])}\n범주열 = ${JSON.stringify(m[2])}`; }
-  else { py = "from sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nX = df[수치열]\ny = df[target]\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=7, stratify=y)\nmodel = DecisionTreeClassifier(random_state=7, max_depth=4)\nmodel.fit(X_train, y_train)"; }
+  if(i===3){ pyodide.runPython("load_csv(CSV_TEXT, False)"); py = "df = df.fillna(df.median(numeric_only=True))"; }
+  else if(i===4){ py = "수치열 = ['pclass', 'age', 'sibsp', 'parch', 'fare']"; }
+  else if(i===8){ py = "from sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nX = df[수치열]\ny = df['survived']\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=7, stratify=y)\nmodel = DecisionTreeClassifier(random_state=7, max_depth=4)\nmodel.fit(X_train, y_train)"; }
+  else { py = "from sklearn.metrics import confusion_matrix\npred = model.predict(X_test)\ncm = confusion_matrix(y_test, pred, labels=[0, 1])"; }
   try{ pyodide.globals.set("repair_code", py); pyodide.runPython("exec(repair_code, _ENV)"); }
   catch(err){
     const es = String(err); let msg = "진행하지 못했습니다. 선생님께 알려 주세요.";
-    if(i===8 && /NameError/.test(es)) msg = "먼저 ③ 변수 정하기를 실행하거나 ③의 '모르겠음'을 누르세요.";
-    else if(i===8 && (/KeyError|not in index|could not convert|contains NaN/.test(es))) msg = "③의 열 이름이 맞지 않습니다. ③의 '모르겠음'을 먼저 누르세요.";
-    else if(i===8 && (/least populated|too few|should be greater|TypeError|AttributeError/.test(es))) msg = "데이터가 올바르지 않습니다. ⑤의 '모르겠음'으로 원래 데이터를 다시 불러오세요.";
+    if(i===8 && /NameError/.test(es)) msg = "먼저 ⑤ 이상치 확인(수치열)을 실행하거나 ⑤의 '모르겠음'을 누르세요.";
+    else if(i===10 && /NameError/.test(es)) msg = "먼저 ⑨ 모델 학습을 실행하거나 ⑨의 '모르겠음'을 누르세요.";
+    else if(i===8 && (/KeyError|not in index|could not convert|contains NaN/.test(es))) msg = "⑤의 수치열 열 이름이 맞지 않습니다. ⑤의 '모르겠음'을 먼저 누르세요.";
+    else if(/least populated|too few|should be greater|TypeError|AttributeError/.test(es)) msg = "데이터가 올바르지 않습니다. ④의 '모르겠음'으로 원래 데이터를 다시 불러오세요.";
     outs[i].innerHTML = `<pre style="color:#b91c1c">${msg}</pre>`;
     return;
   }
@@ -266,17 +263,19 @@ function pyVal(code, dflt){ try{ return pyodide.runPython(code); }catch(e){ retu
 function cascadeHint(i,text){
   const dfOk = pyVal("isinstance(_ENV.get('df'), pd.DataFrame)", true);
   const rows = dfOk ? pyVal("len(_ENV['df'])", ORIG_ROWS) : ORIG_ROWS;
-  const badType = pyVal("any(c in _ENV['df'].columns and _ENV['df'][c].dtype == object for c in list(_ENV.get('수치열', [])) + [_ENV.get('target')] if isinstance(c, str))", false);
-  if(i===4 && !dfOk) return "⚠ ⑤를 실행한 뒤 df가 데이터표가 아닌 다른 값으로 바뀌었습니다. 결측치를 채운 데이터표가 df에 들어가야 합니다. 막히면 ⑤의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
-  if(i>=5 && !dfOk) return "💡 ⑤에서 df가 데이터표가 아닌 다른 값으로 바뀌었습니다. ⑤를 확인하세요. 막히면 ⑤의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
-  if(i>=1 && ORIG_ROWS && rows<ORIG_ROWS) return `⚠ df의 행 수가 원래 ${ORIG_ROWS}개에서 ${rows}개로 줄었습니다. 데이터를 줄이는 코드가 df에 저장되지 않았는지 확인하세요. 막히면 ⑤의 ‘모르겠음’을 누르면 원래 데이터를 다시 불러와 결측치를 채웁니다.`;
+  const badType = pyVal("any(c in _ENV['df'].columns and _ENV['df'][c].dtype == object for c in list(_ENV.get('수치열', [])) if isinstance(c, str))", false);
+  if(i===3 && !dfOk) return "⚠ ④를 실행한 뒤 df가 데이터표가 아닌 다른 값으로 바뀌었습니다. 결측치를 채운 데이터표가 df에 들어가야 합니다. 막히면 ④의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
+  if(i>=4 && !dfOk) return "💡 ④에서 df가 데이터표가 아닌 다른 값으로 바뀌었습니다. ④를 확인하세요. 막히면 ④의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
+  if(i>=1 && ORIG_ROWS && rows<ORIG_ROWS) return `⚠ df의 행 수가 원래 ${ORIG_ROWS}개에서 ${rows}개로 줄었습니다. 이 연습에서는 행을 삭제하지 말고 중앙값으로 채우세요. 막히면 ④의 ‘모르겠음’을 누르면 원래 데이터를 다시 불러와 결측치를 채웁니다.`;
   if(!/Traceback/.test(text)) return "";
   if(/NameError: name '(train_test_split|DecisionTreeClassifier|confusion_matrix|classification_report)'/.test(text)) return "💡 ① 라이브러리 불러오기를 먼저 실행하세요.";
-  if(i>=3 && i<=8 && (/KeyError|not in index|are in the \[columns\]/.test(text) || /NameError: name '(target|수치열|범주열)'/.test(text) || badType))
-    return "💡 ③ 변수 정하기를 확인하세요. 종속변수와 수치형 독립변수에 맞는 열 이름이 들어가야 합니다. 막히면 ③의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
+  if(i>=5 && i<=8 && (/NameError: name '수치열'/.test(text) || badType))
+    return "💡 ⑤ 이상치 확인 셀의 수치열(수치형 독립변수 열 이름)을 확인하세요. 막히면 ⑤의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
+  if(i>=5 && i<=8 && /KeyError|not in index|are in the \[columns\]/.test(text))
+    return "💡 열 이름을 확인하세요. 수치열은 ⑤에서, 정답 열 이름은 이 셀에서 씁니다. 수치열이 막히면 ⑤의 ‘모르겠음’을 누를 수 있습니다.";
   if(i>=9 && i<=10 && /NameError: name '(model|X_train|X_test|y_train|y_test)'/.test(text))
     return "💡 ⑨ 모델 학습을 먼저 실행하세요. 막히면 ⑨의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
-  if(i===11 && /NameError: name '(cm|TN|FP|FN|TP)'/.test(text)) return "💡 ⑪ 혼동행렬을 먼저 실행하세요.";
+  if(i===11 && /NameError: name '(cm|TN|FP|FN|TP|pred)'/.test(text)) return "💡 ⑪ 혼동행렬을 먼저 실행하세요. 막히면 ⑪의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
   if(REPAIR_NAME[i]) return "💡 막히면 이 셀의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
   return "";
 }
@@ -330,7 +329,7 @@ async function boot(){ try{ pyodide=await loadPyodide(); status.textContent="�
 boot();
 async function runCell(i){
   if(!pyodide) return;
-  if(!csvLoaded){ alert("먼저 데이터 번호를 선택하세요."); return; }
+  if(!csvLoaded){ alert("데이터를 불러오는 중입니다. 잠시 후 다시 누르세요."); return; }
   const btn=runBtns[i]; btn.disabled=true; outs[i].innerHTML="<span class='ph'>실행 중…</span>";
   try{ pyodide.globals.set("user_code", cms[i].getValue());
     const arr=pyodide.runPython("run_user(user_code)").toJs(); const text=arr[0], imgs=arr[1]; outs[i].innerHTML="";
