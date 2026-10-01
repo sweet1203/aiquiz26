@@ -269,6 +269,7 @@ function cascadeHint(i,text){
   if(i>=1 && ORIG_ROWS && rows<ORIG_ROWS) return `⚠ df의 행 수가 원래 ${ORIG_ROWS}개에서 ${rows}개로 줄었습니다. 이 연습에서는 행을 삭제하지 말고 중앙값으로 채우세요. 막히면 ④의 ‘모르겠음’을 누르면 원래 데이터를 다시 불러와 결측치를 채웁니다.`;
   if(!/Traceback/.test(text)) return "";
   if(/NameError: name '(train_test_split|DecisionTreeClassifier|confusion_matrix|classification_report)'/.test(text)) return "💡 ① 라이브러리 불러오기를 먼저 실행하세요.";
+  if(i===6 && /NameError: name 'corr'/.test(text)) return "💡 ⑥ 상관 히트맵을 먼저 실행하세요.";
   if(i>=5 && i<=8 && (/NameError: name '수치열'/.test(text) || badType))
     return "💡 ⑤ 이상치 확인 셀의 수치열(수치형 독립변수 열 이름)을 확인하세요. 막히면 ⑤의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
   if(i>=5 && i<=8 && /KeyError|not in index|are in the \[columns\]/.test(text))
