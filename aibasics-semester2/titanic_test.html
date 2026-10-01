@@ -67,7 +67,7 @@
     <div class="cell-body"><textarea class="editor-ta" id="ta1"></textarea><div class="out" id="out1"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>③ 변수 정하기 — 종속변수 · 수치형 독립변수 · 범주형 독립변수 → 열 이름은 영어로 작성하세요.</span><span class="btns"><button class="reset1" data-i="2" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="2" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (제출물에 기록됨)">모르겠음</button><button class="run" data-i="2" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>③ 변수 정하기 — 종속변수 · 수치형 독립변수 · 범주형 독립변수 → 열 이름은 영어로 작성하세요.</span><span class="btns"><button class="reset1" data-i="2" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="2" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="2" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta2"></textarea><div class="out" id="out2"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
@@ -75,7 +75,7 @@
     <div class="cell-body"><textarea class="editor-ta" id="ta3"></textarea><div class="out" id="out3"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑤ 결측치 처리</span><span class="btns"><button class="reset1" data-i="4" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="4" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (제출물에 기록됨)">모르겠음</button><button class="run" data-i="4" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>⑤ 결측치 처리</span><span class="btns"><button class="reset1" data-i="4" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="4" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="4" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta4"></textarea><div class="out" id="out4"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
@@ -91,7 +91,7 @@
     <div class="cell-body"><textarea class="editor-ta" id="ta7"></textarea><div class="out" id="out7"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
-    <div class="cell-head"><span>⑨ 모델 학습 — 훈련 : 테스트 = 7 : 3</span><span class="btns"><button class="reset1" data-i="8" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="8" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (제출물에 기록됨)">모르겠음</button><button class="run" data-i="8" disabled>▶ 실행</button></span></div>
+    <div class="cell-head"><span>⑨ 모델 학습 — 훈련 : 테스트 = 7 : 3</span><span class="btns"><button class="reset1" data-i="8" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="8" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (실제 수행평가에서는 제출물에 기록됨)">모르겠음</button><button class="run" data-i="8" disabled>▶ 실행</button></span></div>
     <div class="cell-body"><textarea class="editor-ta" id="ta8"></textarea><div class="out" id="out8"><span class="ph">실행하면 결과가 여기에</span></div></div>
   </section>
   <section class="cell">
@@ -241,7 +241,7 @@ const repairs = new Set();
 async function repairCell(i){
   if(!pyodide){ return; }
   if(!csvLoaded){ alert("먼저 데이터 번호를 선택하세요."); return; }
-  if(!confirm(`${REPAIR_NAME[i]} 단계를 '모르겠음'으로 넘어갈까요?\n이 단계가 채워져 다음 셀을 이어서 실행할 수 있고, '모르겠음'을 누른 기록이 제출물에 남습니다.`)) return;
+  if(!confirm(`${REPAIR_NAME[i]} 단계를 '모르겠음'으로 넘어갈까요?\n이 단계가 채워져 다음 셀을 이어서 실행할 수 있고, 실제 수행평가에서는 '모르겠음'을 누른 기록이 제출물에 남습니다.`)) return;
   const m = META[$("#dataNo").value];
   let py;
   if(i===4){ pyodide.runPython("load_csv(CSV_TEXT, False)"); py = "df = df.fillna(df.mean(numeric_only=True))"; }
@@ -258,7 +258,7 @@ async function repairCell(i){
   }
   repairs.add(REPAIR_NAME[i]);
   outs.forEach(o=>o.querySelectorAll(".hint").forEach(h=>h.remove()));
-  outs[i].innerHTML = '<pre style="color:#b45309">‘모르겠음’으로 넘어갔습니다 — 다음 셀로 진행하세요. (제출물에 기록됩니다)</pre>';
+  outs[i].innerHTML = '<pre style="color:#b45309">‘모르겠음’으로 넘어갔습니다 — 다음 셀로 진행하세요. (실제 수행평가에서는 제출물에 기록됩니다)</pre>';
   lastCells[i] = {code:cms[i].getValue(), text:"이 단계는 '모르겠음'으로 진행함", imgs:[]};
   status.textContent = `${REPAIR_NAME[i]} 모르겠음으로 진행`;
 }
