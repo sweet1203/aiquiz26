@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>수행평가 연습 · 타이타닉(titanic)</title>
+<style>
+  :root{--bg:#f4f7fb;--panel:#1e293b;--line:#334155;--ink:#e2e8f0;--sub:#94a3b8;--accent:#0891b2;--accent2:#059669;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:#0f172a;font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","맑은 고딕",system-ui,sans-serif;}
+  header{background:linear-gradient(135deg,#0891b2,#059669);color:#fff;padding:18px 22px;}
+  header h1{margin:0;font-size:1.3rem;} header p{margin:5px 0 0;opacity:.92;font-size:.88rem;}
+  .bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 22px;background:#fff;border-bottom:1px solid #e2e8f0;font-size:.86rem;}
+  #status{font-weight:700;}
+  .id-row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;padding:14px 22px;background:#fff;border-bottom:1px solid #e2e8f0;}
+  .id-row label{display:block;font-size:.75rem;color:#64748b;font-weight:700;margin-bottom:3px;}
+  .id-row select,.id-row input{border:1px solid #cbd5e1;border-radius:9px;padding:8px 10px;font:inherit;background:#fff;}
+  #csvInfo{font-size:.82rem;color:#059669;font-weight:700;}
+  .ddesc{background:#eff6ff;border-bottom:1px solid #dbeafe;padding:12px 22px;font-size:.86rem;color:#1e3a5f;line-height:1.7;}
+  .ddesc b{color:#0b3a66;} .guide{margin:4px 0 10px;padding-left:20px;font-size:.9rem;line-height:1.7;} .ddesc .use{margin-top:6px;} .ddesc .cols{margin-top:6px;font-size:.82rem;color:#334155;}
+  .ddesc code{background:#dbeafe;color:#0b3a66;padding:1px 6px;border-radius:5px;font-size:.8rem;}
+  .wrap{max-width:1500px;margin:0 auto;padding:14px 22px 6px;}
+  .cell{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:12px;}
+  .hint{margin-top:8px;padding:8px 12px;border-radius:8px;background:#fef3c7;color:#92400e;font-size:.88rem;font-weight:600;}
+  .reset1{background:transparent;color:#94a3b8;border:1px solid #475569;border-radius:8px;padding:6px 10px;font-weight:700;cursor:pointer;font-size:.85rem;} .reset1:disabled{opacity:.4;cursor:default;}
+  .cell-head{flex-wrap:wrap;row-gap:8px;} .cell-head>span:first-child{flex:1 1 220px;min-width:0;} .cell-head .btns{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;flex-shrink:1;margin-left:auto;max-width:100%;} .repair{background:transparent;color:#f59e0b;border:1px solid #f59e0b;border-radius:8px;padding:6px 10px;font-weight:700;cursor:pointer;font-size:.85rem;} .repair:disabled{opacity:.4;cursor:default;}
+  .cell-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;background:#0b1220;color:var(--ink);font-size:.9rem;font-weight:700;border-bottom:1px solid var(--line);}
+  .cell-body{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+  @media(max-width:900px){.cell-body{grid-template-columns:1fr;}}
+  .CodeMirror{min-height:110px;height:auto;font-family:var(--mono);font-size:13.5px;line-height:1.5;}
+  .CodeMirror-scroll{min-height:110px;}
+  .editor-ta{display:none;}
+  .out{min-height:110px;max-height:360px;overflow:auto;padding:10px 12px;background:#fff;border-left:1px solid var(--line);}
+  .out pre{margin:0 0 8px;font-family:var(--mono);font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:#0f172a;background:#f1f5f9;padding:9px;border-radius:8px;}
+  .out img{max-width:100%;border:1px solid #e2e8f0;border-radius:8px;margin:0 0 8px;display:block;}
+  .out .ph{color:#94a3b8;font-size:.82rem;}
+  button{background:var(--accent);color:#fff;border:0;font-weight:700;font-size:.85rem;padding:7px 14px;border-radius:9px;cursor:pointer;}
+  button:disabled{opacity:.45;cursor:default;} button.ghost{background:#334155;} button.save{background:var(--accent2);}
+  .formcell{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin:0 22px 12px;}
+  .formcell h3{margin:0 0 4px;font-size:.98rem;color:#0f172a;}
+  .formcell p{margin:3px 0 8px;font-size:.82rem;color:#64748b;line-height:1.6;}
+  .formcell textarea{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;font:inherit;font-size:.95rem;line-height:1.6;resize:vertical;}
+  #reason{min-height:70px;} #seosul{min-height:150px;}
+  .submitbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;max-width:1500px;margin:0 auto;padding:6px 22px 24px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>✏️ 수행평가 연습 · 타이타닉(titanic) 데이터</h1>
+  <p><b>①번부터 순서대로</b> 실행하세요. · 실제 수행평가와 같은 화면입니다(연습용이라 제출하지 않습니다).</p>
+</header>
+<div class="bar"><span id="status">⏳ 파이썬 환경 불러오는 중… (처음 한 번, 조금 걸려요)</span></div>
+<div class="id-row">
+  <select id="dataNo" hidden><option value="practice_titanic" selected>practice_titanic</option></select>
+  <div id="csvInfo">⏳ 데이터는 파이썬 준비가 끝나면 자동으로 불러옵니다.</div>
+</div>
+<div id="dataDesc" class="ddesc" hidden></div>
+<script>/* 설명은 처음부터 보이게 */</script>
+
+<div class="wrap">
+  <section class="cell">
+    <div class="cell-head"><span>① 라이브러리 불러오기 (그대로 실행)</span><span class="btns"><button class="reset1" data-i="0" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="0" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta0"></textarea><div class="out" id="out0"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>② 데이터 확인</span><span class="btns"><button class="reset1" data-i="1" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="1" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta1"></textarea><div class="out" id="out1"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>③ 변수 정하기 — 종속변수 · 수치형 독립변수 · 범주형 독립변수 → 열 이름은 영어로 작성하세요.</span><span class="btns"><button class="reset1" data-i="2" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="2" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (제출물에 기록됨)">모르겠음</button><button class="run" data-i="2" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta2"></textarea><div class="out" id="out2"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>④ 결측치 확인</span><span class="btns"><button class="reset1" data-i="3" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="3" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta3"></textarea><div class="out" id="out3"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑤ 결측치 처리</span><span class="btns"><button class="reset1" data-i="4" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="4" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (제출물에 기록됨)">모르겠음</button><button class="run" data-i="4" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta4"></textarea><div class="out" id="out4"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑥ 이상치 확인 — 상자그림</span><span class="btns"><button class="reset1" data-i="5" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="5" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta5"></textarea><div class="out" id="out5"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑦ 핵심변수 찾기 — 상관 히트맵</span><span class="btns"><button class="reset1" data-i="6" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="6" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta6"></textarea><div class="out" id="out6"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑧ 핵심변수 정하기</span><span class="btns"><button class="reset1" data-i="7" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="7" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta7"></textarea><div class="out" id="out7"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑨ 모델 학습 — 훈련 : 테스트 = 7 : 3</span><span class="btns"><button class="reset1" data-i="8" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="repair" data-i="8" disabled title="모르면 눌러서 이 단계를 채우고 다음으로 진행 (제출물에 기록됨)">모르겠음</button><button class="run" data-i="8" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta8"></textarea><div class="out" id="out8"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑩ 정확도 출력 (그대로 실행)</span><span class="btns"><button class="reset1" data-i="9" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="9" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta9"></textarea><div class="out" id="out9"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑪ 혼동행렬 출력 (그대로 실행)</span><span class="btns"><button class="reset1" data-i="10" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="10" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta10"></textarea><div class="out" id="out10"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+  <section class="cell">
+    <div class="cell-head"><span>⑫ 지표 계산 — 계산식을 채우세요</span><span class="btns"><button class="reset1" data-i="11" disabled title="이 셀만 처음 코드로 되돌리기">↺ 처음으로</button><button class="run" data-i="11" disabled>▶ 실행</button></span></div>
+    <div class="cell-body"><textarea class="editor-ta" id="ta11"></textarea><div class="out" id="out11"><span class="ph">실행하면 결과가 여기에</span></div></div>
+  </section>
+</div>
+
+<section class="formcell">
+  <h3>⑧-1. 핵심변수 선택 이유</h3>
+  <textarea id="reason" placeholder="여기에 직접 작성하세요"></textarea>
+</section>
+<section class="formcell">
+  <h3>⑬. 요소2 서술 (5문장 이상)</h3>
+  <p>모델 활용 상황을 바탕으로, 혼동행렬의 <b>FP·FN이 이 데이터에서 각각 무엇을 뜻하는지 예시를 들어</b> 설명하고, 자기 모델의 혼동행렬 결과와 정확도·정밀도·재현율 값을 넣어 <b>어느 오류와 지표를 우선해야 할지</b> 핵심변수와 연결하여 5문장 이상의 완성된 글로 설명하시오. (핵심변수가 예측에 어떻게 작용하는지를 포함할 것)</p>
+  <textarea id="seosul" placeholder="여기에 직접 작성하세요 (5문장 이상)"></textarea>
+</section>
+
+<div class="submitbar">
+  <button id="reset" class="ghost">스캐폴드 되돌리기</button>
+</div>
+
+
+
+<script id="setup-py" type="text/plain">
+import io, sys, base64, traceback, ast
+import pandas as pd
+pd.set_option("display.width", 200); pd.set_option("display.max_columns", 30)
+import matplotlib
+matplotlib.use("AGG")
+import matplotlib.pyplot as plt
+from matplotlib.artist import Artist
+df = None
+_ENV = {"pd": pd, "plt": plt, "io": io}
+def load_csv(text, reset=True):
+    global df
+    if reset:
+        _ENV.clear(); _ENV.update({"pd": pd, "plt": plt, "io": io})
+    df = pd.read_csv(io.StringIO(text)); _ENV["df"] = df
+    return [int(df.shape[0]), int(df.shape[1])]
+def run_user(code):
+    buf = io.StringIO(); old = sys.stdout; sys.stdout = buf
+    plt.close("all"); imgs = []
+    try:
+        if df is None: print("⚠ 먼저 데이터 번호를 선택하세요.")
+        else:
+            tree = ast.parse(code)
+            last = tree.body.pop() if tree.body and isinstance(tree.body[-1], ast.Expr) else None
+            exec(compile(tree, "<cell>", "exec"), _ENV)
+            if last is not None:
+                val = eval(compile(ast.Expression(last.value), "<cell>", "eval"), _ENV)
+                if val is not None and not isinstance(val, Artist) and not (isinstance(val, list) and val and isinstance(val[0], Artist)):
+                    print(val)
+            for num in plt.get_fignums():
+                fig = plt.figure(num); b = io.BytesIO(); fig.savefig(b, format="png", bbox_inches="tight", dpi=110)
+                imgs.append(base64.b64encode(b.getvalue()).decode())
+    except Exception: buf.write(traceback.format_exc())
+    finally: sys.stdout = old; plt.close("all")
+    return [buf.getvalue(), imgs]
+</script>
+<script id="sc0" type="text/plain">import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import confusion_matrix, classification_report
+df.info()
+print('준비 완료')</script>
+<script id="sc1" type="text/plain"># 데이터를 확인하세요.
+____</script>
+<script id="sc2" type="text/plain">target = '____'                 # 종속변수(정답) 열 이름
+수치열 = ['____', '____', '____', '____', '____']   # 수치형 독립변수
+범주열 = ['____', '____']           # 범주형 독립변수
+print('target:', target)
+print('수치열:', 수치열)
+print('범주열:', 범주열)</script>
+<script id="sc3" type="text/plain"># 결측치가 열별로 몇 개 있는지 출력하세요.
+print(____________________)</script>
+<script id="sc4" type="text/plain"># 수치형 데이터의 결측치만 처리합니다.
+# 평균으로 결측치를 채우세요.
+df = ____________________
+print('처리 후 결측:', df[수치열].isnull().sum().sum())</script>
+<script id="sc5" type="text/plain"># 그래프 종류를 채우세요
+df[수치열].plot(kind='____')
+plt.title('outliers')
+plt.show()</script>
+<script id="sc6" type="text/plain">corr = df[수치열 + [target]]____
+plt.imshow(corr, cmap='coolwarm', vmin=-1, vmax=1)
+plt.colorbar()
+plt.xticks(range(len(corr)), corr.columns, rotation=45, ha='right')
+plt.yticks(range(len(corr)), corr.columns)
+for i in range(len(corr)):
+    for j in range(len(corr)):
+        plt.text(j, i, round(corr.iloc[i, j], 2), ha='center', va='center', fontsize=8)
+plt.title('correlation')
+plt.show()
+print(corr[target])</script>
+<script id="sc7" type="text/plain"># 핵심변수를 정하세요 (1개만 작성)
+핵심변수 = '____'
+print('내 핵심변수:', 핵심변수)
+# ↓ 다 정했으면 아래로 내려 '⑧-1 핵심변수 선택 이유'를 작성하세요</script>
+<script id="sc8" type="text/plain"># 모델에는 수치열 5개를 모두 넣습니다
+X = df[수치열]
+y = df[target]
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, ____, random_state=7, stratify=y)
+model = DecisionTreeClassifier(random_state=7, max_depth=4)
+model.fit(____, ____)
+print('학습 완료')</script>
+<script id="sc9" type="text/plain">print('정확도:', round(model.score(X_test, y_test), 2))</script>
+<script id="sc10" type="text/plain">pred = model.predict(X_test)
+cm = confusion_matrix(y_test, pred, labels=[0, 1])
+print('           예측0  예측1')
+print('실제0(TN,FP):', cm[0])
+print('실제1(FN,TP):', cm[1])</script>
+<script id="sc11" type="text/plain">TN, FP = cm[0]
+FN, TP = cm[1]
+정확도 = ____
+정밀도 = ____
+재현율 = ____
+print('정확도', round(정확도,2), '| 정밀도', round(정밀도,2), '| 재현율', round(재현율,2))</script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"></script>
+<script>
+const DESC = {"practice_titanic": {"n": "타이타닉 승객", "q": "승객 정보를 보고 생존했는지(1)/아닌지(0)", "c": [["pclass", "객실 등급(1~3등급)"], ["age", "나이"], ["sibsp", "함께 탄 형제자매·배우자 수"], ["parch", "함께 탄 부모·자녀 수"], ["fare", "요금"], ["sex", "성별"], ["embarked", "탑승 항구(C·Q·S)"], ["survived", "1이면 생존, 0이면 사망"]], "u": "생존하지 못할 것으로 예측된 승객부터 구조팀을 먼저 보냅니다."}};
+const $ = s => document.querySelector(s);
+const status = $("#status");
+const NC = 12;
+const scaffolds = [...Array(NC)].map((_,i)=> $("#sc"+i).textContent.replace(/^\n/,""));
+const outs = [...Array(NC)].map((_,i)=> $("#out"+i));
+const runBtns = [...document.querySelectorAll(".run")];
+const repairBtns = [...document.querySelectorAll(".repair")];
+const META = {"practice_titanic": ["survived", ["pclass", "age", "sibsp", "parch", "fare"], ["sex", "embarked"]]};
+const REPAIR_NAME = {2:"③", 4:"⑤", 8:"⑨"};
+const repairs = new Set();
+async function repairCell(i){
+  if(!pyodide){ return; }
+  if(!csvLoaded){ alert("먼저 데이터 번호를 선택하세요."); return; }
+  if(!confirm(`${REPAIR_NAME[i]} 단계를 '모르겠음'으로 넘어갈까요?\n이 단계가 채워져 다음 셀을 이어서 실행할 수 있고, '모르겠음'을 누른 기록이 제출물에 남습니다.`)) return;
+  const m = META[$("#dataNo").value];
+  let py;
+  if(i===4){ pyodide.runPython("load_csv(CSV_TEXT, False)"); py = "df = df.fillna(df.mean(numeric_only=True))"; }
+  else if(i===2){ py = `target = ${JSON.stringify(m[0])}\n수치열 = ${JSON.stringify(m[1])}\n범주열 = ${JSON.stringify(m[2])}`; }
+  else { py = "from sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nX = df[수치열]\ny = df[target]\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=7, stratify=y)\nmodel = DecisionTreeClassifier(random_state=7, max_depth=4)\nmodel.fit(X_train, y_train)"; }
+  try{ pyodide.globals.set("repair_code", py); pyodide.runPython("exec(repair_code, _ENV)"); }
+  catch(err){
+    const es = String(err); let msg = "진행하지 못했습니다. 선생님께 알려 주세요.";
+    if(i===8 && /NameError/.test(es)) msg = "먼저 ③ 변수 정하기를 실행하거나 ③의 '모르겠음'을 누르세요.";
+    else if(i===8 && (/KeyError|not in index|could not convert|contains NaN/.test(es))) msg = "③의 열 이름이 맞지 않습니다. ③의 '모르겠음'을 먼저 누르세요.";
+    else if(i===8 && (/least populated|too few|should be greater|TypeError|AttributeError/.test(es))) msg = "데이터가 올바르지 않습니다. ⑤의 '모르겠음'으로 원래 데이터를 다시 불러오세요.";
+    outs[i].innerHTML = `<pre style="color:#b91c1c">${msg}</pre>`;
+    return;
+  }
+  repairs.add(REPAIR_NAME[i]);
+  outs.forEach(o=>o.querySelectorAll(".hint").forEach(h=>h.remove()));
+  outs[i].innerHTML = '<pre style="color:#b45309">‘모르겠음’으로 넘어갔습니다 — 다음 셀로 진행하세요. (제출물에 기록됩니다)</pre>';
+  lastCells[i] = {code:cms[i].getValue(), text:"이 단계는 '모르겠음'으로 진행함", imgs:[]};
+  status.textContent = `${REPAIR_NAME[i]} 모르겠음으로 진행`;
+}
+function pyVal(code, dflt){ try{ return pyodide.runPython(code); }catch(e){ return dflt; } }
+function cascadeHint(i,text){
+  const dfOk = pyVal("isinstance(_ENV.get('df'), pd.DataFrame)", true);
+  const rows = dfOk ? pyVal("len(_ENV['df'])", ORIG_ROWS) : ORIG_ROWS;
+  const badType = pyVal("any(c in _ENV['df'].columns and _ENV['df'][c].dtype == object for c in list(_ENV.get('수치열', [])) + [_ENV.get('target')] if isinstance(c, str))", false);
+  if(i===4 && !dfOk) return "⚠ ⑤를 실행한 뒤 df가 데이터표가 아닌 다른 값으로 바뀌었습니다. 결측치를 채운 데이터표가 df에 들어가야 합니다. 막히면 ⑤의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
+  if(i>=5 && !dfOk) return "💡 ⑤에서 df가 데이터표가 아닌 다른 값으로 바뀌었습니다. ⑤를 확인하세요. 막히면 ⑤의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
+  if(i>=1 && ORIG_ROWS && rows<ORIG_ROWS) return `⚠ df의 행 수가 원래 ${ORIG_ROWS}개에서 ${rows}개로 줄었습니다. 데이터를 줄이는 코드가 df에 저장되지 않았는지 확인하세요. 막히면 ⑤의 ‘모르겠음’을 누르면 원래 데이터를 다시 불러와 결측치를 채웁니다.`;
+  if(!/Traceback/.test(text)) return "";
+  if(/NameError: name '(train_test_split|DecisionTreeClassifier|confusion_matrix|classification_report)'/.test(text)) return "💡 ① 라이브러리 불러오기를 먼저 실행하세요.";
+  if(i>=3 && i<=8 && (/KeyError|not in index|are in the \[columns\]/.test(text) || /NameError: name '(target|수치열|범주열)'/.test(text) || badType))
+    return "💡 ③ 변수 정하기를 확인하세요. 종속변수와 수치형 독립변수에 맞는 열 이름이 들어가야 합니다. 막히면 ③의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
+  if(i>=9 && i<=10 && /NameError: name '(model|X_train|X_test|y_train|y_test)'/.test(text))
+    return "💡 ⑨ 모델 학습을 먼저 실행하세요. 막히면 ⑨의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
+  if(i===11 && /NameError: name '(cm|TN|FP|FN|TP)'/.test(text)) return "💡 ⑪ 혼동행렬을 먼저 실행하세요.";
+  if(REPAIR_NAME[i]) return "💡 막히면 이 셀의 ‘모르겠음’을 눌러 다음으로 진행할 수 있습니다.";
+  return "";
+}
+const repairMark = i => (REPAIR_NAME[i] && repairs.has(REPAIR_NAME[i])) ? "[모르겠음] " : "";
+
+const lastCells = [...Array(NC)].map(()=>null);
+function block(e){ e.preventDefault(); e.stopPropagation(); return false; }
+const cms = [...Array(NC)].map((_,i)=>{
+  const cm = CodeMirror.fromTextArea($("#ta"+i), {mode:"python",theme:"material-darker",lineNumbers:true,indentUnit:4,tabSize:4});
+  cm.setValue(scaffolds[i]); cm.setSize("100%",null);
+  const w = cm.getWrapperElement();
+  ["paste","drop","copy","cut","contextmenu"].forEach(ev=> w.addEventListener(ev, block, true));
+  cm.on("beforeChange",(c,ch)=>{ if(ch.origin==="paste") ch.cancel(); });
+  return cm;
+});
+$("#reset").addEventListener("click",()=>{ if(confirm("모든 셀을 되돌릴까요?")) cms.forEach((cm,i)=>cm.setValue(scaffolds[i])); });
+function guardForm(t){ let last=""; t.addEventListener("input",()=>last=t.value);
+  ["copy","cut","contextmenu"].forEach(ev=> t.addEventListener(ev, block));
+  t.addEventListener("paste",e=>{e.preventDefault();t.value=last;}); t.addEventListener("drop",e=>e.preventDefault());
+  t.addEventListener("beforeinput",e=>{ if(/insertFrom(Paste|Drop|Yank)/.test(e.inputType||"")) e.preventDefault(); }); }
+guardForm($("#reason")); guardForm($("#seosul"));
+let dirty=false;
+cms.forEach(cm=>cm.on("change",()=>{dirty=true;}));
+["#reason","#seosul"].forEach(sel=>$(sel).addEventListener("input",()=>{dirty=true;}));
+window.addEventListener("beforeunload",e=>{ if(dirty){ e.preventDefault(); e.returnValue=""; } });
+
+let csvName="", csvLoaded=false;
+function showDesc(num){
+  const d=DESC[num]; if(!d){ $("#dataDesc").hidden=true; return; }
+  const cols=d.c.map(x=>`<code>${x[0]}</code> = ${x[1]}`).join(" · ");
+  $("#dataDesc").innerHTML = `이 데이터는 <b>${d.n}</b> 데이터입니다. &nbsp;해결할 문제: <b>${d.q}</b>`
+    + `<div class="use">모델 활용 상황: <b>${d.u}</b></div>`
+    + `<div class="cols">〈열 이름〉 ${cols}</div>`;
+  $("#dataDesc").hidden=false;
+}
+let ORIG_ROWS=0;
+function afterLoad(name,dim){ csvLoaded=true; ORIG_ROWS=dim[0]; csvName=name; $("#csvInfo").textContent=`✅ ${name} — ${dim[0]}행 × ${dim[1]}열 불러옴`; }
+$("#dataNo").addEventListener("change", async e=>{
+  const num=e.target.value; if(!num) return; showDesc(num);
+  if(!pyodide){ $("#csvInfo").textContent="⏳ 파이썬 준비 후 다시 선택"; return; }
+  $("#csvInfo").textContent="⏳ 불러오는 중…";
+  try{ const text=await fetch("data/"+num+".csv").then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.text();});
+    pyodide.globals.set("CSV_TEXT",text); const dim=pyodide.runPython("load_csv(CSV_TEXT)").toJs(); afterLoad(DESC[num]?DESC[num].n:num,dim);
+  }catch(err){ csvLoaded=false; $("#csvInfo").textContent="⚠ 실패: "+err; }
+});
+let pyodide;
+async function boot(){ try{ pyodide=await loadPyodide(); status.textContent="📦 pandas · matplotlib · scikit-learn 불러오는 중…";
+  await pyodide.loadPackage(["pandas","matplotlib","scikit-learn"]); pyodide.runPython($("#setup-py").textContent);
+  status.textContent="✅ 준비 완료 — ①부터 실행하세요"; setTimeout(()=>$("#dataNo").dispatchEvent(new Event("change")),0); runBtns.forEach(b=>b.disabled=false); repairBtns.forEach(b=>b.disabled=false); document.querySelectorAll(".reset1").forEach(b=>b.disabled=false);
+}catch(err){ status.textContent="⚠️ 불러오기 실패: "+err; } }
+boot();
+async function runCell(i){
+  if(!pyodide) return;
+  if(!csvLoaded){ alert("먼저 데이터 번호를 선택하세요."); return; }
+  const btn=runBtns[i]; btn.disabled=true; outs[i].innerHTML="<span class='ph'>실행 중…</span>";
+  try{ pyodide.globals.set("user_code", cms[i].getValue());
+    const arr=pyodide.runPython("run_user(user_code)").toJs(); const text=arr[0], imgs=arr[1]; outs[i].innerHTML="";
+    if(text&&text.trim()){ const pre=document.createElement("pre"); pre.textContent=text; outs[i].appendChild(pre); }
+    (imgs||[]).forEach(b=>{ const im=document.createElement("img"); im.src="data:image/png;base64,"+b; outs[i].appendChild(im); });
+    if(!text.trim()&&(!imgs||!imgs.length)) outs[i].innerHTML="<span class='ph'>출력 없음</span>";
+    { const hint=cascadeHint(i,text||""); if(hint){ const h=document.createElement("div"); h.className="hint"; h.textContent=hint; outs[i].appendChild(h); } }
+    lastCells[i]={code:cms[i].getValue(), text, imgs:imgs||[]}; status.textContent=`✅ ${i+1}번 완료`;
+  }catch(err){ const pre=document.createElement("pre"); pre.style.color="#b91c1c"; pre.textContent=String(err); outs[i].innerHTML=""; outs[i].appendChild(pre); }
+  finally{ btn.disabled=false; }
+}
+runBtns.forEach(b=> b.addEventListener("click", ()=>runCell(+b.dataset.i)));
+repairBtns.forEach(b=> b.addEventListener("click", ()=>repairCell(+b.dataset.i)));
+const resetBtns = [...document.querySelectorAll(".reset1")];
+resetBtns.forEach(b=> b.addEventListener("click", ()=>{
+  const i=+b.dataset.i;
+  if(!confirm(`${i+1}번 셀의 코드를 처음 상태로 되돌릴까요?\n이 셀에 작성한 내용이 지워집니다.`)) return;
+  cms[i].setValue(scaffolds[i]); cms[i].focus();
+  status.textContent=`↺ ${i+1}번 셀을 처음 코드로 되돌렸습니다`;
+}));
+
+function gather(){
+  const code=cms.map((cm,i)=>`# [${i+1}]\n`+cm.getValue()).join("\n\n");
+  const result=(repairs.size?`[모르겠음: ${[...repairs].join(", ")}]\n`:"")+lastCells.map((c,i)=>`[${i+1}] `+repairMark(i)+(c?c.text.trim():"(실행 안 함)")).join("\n");
+  return {code, result, reason:$("#reason").value, seosul:$("#seosul").value};
+}
+
+</script>
+</body>
+</html>
