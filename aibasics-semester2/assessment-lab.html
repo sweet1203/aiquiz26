@@ -308,9 +308,17 @@ async function repairCell(i){
   if(!confirm(`${REPAIR_NAME[i]} 단계를 '모르겠음'으로 넘어갈까요?\n이 단계가 채워져 다음 셀을 이어서 실행할 수 있고, '모르겠음'을 누른 기록이 제출물에 남습니다.`)) return;
   const m = META[$("#dataNo").value];
   let py;
-  if(i===4){ pyodide.runPython("load_csv(CSV_TEXT, False)"); py = "df = df.fillna(df.mean(numeric_only=True))"; }
-  else if(i===2){ py = `target = ${JSON.stringify(m[0])}\n수치열 = ${JSON.stringify(m[1])}\n범주열 = ${JSON.stringify(m[2])}`; }
-  else { py = "from sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nX = df[수치열]\ny = df[target]\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=7, stratify=y)\nmodel = DecisionTreeClassifier(random_state=7, max_depth=4)\nmodel.fit(X_train, y_train)"; }
+  // 이전 단계에 필요한 것(③ 변수 · 데이터 · ⑤ 결측 처리)까지 함께 바로잡는다
+  const VARS = `target = ${JSON.stringify(m[0])}\n수치열 = ${JSON.stringify(m[1])}\n범주열 = ${JSON.stringify(m[2])}\n`;
+  const FILL = "df = df.fillna(df.mean(numeric_only=True))\n";
+  if(i===2){
+    const cols = JSON.stringify([m[0]].concat(m[1], m[2]));
+    const dfOk = pyVal(`isinstance(_ENV.get('df'), pd.DataFrame) and len(_ENV['df']) == ${ORIG_ROWS} and all(c in _ENV['df'].columns for c in ${cols})`, false);
+    if(!dfOk) pyodide.runPython("load_csv(CSV_TEXT, False)");
+    py = VARS;
+  }
+  else if(i===4){ pyodide.runPython("load_csv(CSV_TEXT, False)"); py = VARS + FILL; }
+  else { pyodide.runPython("load_csv(CSV_TEXT, False)"); py = VARS + FILL + "from sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.metrics import confusion_matrix, classification_report\nX = df[수치열]\ny = df[target]\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=7, stratify=y)\nmodel = DecisionTreeClassifier(random_state=7, max_depth=4)\nmodel.fit(X_train, y_train)"; }
   try{ pyodide.globals.set("repair_code", py); pyodide.runPython("exec(repair_code, _ENV)"); }
   catch(err){
     const es = String(err); let msg = "진행하지 못했습니다. 선생님께 알려 주세요.";
