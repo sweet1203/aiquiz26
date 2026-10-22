@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>인공지능 기초 질문폼 - 경사 하강법 · 배치와 에포크 · 손글씨 숫자 학습(티처블 머신)</title>
+  <title>인공지능 기초 질문폼 - 경사 하강법 · 배치 사이즈와 에포크 · 딥러닝 정리</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Cpath d='M18 40h28v6H18zM18 18h28v6H18zM18 29h20v6H18z' fill='white'/%3E%3C/svg%3E">
   <style>
     :root { --bg:#f5f7fb; --card:#ffffff; --ink:#172033; --muted:#667085; --line:#d9e0ec; --accent:#2563eb; --warn:#b42318; }
@@ -34,14 +34,14 @@
   <main>
     <section class="card">
       <p class="eyebrow">인공지능 기초 · 생기부 기록용 질문폼</p>
-      <h1>경사 하강법 · 배치와 에포크 · 손글씨 숫자 학습(티처블 머신)</h1>
-      <p class="meta">Ⅱ. 인공지능과 학습 · 2-2-1 딥러닝 3차시 · 93~101쪽 · 티처블 머신</p>
+      <h1>경사 하강법 · 배치 사이즈와 에포크 · 딥러닝 정리</h1>
+      <p class="meta">Ⅱ. 인공지능과 학습 · 2-2-1 딥러닝 3차시 · 93~94쪽</p>
       <p class="warning">Apps Script 웹 앱 URL이 아직 설정되지 않았습니다. 선생님이 배포 URL을 넣은 뒤 사용하세요.</p>
       <form id="reflectionForm" method="post" action="https://script.google.com/macros/s/AKfycbyXgCq6W2zzT7fxPiblqG6wA-e3CpCgztuRKrIQkExMn6oQJ9oxd-U--dVB-5H3_fZF/exec" target="hiddenSubmitFrame">
         <input type="hidden" name="course" value="인공지능 기초">
         <input type="hidden" name="subunitId" value="ai-15-dl-3">
-        <input type="hidden" name="subunitTitle" value="경사 하강법 · 배치와 에포크 · 손글씨 숫자 학습(티처블 머신)">
-        <input type="hidden" name="pages" value="93~101쪽 · 티처블 머신">
+        <input type="hidden" name="subunitTitle" value="경사 하강법 · 배치 사이즈와 에포크 · 딥러닝 정리">
+        <input type="hidden" name="pages" value="93~94쪽">
         <input type="hidden" name="pasteBlockCount" id="pasteBlockCount" value="0">
         <input type="hidden" name="clientSubmittedAt" id="clientSubmittedAt" value="">
         <input type="hidden" name="userAgent" id="userAgent" value="">
@@ -66,15 +66,15 @@
           </section>
 <section class="question-block">
             <h2>질문 2</h2>
-            <p class="question-text">티처블 머신 고급 설정의 &#x27;에포크 50&#x27;, &#x27;배치 크기 16&#x27;이 무엇을 뜻하는지 오늘 실습과 연결해 설명하세요. 실험 ①에서 에포크를 2로 줄였을 때 막대그래프의 퍼센트나 손실 그래프가 어떻게 달라졌는지 쓰고, 그 이유를 설명하세요.</p>
-            <input type="hidden" name="question2" value="티처블 머신 고급 설정의 &#x27;에포크 50&#x27;, &#x27;배치 크기 16&#x27;이 무엇을 뜻하는지 오늘 실습과 연결해 설명하세요. 실험 ①에서 에포크를 2로 줄였을 때 막대그래프의 퍼센트나 손실 그래프가 어떻게 달라졌는지 쓰고, 그 이유를 설명하세요.">
+            <p class="question-text">&#x27;영어 단어 120개 외우기&#x27;처럼 내 공부 경험에 빗대어 배치 사이즈와 에포크를 설명하세요. 학습 데이터 60,000장, 배치 사이즈 32일 때 1에포크에 가중치를 몇 번 고치는지 계산 과정과 함께 쓰고, 에포크를 너무 많이 하면 어떤 문제가 생기는지 설명하세요.</p>
+            <input type="hidden" name="question2" value="&#x27;영어 단어 120개 외우기&#x27;처럼 내 공부 경험에 빗대어 배치 사이즈와 에포크를 설명하세요. 학습 데이터 60,000장, 배치 사이즈 32일 때 1에포크에 가중치를 몇 번 고치는지 계산 과정과 함께 쓰고, 에포크를 너무 많이 하면 어떤 문제가 생기는지 설명하세요.">
             <label for="answer2">답변 2</label>
             <textarea id="answer2" name="answer2" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
           </section>
 <section class="question-block">
             <h2>질문 3</h2>
-            <p class="question-text">실험 ②(1과 7) 또는 실험 ③(친구 글씨·낯선 글씨)에서 인공지능이 헷갈리거나 틀린 경우를 하나 골라 쓰세요. 왜 틀렸다고 생각하는지 설명하고, 더 잘 맞히게 하려면 학습 데이터를 어떻게 바꾸어야 할지 오늘 배운 개념(학습 데이터, 과대적합 등)을 넣어 쓰세요.</p>
-            <input type="hidden" name="question3" value="실험 ②(1과 7) 또는 실험 ③(친구 글씨·낯선 글씨)에서 인공지능이 헷갈리거나 틀린 경우를 하나 골라 쓰세요. 왜 틀렸다고 생각하는지 설명하고, 더 잘 맞히게 하려면 학습 데이터를 어떻게 바꾸어야 할지 오늘 배운 개념(학습 데이터, 과대적합 등)을 넣어 쓰세요.">
+            <p class="question-text">지금까지 배운 딥러닝 개념(퍼셉트론, 활성화 함수, 손실 함수, 순전파·역전파, 경사 하강법, 배치·에포크) 중 세 가지 이상을 넣어, 인공지능이 사진 속 동물을 알아보도록 학습하는 과정을 처음부터 끝까지 순서대로 설명하세요.</p>
+            <input type="hidden" name="question3" value="지금까지 배운 딥러닝 개념(퍼셉트론, 활성화 함수, 손실 함수, 순전파·역전파, 경사 하강법, 배치·에포크) 중 세 가지 이상을 넣어, 인공지능이 사진 속 동물을 알아보도록 학습하는 과정을 처음부터 끝까지 순서대로 설명하세요.">
             <label for="answer3">답변 3</label>
             <textarea id="answer3" name="answer3" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
           </section>
