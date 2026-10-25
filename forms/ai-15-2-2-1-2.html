@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>인공지능 기초 질문폼 - 손글씨 숫자 분류 실습 (티처블 머신 → 파이썬 MNIST)</title>
+  <title>인공지능 기초 질문폼 - 손글씨 숫자 분류 실습 (ML4Kids → 파이썬 MNIST)</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Cpath d='M18 40h28v6H18zM18 18h28v6H18zM18 29h20v6H18z' fill='white'/%3E%3C/svg%3E">
   <style>
     :root { --bg:#f5f7fb; --card:#ffffff; --ink:#172033; --muted:#667085; --line:#d9e0ec; --accent:#2563eb; --warn:#b42318; }
@@ -34,13 +34,13 @@
   <main>
     <section class="card">
       <p class="eyebrow">인공지능 기초 · 생기부 기록용 질문폼</p>
-      <h1>손글씨 숫자 분류 실습 (티처블 머신 → 파이썬 MNIST)</h1>
+      <h1>손글씨 숫자 분류 실습 (ML4Kids → 파이썬 MNIST)</h1>
       <p class="meta">Ⅱ. 인공지능과 학습 · 2-2-1-2 · 96~101쪽</p>
       <p class="warning">Apps Script 웹 앱 URL이 아직 설정되지 않았습니다. 선생님이 배포 URL을 넣은 뒤 사용하세요.</p>
       <form id="reflectionForm" method="post" action="https://script.google.com/macros/s/AKfycbyXgCq6W2zzT7fxPiblqG6wA-e3CpCgztuRKrIQkExMn6oQJ9oxd-U--dVB-5H3_fZF/exec" target="hiddenSubmitFrame">
         <input type="hidden" name="course" value="인공지능 기초">
         <input type="hidden" name="subunitId" value="ai-15-2-2-1-2">
-        <input type="hidden" name="subunitTitle" value="손글씨 숫자 분류 실습 (티처블 머신 → 파이썬 MNIST)">
+        <input type="hidden" name="subunitTitle" value="손글씨 숫자 분류 실습 (ML4Kids → 파이썬 MNIST)">
         <input type="hidden" name="pages" value="96~101쪽">
         <input type="hidden" name="pasteBlockCount" id="pasteBlockCount" value="0">
         <input type="hidden" name="clientSubmittedAt" id="clientSubmittedAt" value="">
@@ -59,15 +59,15 @@
         <div class="questions">
           <section class="question-block">
             <h2>질문 1</h2>
-            <p class="question-text">티처블 머신에서 한 일(숫자 카드 찍기, 클래스 0·1·2 만들기, &#x27;모델 학습시키기&#x27; 버튼, 숨겨 둔 테스트 카드로 시험하기) 중 두 가지를 골라, 오늘 실행한 파이썬 코드의 어느 부분(mnist.load_data, 출력층 Dense, model.fit, evaluate·predict 등)과 같은 일인지 짝지어 설명하세요.</p>
-            <input type="hidden" name="question1" value="티처블 머신에서 한 일(숫자 카드 찍기, 클래스 0·1·2 만들기, &#x27;모델 학습시키기&#x27; 버튼, 숨겨 둔 테스트 카드로 시험하기) 중 두 가지를 골라, 오늘 실행한 파이썬 코드의 어느 부분(mnist.load_data, 출력층 Dense, model.fit, evaluate·predict 등)과 같은 일인지 짝지어 설명하세요.">
+            <p class="question-text">ML4Kids에서 한 일(레이블 0·1·2 만들기, 숫자를 그려 레이블 상자에 넣기, 「새로운 머신 러닝 모델을 훈련시켜보세요」 버튼, 새로 그린 그림으로 테스트하기) 중 두 가지를 골라, 오늘 실행한 파이썬 코드의 어느 부분(mnist.load_data, 출력층 Dense, model.fit, evaluate·predict 등)과 같은 일인지 짝지어 설명하세요.</p>
+            <input type="hidden" name="question1" value="ML4Kids에서 한 일(레이블 0·1·2 만들기, 숫자를 그려 레이블 상자에 넣기, 「새로운 머신 러닝 모델을 훈련시켜보세요」 버튼, 새로 그린 그림으로 테스트하기) 중 두 가지를 골라, 오늘 실행한 파이썬 코드의 어느 부분(mnist.load_data, 출력층 Dense, model.fit, evaluate·predict 등)과 같은 일인지 짝지어 설명하세요.">
             <label for="answer1">답변 1</label>
             <textarea id="answer1" name="answer1" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
           </section>
 <section class="question-block">
             <h2>질문 2</h2>
-            <p class="question-text">티처블 머신은 숫자마다 50장 정도만 찍어도 잘 맞혔는데, 오늘 파이썬 모델은 6만 장으로 학습했습니다. 그 이유를 쓰고, 티처블 머신 실험(에포크 줄이기, 1과 7, 낯선 글씨)이나 오늘 코드 결과(에포크 1과 10 비교, 가장 많이 헷갈린 숫자 짝) 중 하나를 골라 무엇을 알게 되었는지 쓰세요.</p>
-            <input type="hidden" name="question2" value="티처블 머신은 숫자마다 50장 정도만 찍어도 잘 맞혔는데, 오늘 파이썬 모델은 6만 장으로 학습했습니다. 그 이유를 쓰고, 티처블 머신 실험(에포크 줄이기, 1과 7, 낯선 글씨)이나 오늘 코드 결과(에포크 1과 10 비교, 가장 많이 헷갈린 숫자 짝) 중 하나를 골라 무엇을 알게 되었는지 쓰세요.">
+            <p class="question-text">ML4Kids는 숫자마다 15장 정도만 그려도 잘 맞혔는데, 오늘 파이썬 모델은 6만 장으로 학습했습니다. 그 이유를 쓰고, ML4Kids 실험(데이터 5장, 1과 7, 낯선 그림)이나 오늘 코드 결과(에포크 1과 10 비교, 가장 많이 헷갈린 숫자 짝) 중 하나를 골라 무엇을 알게 되었는지 쓰세요.</p>
+            <input type="hidden" name="question2" value="ML4Kids는 숫자마다 15장 정도만 그려도 잘 맞혔는데, 오늘 파이썬 모델은 6만 장으로 학습했습니다. 그 이유를 쓰고, ML4Kids 실험(데이터 5장, 1과 7, 낯선 그림)이나 오늘 코드 결과(에포크 1과 10 비교, 가장 많이 헷갈린 숫자 짝) 중 하나를 골라 무엇을 알게 되었는지 쓰세요.">
             <label for="answer2">답변 2</label>
             <textarea id="answer2" name="answer2" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
           </section>
