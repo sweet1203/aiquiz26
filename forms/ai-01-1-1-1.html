@@ -28,6 +28,9 @@
     .hint { color:var(--muted); font-size:.92rem; margin:8px 0 0; }
     .toast { min-height:28px; margin-top:12px; color:var(--warn); font-weight:700; }
     @media (max-width:640px) { main { margin:20px auto; } .card { padding:20px; border-radius:20px; } .row { grid-template-columns:1fr; gap:0; } }
+    /* copy-guard: 질문·화면 글자 선택·복사 막기 (답변 칸은 편집 가능) */
+    body { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+    input, textarea, select { -webkit-user-select:text; user-select:text; }
   </style>
 </head>
 <body>
@@ -79,7 +82,7 @@
             <textarea id="answer3" name="answer3" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
           </section>
         </div>
-        <p class="hint">모든 답변 칸은 붙여넣기와 드래그 입력이 막혀 있습니다. 직접 작성한 내용만 제출하세요.</p>
+        <p class="hint">이 질문폼은 복사·붙여넣기·드래그가 막혀 있습니다. 직접 생각해서 작성한 내용만 제출하세요.</p>
         <button type="submit">제출하기</button>
       </form>
       <div id="toast" class="toast" aria-live="polite"></div>
@@ -116,6 +119,24 @@
       document.getElementById('userAgent').value = navigator.userAgent;
       toast.textContent = '제출했습니다. 선생님 안내에 따라 창을 닫아도 됩니다.';
     });
+  </script>
+  <script>
+    /* copy-guard: 복사·잘라내기·드래그·오른쪽 클릭 막기 */
+    (function () {
+      var toastBox = document.getElementById('toast');
+      function say(msg) { if (!toastBox) return; toastBox.textContent = msg; window.setTimeout(function () { if (toastBox.textContent === msg) toastBox.textContent = ''; }, 2500); }
+      function inField(e) { return e.target && e.target.closest && e.target.closest('input, textarea, select'); }
+      var MSG = '이 질문폼에서는 복사할 수 없습니다. 직접 생각해서 써 주세요.';
+      ['copy', 'cut'].forEach(function (type) { document.addEventListener(type, function (e) { e.preventDefault(); say(MSG); }, true); });
+      document.addEventListener('contextmenu', function (e) { if (!inField(e)) e.preventDefault(); }, true);
+      document.addEventListener('selectstart', function (e) { if (!inField(e)) e.preventDefault(); }, true);
+      document.addEventListener('dragstart', function (e) { e.preventDefault(); }, true);
+      document.addEventListener('keydown', function (e) {
+        var k = (e.key || '').toLowerCase();
+        if ((e.ctrlKey || e.metaKey) && (k === 'c' || k === 'x')) { e.preventDefault(); say(MSG); }
+        if ((e.ctrlKey || e.metaKey) && k === 'a' && !inField(e)) { e.preventDefault(); }
+      }, true);
+    })();
   </script>
 </body>
 </html>
