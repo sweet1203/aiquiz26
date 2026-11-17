@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>인공지능 기초 질문폼 - 3단원 정리 · 수행평가 준비</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Cpath d='M18 40h28v6H18zM18 18h28v6H18zM18 29h20v6H18z' fill='white'/%3E%3C/svg%3E">
+  <style>
+    :root { --bg:#f5f7fb; --card:#ffffff; --ink:#172033; --muted:#667085; --line:#d9e0ec; --accent:#2563eb; --warn:#b42318; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:linear-gradient(180deg,#eef4ff 0%,var(--bg) 42%); color:var(--ink); font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; }
+    main { width:min(760px, calc(100% - 32px)); margin:40px auto; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:24px; box-shadow:0 20px 60px rgba(31,41,55,.12); padding:28px; }
+    .eyebrow { color:var(--accent); font-weight:700; margin:0 0 8px; }
+    h1 { margin:0; font-size:clamp(1.65rem,4vw,2.35rem); letter-spacing:-.04em; }
+    .meta { margin:10px 0 22px; color:var(--muted); }
+    .warning { display:none; margin:0 0 18px; padding:12px 14px; border:1px solid #fecdca; border-radius:14px; color:var(--warn); background:#fffbfa; font-weight:700; }
+    label { display:block; margin:16px 0 7px; font-weight:700; }
+    select, input, textarea { width:100%; border:1px solid var(--line); border-radius:14px; padding:13px 14px; font:inherit; background:#fff; color:var(--ink); }
+    textarea { min-height:150px; resize:vertical; }
+    .questions { display:grid; gap:18px; margin-top:20px; }
+    .question-block { padding:18px; border-radius:18px; background:#f8fbff; border:1px solid #dbeafe; }
+    .question-block h2 { margin:0 0 10px; font-size:1.05rem; }
+    .question-text { margin:0 0 12px; font-size:1.05rem; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    button { width:100%; margin-top:20px; border:0; border-radius:16px; padding:15px 18px; background:var(--accent); color:#fff; font:inherit; font-weight:800; cursor:pointer; }
+    button:focus, input:focus, select:focus, textarea:focus { outline:3px solid rgba(37,99,235,.25); outline-offset:2px; }
+    .hint { color:var(--muted); font-size:.92rem; margin:8px 0 0; }
+    .toast { min-height:28px; margin-top:12px; color:var(--warn); font-weight:700; }
+    @media (max-width:640px) { main { margin:20px auto; } .card { padding:20px; border-radius:20px; } .row { grid-template-columns:1fr; gap:0; } }
+    /* copy-guard: 질문·화면 글자 선택·복사 막기 (답변 칸은 편집 가능) */
+    body { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+    input, textarea, select { -webkit-user-select:text; user-select:text; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="card">
+      <p class="eyebrow">인공지능 기초 · 생기부 기록용 질문폼</p>
+      <h1>3단원 정리 · 수행평가 준비</h1>
+      <p class="meta">Ⅲ → Ⅳ · 3단원 정리와 수행평가 준비</p>
+      <p class="warning">Apps Script 웹 앱 URL이 아직 설정되지 않았습니다. 선생님이 배포 URL을 넣은 뒤 사용하세요.</p>
+      <form id="reflectionForm" method="post" action="https://script.google.com/macros/s/AKfycbyXgCq6W2zzT7fxPiblqG6wA-e3CpCgztuRKrIQkExMn6oQJ9oxd-U--dVB-5H3_fZF/exec" target="hiddenSubmitFrame">
+        <input type="hidden" name="course" value="인공지능 기초">
+        <input type="hidden" name="subunitId" value="ai-242-project-ready">
+        <input type="hidden" name="subunitTitle" value="3단원 정리 · 수행평가 준비">
+        <input type="hidden" name="pages" value="132~177쪽">
+        <input type="hidden" name="pasteBlockCount" id="pasteBlockCount" value="0">
+        <input type="hidden" name="clientSubmittedAt" id="clientSubmittedAt" value="">
+        <input type="hidden" name="userAgent" id="userAgent" value="">
+        <label for="className">반</label>
+        <select id="className" name="className" required>
+          <option value="" selected disabled>반 선택</option>
+          <option value="인공지능C">인공지능C</option>
+<option value="인공지능F">인공지능F</option>
+<option value="인공지능G">인공지능G</option>
+        </select>
+        <div class="row">
+          <div><label for="studentNo">학번</label><input id="studentNo" name="studentNo" inputmode="numeric" autocomplete="off" pattern="[0-9]{5}" minlength="5" maxlength="5" placeholder="예: 20101" required></div>
+          <div><label for="name">이름</label><input id="name" name="name" autocomplete="name" required></div>
+        </div>
+        <div class="questions">
+          <section class="question-block">
+            <h2>질문 1</h2>
+            <p class="question-text">3단원에서 다룬 사례(식당 위생 검사, 직업 세계의 변화, 표정 알아보기, 인공지능 면접관, 자율주행 자동차, 임금 예측, 병원 진단, 범죄 예측 CCTV 등) 중 하나를 골라, 그 사례에서 인공지능이 사회에 도움이 되는 점과 해가 될 수 있는 점을 쓰세요. 그리고 이 사례에 대한 내 생각과 그 까닭을 3단원에서 배운 낱말(편향·책임성·공정성·투명성·딜레마 등)을 넣어 쓰세요.</p>
+            <input type="hidden" name="question1" value="3단원에서 다룬 사례(식당 위생 검사, 직업 세계의 변화, 표정 알아보기, 인공지능 면접관, 자율주행 자동차, 임금 예측, 병원 진단, 범죄 예측 CCTV 등) 중 하나를 골라, 그 사례에서 인공지능이 사회에 도움이 되는 점과 해가 될 수 있는 점을 쓰세요. 그리고 이 사례에 대한 내 생각과 그 까닭을 3단원에서 배운 낱말(편향·책임성·공정성·투명성·딜레마 등)을 넣어 쓰세요.">
+            <label for="answer1">답변 1</label>
+            <textarea id="answer1" name="answer1" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
+          </section>
+<section class="question-block">
+            <h2>질문 2</h2>
+            <p class="question-text">내 프로젝트 계획을 쓰세요. 「어떻게 하면 ___ 할 수 있을까?」 형태의 주제, 데이터 유형(텍스트·숫자·이미지·소리), 클래스(2개 이상), 클래스마다 모을 데이터의 개수와 모으는 방법, 그리고 테스트 사례를 어떻게 따로 둘지 포함해 쓰세요.</p>
+            <input type="hidden" name="question2" value="내 프로젝트 계획을 쓰세요. 「어떻게 하면 ___ 할 수 있을까?」 형태의 주제, 데이터 유형(텍스트·숫자·이미지·소리), 클래스(2개 이상), 클래스마다 모을 데이터의 개수와 모으는 방법, 그리고 테스트 사례를 어떻게 따로 둘지 포함해 쓰세요.">
+            <label for="answer2">답변 2</label>
+            <textarea id="answer2" name="answer2" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
+          </section>
+<section class="question-block">
+            <h2>질문 3</h2>
+            <p class="question-text">내가 만들 인공지능이 틀리거나 학습 데이터가 한쪽으로 치우치면 누가 곤란하거나 불리해질지 쓰세요. 그리고 이를 막기 위해 데이터를 모을 때 지킬 나의 약속을 개인정보·저작권과 관련된 약속을 하나 이상 넣어 쓰세요.</p>
+            <input type="hidden" name="question3" value="내가 만들 인공지능이 틀리거나 학습 데이터가 한쪽으로 치우치면 누가 곤란하거나 불리해질지 쓰세요. 그리고 이를 막기 위해 데이터를 모을 때 지킬 나의 약속을 개인정보·저작권과 관련된 약속을 하나 이상 넣어 쓰세요.">
+            <label for="answer3">답변 3</label>
+            <textarea id="answer3" name="answer3" data-no-paste="true" required placeholder="수업 내용과 자신의 생각이 드러나게 직접 작성하세요."></textarea>
+          </section>
+        </div>
+        <p class="hint">이 질문폼은 복사·붙여넣기·드래그가 막혀 있습니다. 직접 생각해서 작성한 내용만 제출하세요.</p>
+        <button type="submit">제출하기</button>
+      </form>
+      <div id="toast" class="toast" aria-live="polite"></div>
+      <iframe name="hiddenSubmitFrame" title="hidden submit frame" style="display:none"></iframe>
+    </section>
+  </main>
+  <script>
+    const form = document.getElementById('reflectionForm');
+    const answers = Array.from(document.querySelectorAll('textarea[data-no-paste="true"]'));
+    const pasteCount = document.getElementById('pasteBlockCount');
+    const toast = document.getElementById('toast');
+    const lastValues = new Map();
+    function blockPaste(textarea, message) {
+      pasteCount.value = String(Number(pasteCount.value) + 1);
+      textarea.value = lastValues.get(textarea.id) || '';
+      toast.textContent = message;
+      window.setTimeout(() => { toast.textContent = ''; }, 2500);
+    }
+    answers.forEach((textarea) => {
+      lastValues.set(textarea.id, '');
+      textarea.addEventListener('input', () => { lastValues.set(textarea.id, textarea.value); });
+      textarea.addEventListener('paste', (event) => { event.preventDefault(); blockPaste(textarea, '붙여넣기 대신 직접 작성해 주세요.'); });
+      textarea.addEventListener('drop', (event) => { event.preventDefault(); blockPaste(textarea, '드래그해서 넣기는 사용할 수 없습니다.'); });
+      textarea.addEventListener('dragover', (event) => { event.preventDefault(); });
+      textarea.addEventListener('beforeinput', (event) => {
+        if (/insertFrom(Paste|Drop|Yank)/.test(event.inputType || '')) {
+          event.preventDefault();
+          blockPaste(textarea, '붙여넣기나 드래그 입력은 기록하지 않습니다.');
+        }
+      });
+    });
+    form.addEventListener('submit', () => {
+      document.getElementById('clientSubmittedAt').value = new Date().toISOString();
+      document.getElementById('userAgent').value = navigator.userAgent;
+      toast.textContent = '제출했습니다. 선생님 안내에 따라 창을 닫아도 됩니다.';
+    });
+  </script>
+  <script>
+    /* copy-guard: 복사·잘라내기·드래그·오른쪽 클릭 막기 */
+    (function () {
+      var toastBox = document.getElementById('toast');
+      function say(msg) { if (!toastBox) return; toastBox.textContent = msg; window.setTimeout(function () { if (toastBox.textContent === msg) toastBox.textContent = ''; }, 2500); }
+      function inField(e) { return e.target && e.target.closest && e.target.closest('input, textarea, select'); }
+      var MSG = '이 질문폼에서는 복사할 수 없습니다. 직접 생각해서 써 주세요.';
+      ['copy', 'cut'].forEach(function (type) { document.addEventListener(type, function (e) { e.preventDefault(); say(MSG); }, true); });
+      document.addEventListener('contextmenu', function (e) { if (!inField(e)) e.preventDefault(); }, true);
+      document.addEventListener('selectstart', function (e) { if (!inField(e)) e.preventDefault(); }, true);
+      document.addEventListener('dragstart', function (e) { e.preventDefault(); }, true);
+      document.addEventListener('keydown', function (e) {
+        var k = (e.key || '').toLowerCase();
+        if ((e.ctrlKey || e.metaKey) && (k === 'c' || k === 'x')) { e.preventDefault(); say(MSG); }
+        if ((e.ctrlKey || e.metaKey) && k === 'a' && !inField(e)) { e.preventDefault(); }
+      }, true);
+    })();
+  </script>
+</body>
+</html>
