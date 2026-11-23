@@ -27,6 +27,12 @@
     .tb th { background:#eef2f8; }
     .tb td.no { text-align:center; color:var(--muted); width:32px; }
     .tb input { border:0; border-radius:6px; padding:7px 8px; }
+    .tb td.n { width:96px; } .tb td.n input { text-align:right; }
+    .tb td.s { width:72px; } .tb td.s select { border:0; padding:7px 4px; border-radius:6px; }
+    .tb td.cc { width:110px; font-size:.86rem; text-align:center; white-space:nowrap; }
+    .ok-t { color:#1f7a4d; font-weight:700; } .bad-t { color:var(--warn); font-weight:700; }
+    .tally, .calcbox { margin:10px 0 0; padding:10px 14px; border-radius:12px; background:#fff; border:1px dashed var(--line); font-size:.94rem; white-space:pre-line; }
+    .tally:empty, .calcbox:empty { display:none; }
     .cks { display:grid; gap:6px; }
     .ck { margin:0; font-weight:500; display:flex; gap:8px; align-items:flex-start; }
     .ck input { width:auto; margin-top:5px; }
@@ -60,8 +66,8 @@
         <input type="hidden" name="clientSubmittedAt" id="clientSubmittedAt" value="">
         <input type="hidden" name="userAgent" id="userAgent" value="">
         <input type="hidden" name="question1" value="① 1. 프로젝트 계획 — 고른 주제 (주제 목록 번호와 이름 · 자유 주제면 「자유 번호」와 주제 이름) · 「어떻게 하면 ___ 할 수 있을까?」 · 넣을 사진(입력) → 맞힐 것(출력) · 클래스 (2개 이상) · 이 문제를 이미지 인공지능으로 해결하려는 까닭"><input type="hidden" name="answer1" id="answer1" value="">
-<input type="hidden" name="question2" value="① 2. 사진 모으기와 정리 (전처리) — 클래스별 사진 장수 (정리 전 → 정리 후) · 어디서 어떻게 찍었나 (배경·밝기·각도·거리) · 정리하며 뺀 사진·옮긴 사진과 그 까닭 · 사진을 이렇게 구성한 근거"><input type="hidden" name="answer2" id="answer2" value="">
-<input type="hidden" name="question3" value="① 3. 학습과 테스트 — ML4Kids 프로젝트 이름 · 테스트 사진을 어떻게 따로 두었나 · 테스트 결과 (사진마다 한 줄) · 끝나기 전에 확인"><input type="hidden" name="answer3" id="answer3" value="">
+<input type="hidden" name="question2" value="① 2. 사진 모으기와 정리 (전처리) — 클래스별 사진 장수 (정리 전 → 정리 후) · 사진을 어디서 어떻게 모았나 (직접 찍기·그리기 또는 인터넷 검색) · 정리하며 뺀 사진·옮긴 사진과 그 까닭 · 사진을 이렇게 구성한 근거"><input type="hidden" name="answer2" id="answer2" value="">
+<input type="hidden" name="question3" value="① 3. 학습과 테스트 — ML4Kids 프로젝트 이름 · 테스트 사진을 어떻게 따로 두었나 · 테스트 기록표 (테스트 사진마다 한 줄 · 클래스마다 3장 이상 권장) · 끝나기 전에 확인"><input type="hidden" name="answer3" id="answer3" value="">
         <div class="row">
           <div><label for="className">반</label>
             <select id="className" name="className" required>
@@ -74,8 +80,8 @@
         <p class="hint">학번을 쓰면 이 기기에 임시 저장된 내 답이 있으면 다시 채워져요. 공용 컴퓨터에서는 제출 뒤 창을 닫아 주세요.</p>
         <div id="blocks">
 <section class="qb" data-q="1"><h2>1. 프로젝트 계획</h2><div class="fld"><label>고른 주제 (주제 목록 번호와 이름 · 자유 주제면 「자유 번호」와 주제 이름)</label><input type="text" data-k="q1.topic" data-label="고른 주제 (주제 목록 번호와 이름 · 자유 주제면 「자유 번호」와 주제 이름)" data-np="1" placeholder="예: 11번 투명 페트병 분리배출 / 자유3 급식 잔반 양" autocomplete="off" data-req=1></div><div class="fld"><label>「어떻게 하면 ___ 할 수 있을까?」</label><input type="text" data-k="q1.how" data-label="「어떻게 하면 ___ 할 수 있을까?」" data-np="1" placeholder="어떻게 하면 … 수 있을까?" autocomplete="off" data-req=1></div><div class="fld"><label>넣을 사진(입력) → 맞힐 것(출력)</label><input type="text" data-k="q1.io" data-label="넣을 사진(입력) → 맞힐 것(출력)" data-np="1" placeholder="예: 페트병 사진 → 라벨 뗌 / 라벨 붙음" autocomplete="off" data-req=1></div><div class="fld"><label>클래스 (2개 이상)</label><input type="text" data-k="q1.classes" data-label="클래스 (2개 이상)" data-np="1" placeholder="예: 라벨 뗌 / 라벨 붙음" autocomplete="off" data-req=1></div><div class="fld"><label>이 문제를 이미지 인공지능으로 해결하려는 까닭</label><textarea data-k="q1.why" data-label="이 문제를 이미지 인공지능으로 해결하려는 까닭" data-np="1" placeholder="누구에게 어떤 도움이 되는지, 왜 사진으로 판단하는지" rows="3" data-req=1></textarea></div></section>
-<section class="qb" data-q="2"><h2>2. 사진 모으기와 정리 (전처리)</h2><div class="fld"><label>클래스별 사진 장수 (정리 전 → 정리 후)</label><textarea data-k="q2.count" data-label="클래스별 사진 장수 (정리 전 → 정리 후)" data-np="1" placeholder="예: 라벨 뗌 12장 → 10장 / 라벨 붙음 11장 → 10장" rows="3" data-req=1></textarea></div><div class="fld"><label>어디서 어떻게 찍었나 (배경·밝기·각도·거리)</label><textarea data-k="q2.shot" data-label="어디서 어떻게 찍었나 (배경·밝기·각도·거리)" data-np="1" placeholder="두 클래스를 같은 조건으로 골고루 찍었는지도 적어요" rows="3" data-req=1></textarea></div><div class="fld"><label>정리하며 뺀 사진·옮긴 사진과 그 까닭</label><textarea data-k="q2.clean" data-label="정리하며 뺀 사진·옮긴 사진과 그 까닭" data-np="1" placeholder="예: 흔들린 사진 2장을 뺐다. 물건이 잘 안 보여서 …" rows="3" data-req=1></textarea></div><div class="fld"><label>사진을 이렇게 구성한 근거</label><textarea data-k="q2.reason" data-label="사진을 이렇게 구성한 근거" data-np="1" placeholder="장수를 맞춘 까닭, 배경·밝기를 다양하게 한 까닭 등" rows="3" data-req=1></textarea></div></section>
-<section class="qb" data-q="3"><h2>3. 학습과 테스트</h2><div class="fld"><label>ML4Kids 프로젝트 이름</label><input type="text" data-k="q3.project" data-label="ML4Kids 프로젝트 이름" data-np="1" placeholder="" autocomplete="off" data-req=1></div><div class="fld"><label>테스트 사진을 어떻게 따로 두었나</label><textarea data-k="q3.testset" data-label="테스트 사진을 어떻게 따로 두었나" data-np="1" placeholder="학습에 넣지 않은 사진을 클래스마다 몇 장, 어떻게 골랐는지" rows="3" data-req=1></textarea></div><div class="fld"><label>테스트 결과 (사진마다 한 줄)</label><div class="tw"><table class="tb" data-k="q3.tests" data-label="테스트 결과 (사진마다 한 줄)" data-cols="[&quot;테스트 사진 설명&quot;, &quot;정답 클래스&quot;, &quot;모델 예측&quot;, &quot;신뢰도(%)&quot;]"><tr><th>#</th><th>테스트 사진 설명</th><th>정답 클래스</th><th>모델 예측</th><th>신뢰도(%)</th></tr><tr><td class="no">1</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td></tr><tr><td class="no">2</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td></tr><tr><td class="no">3</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td></tr><tr><td class="no">4</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td></tr><tr><td class="no">5</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td></tr><tr><td class="no">6</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td></tr><tr><td class="no">7</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td></tr><tr><td class="no">8</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td></tr></table></div><p class="hint">쓴 줄만 제출돼요. 줄이 모자라면 아래 보충 칸이나 다음 폼에 이어 써요.</p></div><div class="fld"><label>끝나기 전에 확인</label><div class="cks" data-k="q3.done" data-label="끝나기 전에 확인"><label class="ck"><input type="checkbox" value="ML4Kids에서 학습을 마쳤다"> ML4Kids에서 학습을 마쳤다</label><label class="ck"><input type="checkbox" value="훈련 화면(클래스별 사진 장수)을 캡처해 리로스쿨 과제에 올렸다"> 훈련 화면(클래스별 사진 장수)을 캡처해 리로스쿨 과제에 올렸다</label><label class="ck"><input type="checkbox" value="테스트 결과 화면을 캡처해 리로스쿨 과제에 올렸다"> 테스트 결과 화면을 캡처해 리로스쿨 과제에 올렸다</label></div></div></section>
+<section class="qb" data-q="2"><h2>2. 사진 모으기와 정리 (전처리)</h2><div class="fld"><label>클래스별 사진 장수 (정리 전 → 정리 후)</label><textarea data-k="q2.count" data-label="클래스별 사진 장수 (정리 전 → 정리 후)" data-np="1" placeholder="예: 라벨 뗌 12장 → 10장 / 라벨 붙음 11장 → 10장" rows="3" data-req=1></textarea></div><div class="fld"><label>사진을 어디서 어떻게 모았나 (직접 찍기·그리기 또는 인터넷 검색)</label><textarea data-k="q2.shot" data-label="사진을 어디서 어떻게 모았나 (직접 찍기·그리기 또는 인터넷 검색)" data-np="1" placeholder="직접 찍었다면 장소·배경·밝기·각도를, 인터넷에서 찾았다면 검색어·사이트와 고른 기준을 적어요. 예: 교실 책상과 바닥에서 밝기를 바꿔 찍었다 / 「페트병 라벨」로 검색해 픽사베이에서 배경이 서로 다른 사진을 골랐다." rows="3" data-req=1></textarea></div><div class="fld"><label>정리하며 뺀 사진·옮긴 사진과 그 까닭</label><textarea data-k="q2.clean" data-label="정리하며 뺀 사진·옮긴 사진과 그 까닭" data-np="1" placeholder="예: 워터마크·글자가 크게 들어간 사진 2장, 거의 같은 사진 1장을 뺐다. 까닭은 …" rows="3" data-req=1></textarea></div><div class="fld"><label>사진을 이렇게 구성한 근거</label><textarea data-k="q2.reason" data-label="사진을 이렇게 구성한 근거" data-np="1" placeholder="장수를 맞춘 까닭, 배경·밝기를 다양하게 한 까닭 등" rows="3" data-req=1></textarea></div></section>
+<section class="qb" data-q="3"><h2>3. 학습과 테스트</h2><div class="fld"><label>ML4Kids 프로젝트 이름</label><input type="text" data-k="q3.project" data-label="ML4Kids 프로젝트 이름" data-np="1" placeholder="" autocomplete="off" data-req=1></div><div class="fld"><label>테스트 사진을 어떻게 따로 두었나</label><textarea data-k="q3.testset" data-label="테스트 사진을 어떻게 따로 두었나" data-np="1" placeholder="학습에 넣지 않은 사진을 클래스마다 몇 장, 어디서 골랐는지. 학습 사진과 같은 사진·같은 페이지의 비슷한 사진은 쓰지 않아요." rows="3" data-req=1></textarea></div><div class="fld"><label>테스트 기록표 (테스트 사진마다 한 줄 · 클래스마다 3장 이상 권장)</label><div class="tw"><table class="tb" data-k="q3.tests" data-label="테스트 기록표 (테스트 사진마다 한 줄 · 클래스마다 3장 이상 권장)" data-cols="[&quot;사진 설명 · 출처(사이트)&quot;, &quot;정답 클래스&quot;, &quot;모델 예측&quot;, &quot;신뢰도(%)&quot;, &quot;맞음?&quot;]"><tr><th>#</th><th>사진 설명 · 출처(사이트)</th><th>정답 클래스</th><th>모델 예측</th><th>신뢰도(%)</th><th>맞음?</th></tr><tr><td class="no">1</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">2</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">3</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">4</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">5</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">6</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">7</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">8</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">9</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">10</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">11</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">12</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr></table></div><p class="hint">쓴 줄만 제출돼요. 줄이 모자라면 아래 보충 칸이나 다음 폼에 이어 써요.</p></div><div class="tally" data-for="q3.tests"></div><div class="fld"><label>끝나기 전에 확인</label><div class="cks" data-k="q3.done" data-label="끝나기 전에 확인"><label class="ck"><input type="checkbox" value="ML4Kids에서 학습을 마쳤다"> ML4Kids에서 학습을 마쳤다</label><label class="ck"><input type="checkbox" value="테스트 사진은 학습에 넣은 사진과 겹치지 않는다"> 테스트 사진은 학습에 넣은 사진과 겹치지 않는다</label><label class="ck"><input type="checkbox" value="훈련 화면(클래스별 사진 장수)을 캡처해 리로스쿨 과제에 올렸다"> 훈련 화면(클래스별 사진 장수)을 캡처해 리로스쿨 과제에 올렸다</label><label class="ck"><input type="checkbox" value="테스트 결과 화면을 캡처해 리로스쿨 과제에 올렸다"> 테스트 결과 화면을 캡처해 리로스쿨 과제에 올렸다</label></div></div></section>
         </div>
         <p class="note">✍️ 모든 칸은 복사·붙여넣기·드래그가 막혀 있어요. 내 프로젝트에서 실제로 나온 이름과 숫자로 직접 써요. 여러 번 내도 되고, <b>마지막에 낸 것</b>을 봐요.</p>
         <button type="submit">제출하기</button>
@@ -125,6 +131,57 @@
     function showItem() { if (!itemSel || !info) return; var t = ITEMS[itemSel.value]; info.textContent = t || ''; info.className = 'iteminfo' + (t ? ' on' : ''); }
     if (itemSel) itemSel.addEventListener('change', showItem);
 
+    /* 테스트 기록표 집계 · 정확도 계산 확인 (값을 대신 계산해 주지 않고 맞는지만 알려 줌) */
+    function cells(tr) { return Array.prototype.slice.call(tr.querySelectorAll('input,select')); }
+    function rowsOf(tb) { return Array.prototype.slice.call(tb.querySelectorAll('tr')).slice(1); }
+    function num(v) { v = (v || '').replace(/[%장\s,]/g, ''); if (v === '') return null; var n = Number(v); return isFinite(n) ? n : NaN; }
+    function near(a, n, c) { return Math.abs(a - c / n * 100) <= 1; }
+    function tally() {
+      Array.prototype.forEach.call(blocks.querySelectorAll('.tally'), function (box) {
+        var tb = blocks.querySelector('table[data-k="' + box.dataset.for + '"]'); if (!tb) return;
+        var n = 0, o = 0, x = 0, blank = 0, odd = [];
+        rowsOf(tb).forEach(function (tr, i) {
+          var v = cells(tr).map(function (el) { return el.value.trim(); });
+          if (!v.join('')) return;
+          n++; var mark = v[4];
+          if (mark === 'O') o++; else if (mark === 'X') x++; else blank++;
+          var same = v[1] && v[2] && v[1].replace(/\s/g, '') === v[2].replace(/\s/g, '');
+          if (mark && v[1] && v[2] && ((same && mark === 'X') || (!same && mark === 'O'))) odd.push(i + 1);
+        });
+        box.textContent = n ? ('기록한 테스트 사진 ' + n + '장 · O ' + o + '장 · X ' + x + '장' + (blank ? ' · 「맞음?」을 안 고른 줄 ' + blank + '개' : '') +
+          (odd.length ? '\n⚠️ ' + odd.join(', ') + '번 줄: 정답 클래스와 모델 예측을 비교해 O/X를 다시 확인해요.' : '')) : '';
+      });
+    }
+    function calc() {
+      var tb = blocks.querySelector('table[data-calc]'), box = blocks.querySelector('.calcbox');
+      if (!tb || !box) return;
+      var sn = 0, sc = 0, rows = 0, lines = [];
+      rowsOf(tb).forEach(function (tr, i) {
+        var v = cells(tr).map(function (el) { return el.value.trim(); }), cc = tr.querySelector('td.cc');
+        var n = num(v[1]), c = num(v[2]), a = num(v[3]), msg = '', ok = null;
+        if (v.join('')) {
+          if (n == null || c == null) msg = '장수를 써요';
+          else if (isNaN(n) || isNaN(c) || n <= 0 || c < 0 || c > n) { msg = '장수를 확인해요'; ok = false; }
+          else {
+            rows++; sn += n; sc += c;
+            if (a == null) msg = '정확도를 써요';
+            else if (isNaN(a) || !near(a, n, c)) { msg = '✗ 다시 계산'; ok = false; }
+            else { msg = '✓ 맞아요'; ok = true; }
+          }
+          lines.push((v[0] || (i + 1) + '번 줄') + ': ' + (v[1] || '-') + '장 중 ' + (v[2] || '-') + '장, ' + (v[3] || '-') + '% → ' + msg);
+        }
+        cc.textContent = msg; cc.className = 'cc' + (ok === true ? ' ok-t' : ok === false ? ' bad-t' : '');
+      });
+      var g = function (k) { var el = blocks.querySelector('[data-k="q1.' + k + '"]'); return el ? num(el.value) : null; };
+      var tn = g('tn'), tc = g('tc'), ta = g('ta'), tot = [];
+      if (tn != null && rows) tot.push(tn === sn ? '✓ 전체 장수가 클래스별 장수의 합과 같아요' : '✗ 전체 장수가 클래스별 장수의 합(표)과 달라요');
+      if (tc != null && rows) tot.push(tc === sc ? '✓ 전체 맞힌 장수가 클래스별 합과 같아요' : '✗ 전체 맞힌 장수가 클래스별 합(표)과 달라요');
+      if (tn != null && tc != null && ta != null) tot.push(!isNaN(tn) && !isNaN(tc) && !isNaN(ta) && tn > 0 && tc <= tn && near(ta, tn, tc) ? '✓ 전체 정확도 계산이 맞아요' : '✗ 전체 정확도를 다시 계산해요');
+      box.textContent = (lines.length || tot.length) ? ['클래스별', lines.join('\n') || '(비어 있음)', '전체', tot.join('\n') || '(전체 칸을 채우면 확인해요)'].join('\n') : '';
+    }
+    function refresh() { tally(); calc(); }
+    blocks.addEventListener('input', refresh); blocks.addEventListener('change', refresh); refresh();
+
     /* 이 기기 임시 저장 (학번마다 따로) */
     function key() { var s = (sidEl.value || '').trim(); return /^\d{5}$/.test(s) ? 'ai2-' + ID + '-' + s : null; }
     function save() { var k = key(); if (!k) return; try { localStorage.setItem(k, JSON.stringify(all().map(function (el) { return el.type === 'checkbox' ? el.checked : el.value; }))); } catch (e) {} }
@@ -134,7 +191,7 @@
       var v; try { v = JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { v = null; }
       if (!v) return;
       all().forEach(function (el, i) { if (v[i] == null) return; if (el.type === 'checkbox') el.checked = !!v[i]; else { el.value = v[i]; last.set(el, el.value); } });
-      Array.prototype.forEach.call(blocks.querySelectorAll('[data-sent]'), upd); showItem();
+      Array.prototype.forEach.call(blocks.querySelectorAll('[data-sent]'), upd); showItem(); refresh();
       say('이 기기에 저장된 내 답을 다시 채웠어요.', true);
     }
     sidEl.addEventListener('input', load);
@@ -149,10 +206,12 @@
           var cols = JSON.parse(el.dataset.cols), lines = [];
           Array.prototype.forEach.call(el.querySelectorAll('tr'), function (tr, r) {
             if (!r) return;
-            var v = Array.prototype.map.call(tr.querySelectorAll('input'), function (i) { return i.value.trim(); });
+            var v = Array.prototype.map.call(tr.querySelectorAll('input,select'), function (i) { return i.value.trim(); });
             if (v.join('')) lines.push(r + ') ' + cols.map(function (c, j) { return c + ': ' + (v[j] || '-'); }).join(' | '));
           });
           out.push('■ ' + label + '\n' + (lines.join('\n') || '(비어 있음)'));
+        } else if (el.classList.contains('calcbox')) {
+          out.push('■ ' + label + '\n' + (el.textContent.trim() || '(비어 있음)'));
         } else if (el.classList.contains('cks')) {
           out.push('■ ' + label + '\n' + Array.prototype.map.call(el.querySelectorAll('input'), function (c) { return (c.checked ? '☑ ' : '☐ ') + c.value; }).join('\n'));
         } else if (el.tagName === 'SELECT') {

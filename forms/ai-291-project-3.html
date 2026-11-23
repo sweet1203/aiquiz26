@@ -27,6 +27,12 @@
     .tb th { background:#eef2f8; }
     .tb td.no { text-align:center; color:var(--muted); width:32px; }
     .tb input { border:0; border-radius:6px; padding:7px 8px; }
+    .tb td.n { width:96px; } .tb td.n input { text-align:right; }
+    .tb td.s { width:72px; } .tb td.s select { border:0; padding:7px 4px; border-radius:6px; }
+    .tb td.cc { width:110px; font-size:.86rem; text-align:center; white-space:nowrap; }
+    .ok-t { color:#1f7a4d; font-weight:700; } .bad-t { color:var(--warn); font-weight:700; }
+    .tally, .calcbox { margin:10px 0 0; padding:10px 14px; border-radius:12px; background:#fff; border:1px dashed var(--line); font-size:.94rem; white-space:pre-line; }
+    .tally:empty, .calcbox:empty { display:none; }
     .cks { display:grid; gap:6px; }
     .ck { margin:0; font-weight:500; display:flex; gap:8px; align-items:flex-start; }
     .ck input { width:auto; margin-top:5px; }
@@ -125,6 +131,57 @@
     function showItem() { if (!itemSel || !info) return; var t = ITEMS[itemSel.value]; info.textContent = t || ''; info.className = 'iteminfo' + (t ? ' on' : ''); }
     if (itemSel) itemSel.addEventListener('change', showItem);
 
+    /* 테스트 기록표 집계 · 정확도 계산 확인 (값을 대신 계산해 주지 않고 맞는지만 알려 줌) */
+    function cells(tr) { return Array.prototype.slice.call(tr.querySelectorAll('input,select')); }
+    function rowsOf(tb) { return Array.prototype.slice.call(tb.querySelectorAll('tr')).slice(1); }
+    function num(v) { v = (v || '').replace(/[%장\s,]/g, ''); if (v === '') return null; var n = Number(v); return isFinite(n) ? n : NaN; }
+    function near(a, n, c) { return Math.abs(a - c / n * 100) <= 1; }
+    function tally() {
+      Array.prototype.forEach.call(blocks.querySelectorAll('.tally'), function (box) {
+        var tb = blocks.querySelector('table[data-k="' + box.dataset.for + '"]'); if (!tb) return;
+        var n = 0, o = 0, x = 0, blank = 0, odd = [];
+        rowsOf(tb).forEach(function (tr, i) {
+          var v = cells(tr).map(function (el) { return el.value.trim(); });
+          if (!v.join('')) return;
+          n++; var mark = v[4];
+          if (mark === 'O') o++; else if (mark === 'X') x++; else blank++;
+          var same = v[1] && v[2] && v[1].replace(/\s/g, '') === v[2].replace(/\s/g, '');
+          if (mark && v[1] && v[2] && ((same && mark === 'X') || (!same && mark === 'O'))) odd.push(i + 1);
+        });
+        box.textContent = n ? ('기록한 테스트 사진 ' + n + '장 · O ' + o + '장 · X ' + x + '장' + (blank ? ' · 「맞음?」을 안 고른 줄 ' + blank + '개' : '') +
+          (odd.length ? '\n⚠️ ' + odd.join(', ') + '번 줄: 정답 클래스와 모델 예측을 비교해 O/X를 다시 확인해요.' : '')) : '';
+      });
+    }
+    function calc() {
+      var tb = blocks.querySelector('table[data-calc]'), box = blocks.querySelector('.calcbox');
+      if (!tb || !box) return;
+      var sn = 0, sc = 0, rows = 0, lines = [];
+      rowsOf(tb).forEach(function (tr, i) {
+        var v = cells(tr).map(function (el) { return el.value.trim(); }), cc = tr.querySelector('td.cc');
+        var n = num(v[1]), c = num(v[2]), a = num(v[3]), msg = '', ok = null;
+        if (v.join('')) {
+          if (n == null || c == null) msg = '장수를 써요';
+          else if (isNaN(n) || isNaN(c) || n <= 0 || c < 0 || c > n) { msg = '장수를 확인해요'; ok = false; }
+          else {
+            rows++; sn += n; sc += c;
+            if (a == null) msg = '정확도를 써요';
+            else if (isNaN(a) || !near(a, n, c)) { msg = '✗ 다시 계산'; ok = false; }
+            else { msg = '✓ 맞아요'; ok = true; }
+          }
+          lines.push((v[0] || (i + 1) + '번 줄') + ': ' + (v[1] || '-') + '장 중 ' + (v[2] || '-') + '장, ' + (v[3] || '-') + '% → ' + msg);
+        }
+        cc.textContent = msg; cc.className = 'cc' + (ok === true ? ' ok-t' : ok === false ? ' bad-t' : '');
+      });
+      var g = function (k) { var el = blocks.querySelector('[data-k="q1.' + k + '"]'); return el ? num(el.value) : null; };
+      var tn = g('tn'), tc = g('tc'), ta = g('ta'), tot = [];
+      if (tn != null && rows) tot.push(tn === sn ? '✓ 전체 장수가 클래스별 장수의 합과 같아요' : '✗ 전체 장수가 클래스별 장수의 합(표)과 달라요');
+      if (tc != null && rows) tot.push(tc === sc ? '✓ 전체 맞힌 장수가 클래스별 합과 같아요' : '✗ 전체 맞힌 장수가 클래스별 합(표)과 달라요');
+      if (tn != null && tc != null && ta != null) tot.push(!isNaN(tn) && !isNaN(tc) && !isNaN(ta) && tn > 0 && tc <= tn && near(ta, tn, tc) ? '✓ 전체 정확도 계산이 맞아요' : '✗ 전체 정확도를 다시 계산해요');
+      box.textContent = (lines.length || tot.length) ? ['클래스별', lines.join('\n') || '(비어 있음)', '전체', tot.join('\n') || '(전체 칸을 채우면 확인해요)'].join('\n') : '';
+    }
+    function refresh() { tally(); calc(); }
+    blocks.addEventListener('input', refresh); blocks.addEventListener('change', refresh); refresh();
+
     /* 이 기기 임시 저장 (학번마다 따로) */
     function key() { var s = (sidEl.value || '').trim(); return /^\d{5}$/.test(s) ? 'ai2-' + ID + '-' + s : null; }
     function save() { var k = key(); if (!k) return; try { localStorage.setItem(k, JSON.stringify(all().map(function (el) { return el.type === 'checkbox' ? el.checked : el.value; }))); } catch (e) {} }
@@ -134,7 +191,7 @@
       var v; try { v = JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { v = null; }
       if (!v) return;
       all().forEach(function (el, i) { if (v[i] == null) return; if (el.type === 'checkbox') el.checked = !!v[i]; else { el.value = v[i]; last.set(el, el.value); } });
-      Array.prototype.forEach.call(blocks.querySelectorAll('[data-sent]'), upd); showItem();
+      Array.prototype.forEach.call(blocks.querySelectorAll('[data-sent]'), upd); showItem(); refresh();
       say('이 기기에 저장된 내 답을 다시 채웠어요.', true);
     }
     sidEl.addEventListener('input', load);
@@ -149,10 +206,12 @@
           var cols = JSON.parse(el.dataset.cols), lines = [];
           Array.prototype.forEach.call(el.querySelectorAll('tr'), function (tr, r) {
             if (!r) return;
-            var v = Array.prototype.map.call(tr.querySelectorAll('input'), function (i) { return i.value.trim(); });
+            var v = Array.prototype.map.call(tr.querySelectorAll('input,select'), function (i) { return i.value.trim(); });
             if (v.join('')) lines.push(r + ') ' + cols.map(function (c, j) { return c + ': ' + (v[j] || '-'); }).join(' | '));
           });
           out.push('■ ' + label + '\n' + (lines.join('\n') || '(비어 있음)'));
+        } else if (el.classList.contains('calcbox')) {
+          out.push('■ ' + label + '\n' + (el.textContent.trim() || '(비어 있음)'));
         } else if (el.classList.contains('cks')) {
           out.push('■ ' + label + '\n' + Array.prototype.map.call(el.querySelectorAll('input'), function (c) { return (c.checked ? '☑ ' : '☐ ') + c.value; }).join('\n'));
         } else if (el.tagName === 'SELECT') {
