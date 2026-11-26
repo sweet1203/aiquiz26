@@ -231,9 +231,9 @@
       if (!/^\d{5}$/.test((sidEl.value || '').trim())) miss.push(sidEl);
       if (!nm.value.trim()) miss.push(nm);
       Array.prototype.forEach.call(blocks.querySelectorAll('[data-req]'), function (el) { if (!el.value.trim()) miss.push(el); });
-      var aiSel = blocks.querySelector('select[data-k="q2.ai"]'), aiWhat = blocks.querySelector('[data-k="q2.aiwhat"]');
+      var aiSel = blocks.querySelector('select[data-k$=".ai"]'), aiWhat = blocks.querySelector('[data-k$=".aiwhat"]');
       if (aiSel && aiWhat && aiSel.value === '사용함' && !aiWhat.value.trim()) miss.push(aiWhat);
-      var testTb = blocks.querySelector('table[data-k="q3.tests"], table[data-k="q1.acc"]');
+      var testTb = blocks.querySelector('table[data-k="q3.tests"], table[data-k="q2.tests"], table[data-k="q1.acc"]');
       if (testTb && !Array.prototype.some.call(testTb.querySelectorAll('input'), function (i) { return i.value.trim(); })) miss.push(testTb);
       if (miss.length) { miss.forEach(function (x) { x.classList.add('miss'); }); miss[0].scrollIntoView({ behavior: 'smooth', block: 'center' }); say('빨간 테두리 칸을 채워 주세요. (반 · 학번 다섯 자리 · 이름 포함' + (aiSel && aiSel.value === '사용함' ? ' · 생성형 AI를 썼다면 무엇을 어떻게 썼는지도' : '') + ')'); return; }
       Array.prototype.forEach.call(blocks.querySelectorAll('.qb'), function (sec) { document.getElementById('answer' + sec.dataset.q).value = pack(sec); });
