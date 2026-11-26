@@ -172,7 +172,7 @@
         }
         cc.textContent = msg; cc.className = 'cc' + (ok === true ? ' ok-t' : ok === false ? ' bad-t' : '');
       });
-      var g = function (k) { var el = blocks.querySelector('[data-k="q1.' + k + '"]'); return el ? num(el.value) : null; };
+      var g = function (k) { var el = blocks.querySelector('[data-k$=".' + k + '"]'); return el ? num(el.value) : null; };
       var tn = g('tn'), tc = g('tc'), ta = g('ta'), tot = [];
       if (tn != null && rows) tot.push(tn === sn ? '✓ 전체 장수가 클래스별 장수의 합과 같아요' : '✗ 전체 장수가 클래스별 장수의 합(표)과 달라요');
       if (tc != null && rows) tot.push(tc === sc ? '✓ 전체 맞힌 장수가 클래스별 합과 같아요' : '✗ 전체 맞힌 장수가 클래스별 합(표)과 달라요');
