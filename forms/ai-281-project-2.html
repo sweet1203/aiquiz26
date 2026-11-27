@@ -44,6 +44,15 @@
     button { width:100%; margin-top:22px; border:0; border-radius:16px; padding:15px 18px; background:var(--accent); color:#fff; font:inherit; font-weight:800; cursor:pointer; }
     .hint { color:var(--muted); font-size:.9rem; margin:6px 0 0; }
     .note { margin:16px 0 0; padding:12px 14px; border-radius:12px; background:#fffbeb; border:1px solid #fde68a; font-size:.94rem; }
+    .caps { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:10px; }
+    .cap { border:2px dashed #93c5fd; border-radius:14px; background:#fff; padding:10px 12px; outline:none; cursor:pointer; }
+    .cap:focus { border-color:var(--accent); box-shadow:0 0 0 3px #bfdbfe; }
+    .cap-h b { display:block; } .cap-h span { color:var(--muted); font-size:.86rem; }
+    .cap-drop { margin-top:8px; padding:14px 8px; text-align:center; border-radius:10px; background:#eff6ff; color:#1d4ed8; font-weight:700; font-size:.92rem; }
+    .cap img { display:block; width:100%; margin-top:8px; border-radius:8px; border:1px solid var(--line); }
+    .cap-st { margin-top:6px; font-size:.88rem; font-weight:700; color:var(--muted); min-height:1.2em; }
+    .cap-st.ok { color:#1f7a4d; } .cap-st.bad { color:var(--warn); }
+    .cap-file { display:inline-block; margin-top:6px; font-size:.82rem; color:var(--muted); text-decoration:underline; cursor:pointer; font-weight:500; }
     .toast { min-height:28px; margin-top:12px; color:var(--warn); font-weight:700; white-space:pre-line; }
     .toast.ok { color:#1f7a4d; }
     @media (max-width:640px) { main { margin:16px auto; } .card { padding:18px; border-radius:18px; } .row { grid-template-columns:1fr; gap:0; } }
@@ -100,7 +109,7 @@
     var blocks = document.getElementById('blocks');
     var pasteCount = document.getElementById('pasteBlockCount');
     function say(m, ok) { toast.textContent = m; toast.className = 'toast' + (ok ? ' ok' : ''); }
-    function all() { return Array.prototype.slice.call(blocks.querySelectorAll('input,textarea,select')); }
+    function all() { return Array.prototype.slice.call(blocks.querySelectorAll('input:not([type=file]),textarea,select')); }
 
     /* 붙여넣기·드래그 막기 (모든 입력 칸) */
     var last = new WeakMap();
@@ -194,6 +203,57 @@
       Array.prototype.forEach.call(blocks.querySelectorAll('[data-sent]'), upd); showItem(); refresh();
       say('이 기기에 저장된 내 답을 다시 채웠어요.', true);
     }
+    /* 캡처 붙여넣기 칸: 칸을 누르고 Ctrl+V → 줄여서 캡처 수집기로 보냄 (선생님 드라이브에 저장) */
+    var CAP_URL = 'https://script.google.com/macros/s/AKfycbzq-CB6BteWTEiAQ8Gu4-wO9UPxI_fxQKZot76-mXEk36xPZnPUYBCJqBs-oAAK1O0H/exec';
+    var caps = Array.prototype.slice.call(blocks.querySelectorAll('.cap')), activeCap = null;
+    function capKey() { var k = key(); return k ? k + '-caps' : null; }
+    function saveCaps() { var k = capKey(); if (!k) return; var o = {}; caps.forEach(function (c) { if (c.dataset.done) o[c.dataset.slot] = c.dataset.done; }); try { localStorage.setItem(k, JSON.stringify(o)); } catch (e) {} }
+    function loadCaps() {
+      var k = capKey(); if (!k) return; var o; try { o = JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch (e) { o = {}; }
+      caps.forEach(function (c) { if (o[c.dataset.slot] && !c.dataset.done) { c.dataset.done = o[c.dataset.slot]; var st = c.querySelector('.cap-st'); st.textContent = '✓ 이 기기에서 올렸어요 (' + o[c.dataset.slot].split(' ')[0] + ')'; st.className = 'cap-st ok'; var t = null; try { t = localStorage.getItem(k + '-' + c.dataset.slot); } catch (e) {} if (t) { var im = c.querySelector('img'); im.src = t; im.hidden = false; } } });
+    }
+    function shrink(blob, w, q) {
+      return new Promise(function (res, rej) {
+        var url = URL.createObjectURL(blob), im = new Image();
+        im.onload = function () {
+          var sc = Math.min(1, w / im.naturalWidth), cv = document.createElement('canvas');
+          cv.width = Math.round(im.naturalWidth * sc); cv.height = Math.round(im.naturalHeight * sc);
+          var g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height); g.drawImage(im, 0, 0, cv.width, cv.height);
+          URL.revokeObjectURL(url); res(cv.toDataURL('image/jpeg', q));
+        };
+        im.onerror = function () { URL.revokeObjectURL(url); rej(new Error('그림을 읽지 못했어요')); };
+        im.src = url;
+      });
+    }
+    function sendCap(box, blob) {
+      var st = box.querySelector('.cap-st'), img = box.querySelector('img');
+      var cls = document.getElementById('className').value, no = (sidEl.value || '').trim(), nm = (document.getElementById('name').value || '').trim();
+      if (!cls || !/^\d{5}$/.test(no) || !nm) { st.textContent = '먼저 맨 위에 반 · 학번 · 이름을 써요.'; st.className = 'cap-st bad'; return; }
+      st.textContent = '올리는 중…'; st.className = 'cap-st';
+      shrink(blob, 1600, 0.88).then(function (data) {
+        img.src = data; img.hidden = false;
+        return fetch(CAP_URL, { method: 'POST', body: JSON.stringify({ form: ID, slot: box.dataset.slot, cls: cls, no: no, name: nm, data: data }) }).then(function (r) { return r.json(); });
+      }).then(function (j) {
+        if (!j || !j.ok) throw new Error((j && j.err) || '응답 없음');
+        box.dataset.done = j.at + ' ' + j.file; st.textContent = '✓ 올라갔어요 (' + j.at + ')'; st.className = 'cap-st ok'; saveCaps();
+        var k = capKey(); if (k) shrink(blob, 720, 0.7).then(function (t) { try { localStorage.setItem(k + '-' + box.dataset.slot, t); } catch (e) {} });
+      }).catch(function (e) { st.textContent = '올리지 못했어요. 다시 Ctrl+V 해 주세요. (' + e.message + ')'; st.className = 'cap-st bad'; });
+    }
+    caps.forEach(function (box) {
+      var file = box.querySelector('input[type=file]');
+      box.addEventListener('focus', function () { activeCap = box; });
+      box.addEventListener('click', function (e) { activeCap = box; if (!e.target.closest('.cap-file')) box.focus(); });
+      file.addEventListener('change', function () { if (file.files && file.files[0]) sendCap(box, file.files[0]); file.value = ''; });
+    });
+    document.addEventListener('paste', function (ev) {
+      var box = document.activeElement && document.activeElement.closest ? document.activeElement.closest('.cap') : null;
+      if (!box) return;
+      ev.preventDefault();
+      var items = (ev.clipboardData && ev.clipboardData.items) || [];
+      for (var i = 0; i < items.length; i++) { if (items[i].type.indexOf('image/') === 0) { sendCap(box, items[i].getAsFile()); return; } }
+      var st = box.querySelector('.cap-st'); st.textContent = '복사된 그림이 없어요. Win + Shift + S로 캡처한 뒤 이 칸을 누르고 Ctrl + V 해요.'; st.className = 'cap-st bad';
+    });
+    sidEl.addEventListener('input', loadCaps);
     sidEl.addEventListener('input', load);
     blocks.addEventListener('input', save); blocks.addEventListener('change', save);
 
@@ -210,6 +270,8 @@
             if (v.join('')) lines.push(r + ') ' + cols.map(function (c, j) { return c + ': ' + (v[j] || '-'); }).join(' | '));
           });
           out.push('■ ' + label + '\n' + (lines.join('\n') || '(비어 있음)'));
+        } else if (el.classList.contains('caps')) {
+          out.push('■ ' + label + '\n' + Array.prototype.map.call(el.querySelectorAll('.cap'), function (c) { return c.dataset.slot + ': ' + (c.dataset.done ? '✓ ' + c.dataset.done : '(안 붙임)'); }).join('\n'));
         } else if (el.classList.contains('calcbox')) {
           out.push('■ ' + label + '\n' + (el.textContent.trim() || '(비어 있음)'));
         } else if (el.classList.contains('cks')) {
