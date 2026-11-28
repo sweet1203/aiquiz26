@@ -243,7 +243,7 @@
         if (!j || !j.ok) throw new Error((j && j.err) || '응답 없음');
         box.dataset.done = j.at + ' ' + j.file; st.textContent = '✓ 올라갔어요 (' + j.at + ')'; st.className = 'cap-st ok'; saveCaps();
         var k = capKey(); if (k) shrink(blob, 720, 0.7).then(function (t) { try { localStorage.setItem(k + '-' + box.dataset.slot, t); } catch (e) {} });
-      }).catch(function (e) { st.textContent = '올리지 못했어요. 다시 Ctrl+V 해 주세요. (' + e.message + ')'; st.className = 'cap-st bad'; });
+      }).catch(function (e) { st.textContent = '올리지 못했어요. 다시 Ctrl+V 해 주세요. (' + why(e.message) + ')'; st.className = 'cap-st bad'; });
     }
     caps.forEach(function (box) {
       var file = box.querySelector('input[type=file]');
@@ -274,6 +274,8 @@
       }
       return shrink(f, 2000, 0.9);
     }
+    var WHY = { bad: '반 · 학번(다섯 자리) · 이름을 다시 확인해요', noimg: '사진 파일이 아니에요', big: '사진이 너무 커요', nopath: '파일 이름을 확인해요' };
+    function why(m) { m = String(m || ''); return WHY[m] || (m.indexOf('Failed to fetch') >= 0 ? '인터넷 연결을 확인해요' : m); }
     function sendPhoto(who, rel, data) {
       var body = JSON.stringify({ kind: 'photo', form: ID, cls: who.cls, no: who.no, name: who.nm, path: rel, data: data });
       var tryOnce = function (n) {
@@ -289,8 +291,8 @@
       var picked = Array.prototype.slice.call(fileList || []);
       var list = picked.filter(function (f) { return PHOTO_RE.test(f.name); });
       if (!list.length) { foldSt(box, '사진 파일이 없어요. 바탕 화면의 학번이름_수행2 폴더를 골랐는지 확인해요.', 'bad'); return; }
-      var top = (list[0].webkitRelativePath || '').split('/')[0] || '';
-      var rel = function (f) { var p = (f.webkitRelativePath || f.name).split('/'); return p.length > 1 ? p.slice(1).join('/') : p[0]; };
+      var top = (list[0].webkitRelativePath || '').normalize('NFC').split('/')[0] || '';
+      var rel = function (f) { var p = (f.webkitRelativePath || f.name).normalize('NFC').split('/'); return p.length > 1 ? p.slice(1).join('/') : p[0]; };
       var counts = {}, order = [];
       list.forEach(function (f) { var p = rel(f).split('/'), d = p.length > 1 ? p[0] : '(폴더 밖)'; if (!(d in counts)) { counts[d] = 0; order.push(d); } counts[d]++; });
       var summary = order.map(function (d) { return d + ' ' + counts[d]; }).join(' · ');
@@ -298,18 +300,18 @@
       box.querySelector('.pf-sum').textContent = '고른 폴더: ' + (top || '-') + ' — ' + summary + (picked.length > list.length ? ' (사진이 아닌 파일 ' + (picked.length - list.length) + '개는 뺌)' : '');
       var btn = box.querySelector('.pf-btn'); btn.classList.add('busy');
       delete box.dataset.done;
-      var i = 0, done = 0, fail = [];
+      var i = 0, done = 0, fail = [], lastErr = '';
       foldSt(box, '올리는 중… 0 / ' + list.length + '장' + warn);
       function worker() {
         if (i >= list.length) return Promise.resolve();
         var f = list[i++];
         return readData(f).then(function (data) { return sendPhoto(who, rel(f), data); })
-          .then(function () { done++; }, function () { fail.push(rel(f)); })
+          .then(function () { done++; }, function (e) { fail.push(rel(f)); lastErr = why(e && e.message); })
           .then(function () { foldSt(box, '올리는 중… ' + (done + fail.length) + ' / ' + list.length + '장' + warn); return worker(); });
       }
       Promise.all([worker(), worker()]).then(function () {
         btn.classList.remove('busy');
-        if (fail.length) { foldSt(box, '⚠️ ' + list.length + '장 중 ' + fail.length + '장을 못 올렸어요. 폴더를 다시 골라 주세요.\n(' + fail.slice(0, 5).join(', ') + (fail.length > 5 ? ' …' : '') + ')', 'bad'); return; }
+        if (fail.length) { foldSt(box, '⚠️ ' + list.length + '장 중 ' + fail.length + '장을 못 올렸어요. ' + (lastErr ? '(' + lastErr + ') ' : '') + '폴더를 다시 골라 주세요.\n(' + fail.slice(0, 5).join(', ') + (fail.length > 5 ? ' …' : '') + ')', 'bad'); return; }
         return fetch(CAP_URL, { method: 'POST', body: JSON.stringify({ kind: 'photodone', form: ID, cls: who.cls, no: who.no, name: who.nm, summary: top + ' — ' + summary, count: list.length }) })
           .then(function (r) { return r.json(); }).catch(function () { return {}; })
           .then(function (j) {
