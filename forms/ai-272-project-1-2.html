@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>인공지능 기초 활동지 - 인공지능 프로젝트 ①-2 학습 · 테스트 · 정확도</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23d64535'/%3E%3Cpath d='M18 40h28v6H18zM18 18h28v6H18zM18 29h20v6H18z' fill='white'/%3E%3C/svg%3E">
+  <style>
+    :root { --bg:#f5f7fb; --card:#ffffff; --ink:#172033; --muted:#667085; --line:#d9e0ec; --accent:#2563eb; --warn:#b42318; --soft:#f8fbff; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:linear-gradient(180deg,#fff1ee 0%,var(--bg) 40%); color:var(--ink); font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; }
+    main { width:min(860px, calc(100% - 32px)); margin:36px auto; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:24px; box-shadow:0 20px 60px rgba(31,41,55,.12); padding:28px; }
+    .eyebrow { color:#d64535; font-weight:800; margin:0 0 8px; }
+    h1 { margin:0; font-size:clamp(1.5rem,4vw,2.1rem); letter-spacing:-.03em; }
+    .lead { margin:10px 0 18px; color:var(--muted); }
+    label { display:block; margin:14px 0 6px; font-weight:700; }
+    label small { color:var(--muted); font-weight:500; }
+    select, input[type=text], input:not([type]), textarea { width:100%; border:1px solid var(--line); border-radius:12px; padding:11px 12px; font:inherit; background:#fff; color:var(--ink); }
+    textarea { resize:vertical; min-height:84px; }
+    .row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+    .qb { margin-top:22px; padding:18px; border-radius:18px; background:var(--soft); border:1px solid #dbeafe; }
+    .qb h2 { margin:0 0 4px; font-size:1.12rem; }
+    .tw { overflow-x:auto; }
+    .tb { width:100%; border-collapse:collapse; min-width:560px; }
+    .tb th, .tb td { border:1px solid var(--line); padding:4px; font-size:.92rem; }
+    .tb th { background:#eef2f8; }
+    .tb td.no { text-align:center; color:var(--muted); width:32px; }
+    .tb input { border:0; border-radius:6px; padding:7px 8px; }
+    .tb td.n { width:96px; } .tb td.n input { text-align:right; }
+    .tb td.s { width:72px; } .tb td.s select { border:0; padding:7px 4px; border-radius:6px; }
+    .tb td.cc { width:110px; font-size:.86rem; text-align:center; white-space:nowrap; }
+    .ok-t { color:#1f7a4d; font-weight:700; } .bad-t { color:var(--warn); font-weight:700; }
+    .tally, .calcbox { margin:10px 0 0; padding:10px 14px; border-radius:12px; background:#fff; border:1px dashed var(--line); font-size:.94rem; white-space:pre-line; }
+    .tally:empty, .calcbox:empty { display:none; }
+    .cks { display:grid; gap:6px; }
+    .ck { margin:0; font-weight:500; display:flex; gap:8px; align-items:flex-start; }
+    .ck input { width:auto; margin-top:5px; }
+    .cnt { text-align:right; color:var(--muted); font-size:.88rem; margin-top:4px; }
+    .cnt.ok { color:#1f7a4d; font-weight:700; }
+    .iteminfo { display:none; margin:10px 0 0; padding:12px 14px; border-left:4px solid #d64535; background:#fff; border-radius:10px; }
+    .iteminfo.on { display:block; }
+    .miss { outline:3px solid rgba(214,69,53,.35); }
+    button { width:100%; margin-top:22px; border:0; border-radius:16px; padding:15px 18px; background:var(--accent); color:#fff; font:inherit; font-weight:800; cursor:pointer; }
+    .hint { color:var(--muted); font-size:.9rem; margin:6px 0 0; }
+    .note { margin:16px 0 0; padding:12px 14px; border-radius:12px; background:#fffbeb; border:1px solid #fde68a; font-size:.94rem; }
+    .caps { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:10px; }
+    .cap { border:2px dashed #93c5fd; border-radius:14px; background:#fff; padding:10px 12px; outline:none; cursor:pointer; }
+    .cap:focus { border-color:var(--accent); box-shadow:0 0 0 3px #bfdbfe; }
+    .cap-h b { display:block; } .cap-h span { color:var(--muted); font-size:.86rem; }
+    .cap-drop { margin-top:8px; padding:14px 8px; text-align:center; border-radius:10px; background:#eff6ff; color:#1d4ed8; font-weight:700; font-size:.92rem; }
+    .cap img { display:block; width:100%; margin-top:8px; border-radius:8px; border:1px solid var(--line); }
+    .cap-st { margin-top:6px; font-size:.88rem; font-weight:700; color:var(--muted); min-height:1.2em; }
+    .cap-st.ok { color:#1f7a4d; } .cap-st.bad { color:var(--warn); }
+    .pfold { border:2px dashed #86c5a4; border-radius:14px; background:#fff; padding:12px; }
+    .pf-btn { display:inline-block; background:#1f7a4d; color:#fff; font-weight:700; border-radius:10px; padding:9px 16px; cursor:pointer; }
+    .pf-btn.busy { background:#9aa5b1; pointer-events:none; }
+    .pf-st { margin-top:8px; font-size:.92rem; font-weight:700; color:var(--muted); min-height:1.2em; white-space:pre-line; }
+    .pf-st.ok { color:#1f7a4d; } .pf-st.bad { color:var(--warn); }
+    .pf-sum { margin-top:4px; font-size:.86rem; color:var(--muted); }
+    .cap-file { display:inline-block; margin-top:6px; font-size:.82rem; color:var(--muted); text-decoration:underline; cursor:pointer; font-weight:500; }
+    .toast { min-height:28px; margin-top:12px; color:var(--warn); font-weight:700; white-space:pre-line; }
+    .toast.ok { color:#1f7a4d; }
+    @media (max-width:640px) { main { margin:16px auto; } .card { padding:18px; border-radius:18px; } .row { grid-template-columns:1fr; gap:0; } }
+    body { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+    input, textarea, select { -webkit-user-select:text; user-select:text; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="card">
+      <p class="eyebrow">인공지능 기초 · 2차 수행평가 활동지(제출 폼)</p>
+      <h1>인공지능 프로젝트 ①-2 학습 · 테스트 · 정확도</h1>
+      <p class="lead">활동지 ①-1에서 모은 사진으로 ML4Kids에서 학습하고 테스트해요. 결과는 이 폼에 적고, 증거 화면은 그 장면이 나올 때 바로 붙여 넣어요. 1차시에 다 못 했으면 2차시 시작 때 이어서 하고 제출해요.</p>
+      <form id="f" method="post" action="https://script.google.com/macros/s/AKfycbyXgCq6W2zzT7fxPiblqG6wA-e3CpCgztuRKrIQkExMn6oQJ9oxd-U--dVB-5H3_fZF/exec" target="sink" novalidate>
+        <input type="hidden" name="course" value="인공지능 기초">
+        <input type="hidden" name="subunitId" value="ai-272-project-1-2">
+        <input type="hidden" name="subunitTitle" value="인공지능 프로젝트 ①-2 학습 · 테스트 · 정확도">
+        <input type="hidden" name="pages" value="2차 수행평가">
+        <input type="hidden" name="pasteBlockCount" id="pasteBlockCount" value="0">
+        <input type="hidden" name="clientSubmittedAt" id="clientSubmittedAt" value="">
+        <input type="hidden" name="userAgent" id="userAgent" value="">
+        <input type="hidden" name="question1" value="①-2 1. 학습 · 훈련 화면 — ML4Kids 프로젝트 이름 · 훈련 화면 붙여넣기 (학습 사진을 다 넣은 직후 바로)"><input type="hidden" name="answer1" id="answer1" value="">
+<input type="hidden" name="question2" value="①-2 2. 테스트 기록표 — 테스트 기록표 (테스트 사진마다 한 줄 · 클래스마다 5장 이상)"><input type="hidden" name="answer2" id="answer2" value="">
+<input type="hidden" name="question3" value="①-2 3. 정확도 · 테스트 화면 — 클래스별 정확도 · 전체 테스트 장수 · 전체 맞힌 장수 · 전체 정확도(%) · 전체 정확도 계산 과정 (식으로) · 테스트 화면 붙여넣기 (그 장면이 나올 때 바로)"><input type="hidden" name="answer3" id="answer3" value="">
+        <div class="row">
+          <div><label for="className">반</label>
+            <select id="className" name="className" required>
+              <option value="" selected disabled>반 선택</option>
+              <option value="인공지능C">인공지능C</option><option value="인공지능F">인공지능F</option><option value="인공지능G">인공지능G</option>
+            </select></div>
+          <div><label for="studentNo">학번</label><input id="studentNo" name="studentNo" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="예: 20101"></div>
+          <div><label for="name">이름</label><input id="name" name="name" autocomplete="off"></div>
+        </div>
+        <p class="hint">학번을 쓰면 이 기기에 임시 저장된 내 답이 있으면 다시 채워져요. 공용 컴퓨터에서는 제출 뒤 창을 닫아 주세요.</p>
+        <div id="blocks">
+<section class="qb" data-q="1"><h2>1. 학습 · 훈련 화면</h2><div class="fld"><label>ML4Kids 프로젝트 이름</label><input type="text" data-k="q1.project" data-label="ML4Kids 프로젝트 이름" data-np="1" placeholder="" autocomplete="off"></div><div class="fld"><label>훈련 화면 붙여넣기 (학습 사진을 다 넣은 직후 바로)</label><div class="caps" data-k="q1.caps" data-label="훈련 화면 붙여넣기 (학습 사진을 다 넣은 직후 바로)"><div class="cap" data-slot="훈련" tabindex="0"><div class="cap-h"><b>훈련</b><span>클래스별 사진 장수가 보이는 훈련 화면 (학습 사진을 다 넣은 직후)</span></div><div class="cap-drop">이 칸을 누르고 Ctrl + V</div><img alt="" hidden><div class="cap-st"></div><label class="cap-file">붙여넣기가 안 되면: 저장한 그림 파일 고르기<input type="file" accept="image/png,image/jpeg" hidden></label></div></div><p class="hint">Win + Shift + S로 캡처 → 아래 칸을 한 번 누르고 → Ctrl + V. 「✓ 올라갔어요」가 뜨면 끝이에요. 다시 붙여넣으면 새것으로 바뀌어요(마지막 것을 봐요).</p></div></section>
+<section class="qb" data-q="2"><h2>2. 테스트 기록표</h2><div class="fld"><label>테스트 기록표 (테스트 사진마다 한 줄 · 클래스마다 5장 이상)</label><div class="tw"><table class="tb" data-k="q2.tests" data-label="테스트 기록표 (테스트 사진마다 한 줄 · 클래스마다 5장 이상)" data-cols="[&quot;사진 파일 이름&quot;, &quot;정답 클래스&quot;, &quot;모델 예측&quot;, &quot;신뢰도(%)&quot;, &quot;맞음?&quot;]"><tr><th>#</th><th>사진 파일 이름</th><th>정답 클래스</th><th>모델 예측</th><th>신뢰도(%)</th><th>맞음?</th></tr><tr><td class="no">1</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">2</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">3</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">4</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">5</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">6</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">7</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">8</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">9</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">10</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">11</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">12</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">13</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">14</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">15</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">16</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">17</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">18</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">19</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr><tr><td class="no">20</td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="s"><select><option value="">-</option><option>O</option><option>X</option></select></td></tr></table></div><p class="hint">쓴 줄만 제출돼요. 줄이 모자라면 아래 보충 칸이나 다음 폼에 이어 써요.</p></div><div class="tally" data-for="q2.tests"></div></section>
+<section class="qb" data-q="3"><h2>3. 정확도 · 테스트 화면</h2><p class="note">위 기록표의 O/X를 세어 정확도를 계산해요. 정확도(%) = 맞힌 장수 ÷ 테스트 장수 × 100 (소수 첫째 자리에서 반올림). 전체 칸을 채우면 아래 「계산 확인」에 맞는지 표시돼요.</p><div class="fld"><label>클래스별 정확도</label><div class="tw"><table class="tb" data-k="q3.acc" data-label="클래스별 정확도" data-cols="[&quot;클래스&quot;, &quot;테스트 장수&quot;, &quot;맞힌 장수&quot;, &quot;정확도(%)&quot;]" data-calc="q"><tr><th>#</th><th>클래스</th><th>테스트 장수</th><th>맞힌 장수</th><th>정확도(%)</th></tr><tr><td class="no">1</td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td></tr><tr><td class="no">2</td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td></tr><tr><td class="no">3</td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td></tr><tr><td class="no">4</td><td><input type="text" data-np="1" autocomplete="off"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td><td class="n"><input type="text" data-np="1" autocomplete="off" inputmode="decimal"></td></tr></table></div><p class="hint">쓴 줄만 제출돼요. 줄이 모자라면 아래 보충 칸이나 다음 폼에 이어 써요.</p></div><div class="fld"><label>전체 테스트 장수</label><input type="text" data-k="q3.tn" data-label="전체 테스트 장수" data-np="1" placeholder="" autocomplete="off" inputmode=decimal></div><div class="fld"><label>전체 맞힌 장수</label><input type="text" data-k="q3.tc" data-label="전체 맞힌 장수" data-np="1" placeholder="" autocomplete="off" inputmode=decimal></div><div class="fld"><label>전체 정확도(%)</label><input type="text" data-k="q3.ta" data-label="전체 정확도(%)" data-np="1" placeholder="" autocomplete="off" inputmode=decimal></div><div class="fld"><label>전체 정확도 계산 과정 (식으로)</label><textarea data-k="q3.total" data-label="전체 정확도 계산 과정 (식으로)" data-np="1" placeholder="" rows="3"></textarea></div><div class="calcbox" data-k="q3.check" data-label="계산 자동 확인"></div><div class="fld"><label>테스트 화면 붙여넣기 (그 장면이 나올 때 바로)</label><div class="caps" data-k="q3.caps" data-label="테스트 화면 붙여넣기 (그 장면이 나올 때 바로)"><div class="cap" data-slot="클래스 1 테스트 화면" tabindex="0"><div class="cap-h"><b>클래스 1 테스트 화면</b><span>클래스 1의 테스트 사진 하나 — 왼쪽 폴더 창의 그 사진(파일 이름)과 오른쪽 결과가 함께</span></div><div class="cap-drop">이 칸을 누르고 Ctrl + V</div><img alt="" hidden><div class="cap-st"></div><label class="cap-file">붙여넣기가 안 되면: 저장한 그림 파일 고르기<input type="file" accept="image/png,image/jpeg" hidden></label></div><div class="cap" data-slot="클래스 2 테스트 화면" tabindex="0"><div class="cap-h"><b>클래스 2 테스트 화면</b><span>클래스 2의 테스트 사진 하나 — 왼쪽 폴더 창의 그 사진(파일 이름)과 오른쪽 결과가 함께</span></div><div class="cap-drop">이 칸을 누르고 Ctrl + V</div><img alt="" hidden><div class="cap-st"></div><label class="cap-file">붙여넣기가 안 되면: 저장한 그림 파일 고르기<input type="file" accept="image/png,image/jpeg" hidden></label></div></div><p class="hint">Win + Shift + S로 캡처 → 아래 칸을 한 번 누르고 → Ctrl + V. 「✓ 올라갔어요」가 뜨면 끝이에요. 다시 붙여넣으면 새것으로 바뀌어요(마지막 것을 봐요).</p></div></section>
+        </div>
+        <p class="note">✍️ 모든 칸은 복사·붙여넣기·드래그가 막혀 있어요. 내 프로젝트에서 실제로 나온 이름과 숫자로 직접 써요.</p>
+        <button type="submit">제출하기</button>
+      </form>
+      <div id="toast" class="toast" aria-live="polite"></div>
+      <iframe name="sink" title="hidden submit frame" style="display:none"></iframe>
+    </section>
+  </main>
+  <script>
+  (function () {
+    var ID = 'ai-272-project-1-2';
+    var ITEMS = {"문항 A — 틀린 사진과 학습 데이터": "내 모델에서 실제로 틀린 사진 1장(없으면 신뢰도가 가장 낮았던 사진)의 입력·예측·정답을 쓰고, 그렇게 된 까닭을 내 학습 사진의 특성(장수, 배경, 밝기, 비슷한 사진 등)과 연결해 6문장 이상 설명하시오.", "문항 B — 개선 방향과 그 영향": "내가 정한 개선 방법 1가지를 쓰고, 그 방법이 같은 테스트 사진의 결과에 어떤 영향을 주는지(실제로 고쳐 봤다면 전·후 결과를 비교해) 6문장 이상 설명하시오.", "문항 C — 새 사용 환경과 더 필요한 데이터": "내 모델을 실제 생활(다른 교실, 어두운 곳, 다른 사람의 물건 등)에서 쓴다면 어떤 상황에서 틀릴 수 있는지 쓰고, 이를 줄이려면 어떤 사진을 더 모아야 하는지와 그 까닭을 6문장 이상 설명하시오."};
+    var form = document.getElementById('f');
+    var toast = document.getElementById('toast');
+    var sidEl = document.getElementById('studentNo');
+    var blocks = document.getElementById('blocks');
+    var pasteCount = document.getElementById('pasteBlockCount');
+    function say(m, ok) { toast.textContent = m; toast.className = 'toast' + (ok ? ' ok' : ''); }
+    function all() { return Array.prototype.slice.call(blocks.querySelectorAll('input:not([type=file]),textarea,select')); }
+
+    /* 붙여넣기·드래그 막기 (모든 입력 칸) */
+    var last = new WeakMap();
+    function guard(el) {
+      if (el.type === 'checkbox' || el.tagName === 'SELECT') return;
+      last.set(el, el.value);
+      function block(ev, m) { ev.preventDefault(); pasteCount.value = String(+pasteCount.value + 1); el.value = last.get(el) || ''; say(m); setTimeout(function () { if (toast.textContent === m) say(''); }, 2500); }
+      el.addEventListener('input', function () { last.set(el, el.value); });
+      el.addEventListener('paste', function (ev) { block(ev, '붙여넣기 대신 직접 써 주세요.'); });
+      el.addEventListener('drop', function (ev) { block(ev, '드래그해서 넣기는 쓸 수 없어요.'); });
+      el.addEventListener('dragover', function (ev) { ev.preventDefault(); });
+      el.addEventListener('beforeinput', function (ev) { if (/insertFrom(Paste|Drop|Yank)/.test(ev.inputType || '')) block(ev, '붙여넣기나 드래그 입력은 기록하지 않아요.'); });
+    }
+    all().concat([sidEl, document.getElementById('name')]).forEach(guard);
+
+    /* 문장 수 세기 */
+    function sentences(t) { return (t.replace(/\s+/g, ' ').match(/[^.!?。]+[.!?。]+/g) || []).filter(function (s) { return s.trim().length > 4; }).length; }
+    function upd(el) {
+      var c = blocks.querySelector('.cnt[data-for="' + el.dataset.k + '"]'); if (!c) return;
+      var n = sentences(el.value); var need = el.dataset.k === 'q3.essay' ? 6 : 5;
+      c.textContent = '문장 ' + n + '개 (마침표로 센 어림값 · ' + need + '문장 이상)'; c.className = 'cnt' + (n >= need ? ' ok' : '');
+    }
+    Array.prototype.forEach.call(blocks.querySelectorAll('[data-sent]'), function (el) { el.addEventListener('input', function () { upd(el); }); upd(el); });
+
+    /* 현장 서술 문항 보이기 */
+    var itemSel = blocks.querySelector('select[data-k="q3.item"]');
+    var info = document.getElementById('iteminfo');
+    function showItem() { if (!itemSel || !info) return; var t = ITEMS[itemSel.value]; info.textContent = t || ''; info.className = 'iteminfo' + (t ? ' on' : ''); }
+    if (itemSel) itemSel.addEventListener('change', showItem);
+
+    /* 테스트 기록표 집계 · 정확도 계산 확인 (값을 대신 계산해 주지 않고 맞는지만 알려 줌) */
+    function cells(tr) { return Array.prototype.slice.call(tr.querySelectorAll('input,select')); }
+    function rowsOf(tb) { return Array.prototype.slice.call(tb.querySelectorAll('tr')).slice(1); }
+    function num(v) { v = (v || '').replace(/[%장\s,]/g, ''); if (v === '') return null; var n = Number(v); return isFinite(n) ? n : NaN; }
+    function near(a, n, c) { return Math.abs(a - c / n * 100) <= 1; }
+    function tally() {
+      Array.prototype.forEach.call(blocks.querySelectorAll('.tally'), function (box) {
+        var tb = blocks.querySelector('table[data-k="' + box.dataset.for + '"]'); if (!tb) return;
+        var n = 0, o = 0, x = 0, blank = 0, odd = [];
+        rowsOf(tb).forEach(function (tr, i) {
+          var v = cells(tr).map(function (el) { return el.value.trim(); });
+          if (!v.join('')) return;
+          n++; var mark = v[4];
+          if (mark === 'O') o++; else if (mark === 'X') x++; else blank++;
+          var same = v[1] && v[2] && v[1].replace(/\s/g, '') === v[2].replace(/\s/g, '');
+          if (mark && v[1] && v[2] && ((same && mark === 'X') || (!same && mark === 'O'))) odd.push(i + 1);
+        });
+        box.textContent = n ? ('기록한 테스트 사진 ' + n + '장 · O ' + o + '장 · X ' + x + '장' + (blank ? ' · 「맞음?」을 안 고른 줄 ' + blank + '개' : '') +
+          (odd.length ? '\n⚠️ ' + odd.join(', ') + '번 줄: 정답 클래스와 모델 예측을 비교해 O/X를 다시 확인해요.' : '')) : '';
+      });
+    }
+    function calc() {
+      var tb = blocks.querySelector('table[data-calc]'), box = blocks.querySelector('.calcbox');
+      if (!tb || !box) return;
+      var sn = 0, sc = 0, rows = 0, lines = [];
+      rowsOf(tb).forEach(function (tr, i) {
+        var v = cells(tr).map(function (el) { return el.value.trim(); }), cc = tr.querySelector('td.cc');
+        var n = num(v[1]), c = num(v[2]), a = num(v[3]), msg = '', ok = null;
+        if (v.join('')) {
+          if (n == null || c == null) msg = '장수를 써요';
+          else if (isNaN(n) || isNaN(c) || n <= 0 || c < 0 || c > n) { msg = '장수를 확인해요'; ok = false; }
+          else {
+            rows++; sn += n; sc += c;
+            if (a == null) msg = '정확도를 써요';
+            else if (isNaN(a) || !near(a, n, c)) { msg = '✗ 다시 계산'; ok = false; }
+            else { msg = '✓ 맞아요'; ok = true; }
+          }
+          lines.push((v[0] || (i + 1) + '번 줄') + ': ' + (v[1] || '-') + '장 중 ' + (v[2] || '-') + '장, ' + (v[3] || '-') + '% → ' + msg);
+        }
+        if (cc) { cc.textContent = msg; cc.className = 'cc' + (ok === true ? ' ok-t' : ok === false ? ' bad-t' : ''); }
+      });
+      var g = function (k) { var el = blocks.querySelector('[data-k$=".' + k + '"]'); return el ? num(el.value) : null; };
+      var tn = g('tn'), tc = g('tc'), ta = g('ta'), tot = [];
+      if (tn != null && rows) tot.push(tn === sn ? '✓ 전체 장수가 클래스별 장수의 합과 같아요' : '✗ 전체 장수가 클래스별 장수의 합(표)과 달라요');
+      if (tc != null && rows) tot.push(tc === sc ? '✓ 전체 맞힌 장수가 클래스별 합과 같아요' : '✗ 전체 맞힌 장수가 클래스별 합(표)과 달라요');
+      if (tn != null && tc != null && ta != null) tot.push(!isNaN(tn) && !isNaN(tc) && !isNaN(ta) && tn > 0 && tc <= tn && near(ta, tn, tc) ? '✓ 전체 정확도 계산이 맞아요' : '✗ 전체 정확도를 다시 계산해요');
+      var quiet = tb.getAttribute('data-calc') === 'q';
+      box.textContent = quiet ? (tot.length ? '전체\n' + tot.join('\n') : '') : ((lines.length || tot.length) ? ['클래스별', lines.join('\n') || '(비어 있음)', '전체', tot.join('\n') || '(전체 칸을 채우면 확인해요)'].join('\n') : '');
+    }
+    function refresh() { tally(); calc(); }
+    blocks.addEventListener('input', refresh); blocks.addEventListener('change', refresh); refresh();
+
+    /* 이 기기 임시 저장 (학번마다 따로) */
+    function key() { var s = (sidEl.value || '').trim(); return /^\d{5}$/.test(s) ? 'ai2-' + ID + '-' + s : null; }
+    function save() { var k = key(); if (!k) return; try { localStorage.setItem(k, JSON.stringify(all().map(function (el) { return el.type === 'checkbox' ? el.checked : el.value; }))); } catch (e) {} }
+    function load() {
+      var k = key(); if (!k) return;
+      if (all().some(function (el) { return el.type === 'checkbox' ? el.checked : (el.tagName !== 'SELECT' && el.value.trim()); })) return;
+      var v; try { v = JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { v = null; }
+      if (!v) return;
+      all().forEach(function (el, i) { if (v[i] == null) return; if (el.type === 'checkbox') el.checked = !!v[i]; else { el.value = v[i]; last.set(el, el.value); } });
+      Array.prototype.forEach.call(blocks.querySelectorAll('[data-sent]'), upd); showItem(); refresh();
+      say('이 기기에 저장된 내 답을 다시 채웠어요.', true);
+    }
+    /* 캡처 붙여넣기 칸: 칸을 누르고 Ctrl+V → 줄여서 캡처 수집기로 보냄 (선생님 드라이브에 저장) */
+    var CAP_URL = 'https://script.google.com/macros/s/AKfycbzq-CB6BteWTEiAQ8Gu4-wO9UPxI_fxQKZot76-mXEk36xPZnPUYBCJqBs-oAAK1O0H/exec';
+    var caps = Array.prototype.slice.call(blocks.querySelectorAll('.cap')), activeCap = null;
+    function capKey() { var k = key(); return k ? k + '-caps' : null; }
+    function saveCaps() { var k = capKey(); if (!k) return; var o = {}; caps.forEach(function (c) { if (c.dataset.done) o[c.dataset.slot] = c.dataset.done; }); try { localStorage.setItem(k, JSON.stringify(o)); } catch (e) {} }
+    function loadCaps() {
+      var k = capKey(); if (!k) return; var o; try { o = JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch (e) { o = {}; }
+      caps.forEach(function (c) { if (o[c.dataset.slot] && !c.dataset.done) { c.dataset.done = o[c.dataset.slot]; var st = c.querySelector('.cap-st'); st.textContent = '✓ 이 기기에서 올렸어요 (' + o[c.dataset.slot].split(' ')[0] + ')'; st.className = 'cap-st ok'; var t = null; try { t = localStorage.getItem(k + '-' + c.dataset.slot); } catch (e) {} if (t) { var im = c.querySelector('img'); im.src = t; im.hidden = false; } } });
+    }
+    function shrink(blob, w, q) {
+      return new Promise(function (res, rej) {
+        var url = URL.createObjectURL(blob), im = new Image();
+        im.onload = function () {
+          var sc = Math.min(1, w / im.naturalWidth), cv = document.createElement('canvas');
+          cv.width = Math.round(im.naturalWidth * sc); cv.height = Math.round(im.naturalHeight * sc);
+          var g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height); g.drawImage(im, 0, 0, cv.width, cv.height);
+          URL.revokeObjectURL(url); res(cv.toDataURL('image/jpeg', q));
+        };
+        im.onerror = function () { URL.revokeObjectURL(url); rej(new Error('그림을 읽지 못했어요')); };
+        im.src = url;
+      });
+    }
+    function sendCap(box, blob) {
+      var st = box.querySelector('.cap-st'), img = box.querySelector('img');
+      var cls = document.getElementById('className').value, no = (sidEl.value || '').trim(), nm = (document.getElementById('name').value || '').trim();
+      if (!cls || !/^\d{5}$/.test(no) || !nm) { st.textContent = '먼저 맨 위에 반 · 학번 · 이름을 써요.'; st.className = 'cap-st bad'; return; }
+      st.textContent = '올리는 중…'; st.className = 'cap-st';
+      shrink(blob, 1600, 0.88).then(function (data) {
+        img.src = data; img.hidden = false;
+        return fetch(CAP_URL, { method: 'POST', body: JSON.stringify({ form: ID, slot: box.dataset.slot, cls: cls, no: no, name: nm, data: data }) }).then(function (r) { return r.json(); });
+      }).then(function (j) {
+        if (!j || !j.ok) throw new Error((j && j.err) || '응답 없음');
+        box.dataset.done = j.at + ' ' + j.file; st.textContent = '✓ 올라갔어요 (' + j.at + ')'; st.className = 'cap-st ok'; saveCaps();
+        var k = capKey(); if (k) shrink(blob, 720, 0.7).then(function (t) { try { localStorage.setItem(k + '-' + box.dataset.slot, t); } catch (e) {} });
+      }).catch(function (e) { st.textContent = '올리지 못했어요. 다시 Ctrl+V 해 주세요. (' + why(e.message) + ')'; st.className = 'cap-st bad'; });
+    }
+    caps.forEach(function (box) {
+      var file = box.querySelector('input[type=file]');
+      box.addEventListener('focus', function () { activeCap = box; });
+      box.addEventListener('click', function (e) { activeCap = box; if (!e.target.closest('.cap-file')) box.focus(); });
+      file.addEventListener('change', function () { if (file.files && file.files[0]) sendCap(box, file.files[0]); file.value = ''; });
+    });
+    document.addEventListener('paste', function (ev) {
+      var box = document.activeElement && document.activeElement.closest ? document.activeElement.closest('.cap') : null;
+      if (!box) return;
+      ev.preventDefault();
+      var items = (ev.clipboardData && ev.clipboardData.items) || [];
+      for (var i = 0; i < items.length; i++) { if (items[i].type.indexOf('image/') === 0) { sendCap(box, items[i].getAsFile()); return; } }
+      var st = box.querySelector('.cap-st'); st.textContent = '복사된 그림이 없어요. Win + Shift + S로 캡처한 뒤 이 칸을 누르고 Ctrl + V 해요.'; st.className = 'cap-st bad';
+    });
+    /* 사진 폴더 올리기: 폴더를 고르면 사진을 한 장씩 캡처 수집기로 보냄 (로그인 없이, 선생님 드라이브 「인공지능기초 2차 수행 사진 폴더」) */
+    var folds = Array.prototype.slice.call(blocks.querySelectorAll('.pfold'));
+    var PHOTO_RE = /\.(jpe?g|png|gif|webp|bmp)$/i, OK_TYPES = /^image\/(png|jpeg|gif|webp|bmp)$/;
+    function foldKey() { var k = key(); return k ? k + '-photos' : null; }
+    function foldSt(box, msg, c) { var st = box.querySelector('.pf-st'); st.textContent = msg; st.className = 'pf-st' + (c ? ' ' + c : ''); }
+    function loadFolds() {
+      var k = foldKey(); if (!k) return; var v = null; try { v = localStorage.getItem(k); } catch (e) {}
+      folds.forEach(function (box) { if (v && !box.dataset.done) { box.dataset.done = v; foldSt(box, '✓ 이 기기에서 올렸어요 (' + v + ')', 'ok'); } });
+    }
+    function readData(f) {
+      if (f.size <= 4 * 1024 * 1024 && OK_TYPES.test(f.type)) {
+        return new Promise(function (res, rej) { var r = new FileReader(); r.onload = function () { res(r.result); }; r.onerror = function () { rej(new Error('파일을 읽지 못했어요')); }; r.readAsDataURL(f); });
+      }
+      return shrink(f, 2000, 0.9);
+    }
+    var WHY = { bad: '반 · 학번(다섯 자리) · 이름을 다시 확인해요', noimg: '사진 파일이 아니에요', big: '사진이 너무 커요', nopath: '파일 이름을 확인해요' };
+    function why(m) { m = String(m || ''); return WHY[m] || (m.indexOf('Failed to fetch') >= 0 ? '인터넷 연결을 확인해요' : m); }
+    function sendPhoto(who, rel, data) {
+      var body = JSON.stringify({ kind: 'photo', form: ID, cls: who.cls, no: who.no, name: who.nm, path: rel, data: data });
+      var tryOnce = function (n) {
+        return fetch(CAP_URL, { method: 'POST', body: body }).then(function (r) { return r.json(); }).then(function (j) {
+          if (!j || !j.ok) throw new Error((j && j.err) || '응답 없음'); return j;
+        }).catch(function (e) { if (n >= 4) throw e; return new Promise(function (ok) { setTimeout(ok, 1500 * (n + 1)); }).then(function () { return tryOnce(n + 1); }); });
+      };
+      return tryOnce(0);
+    }
+    function uploadFolder(box, fileList) {
+      var who = { cls: document.getElementById('className').value, no: (sidEl.value || '').trim(), nm: (document.getElementById('name').value || '').trim() };
+      if (!who.cls || !/^\d{5}$/.test(who.no) || !who.nm) { foldSt(box, '먼저 맨 위에 반 · 학번 · 이름을 써요.', 'bad'); return; }
+      var picked = Array.prototype.slice.call(fileList || []);
+      var list = picked.filter(function (f) { return PHOTO_RE.test(f.name); });
+      if (!list.length) { foldSt(box, '사진 파일이 없어요. 바탕 화면의 학번이름_수행2 폴더를 골랐는지 확인해요.', 'bad'); return; }
+      var top = (list[0].webkitRelativePath || '').normalize('NFC').split('/')[0] || '';
+      var rel = function (f) { var p = (f.webkitRelativePath || f.name).normalize('NFC').split('/'); return p.length > 1 ? p.slice(1).join('/') : p[0]; };
+      var counts = {}, order = [];
+      list.forEach(function (f) { var p = rel(f).split('/'), d = p.length > 1 ? p[0] : '(폴더 밖)'; if (!(d in counts)) { counts[d] = 0; order.push(d); } counts[d]++; });
+      var summary = order.map(function (d) { return d + ' ' + counts[d]; }).join(' · ');
+      var warn = top && top.indexOf(who.no) < 0 ? '\n⚠️ 고른 폴더 이름(' + top + ')에 내 학번이 없어요. 학번이름_수행2 폴더가 맞는지 확인해요.' : '';
+      box.querySelector('.pf-sum').textContent = '고른 폴더: ' + (top || '-') + ' — ' + summary + (picked.length > list.length ? ' (사진이 아닌 파일 ' + (picked.length - list.length) + '개는 뺌)' : '');
+      var btn = box.querySelector('.pf-btn'); btn.classList.add('busy');
+      delete box.dataset.done;
+      var i = 0, done = 0, fail = [], lastErr = '';
+      foldSt(box, '올리는 중… 0 / ' + list.length + '장' + warn);
+      function worker() {
+        if (i >= list.length) return Promise.resolve();
+        var f = list[i++];
+        return readData(f).then(function (data) { return sendPhoto(who, rel(f), data); })
+          .then(function () { done++; }, function (e) { fail.push(rel(f)); lastErr = why(e && e.message); })
+          .then(function () { foldSt(box, '올리는 중… ' + (done + fail.length) + ' / ' + list.length + '장' + warn); return worker(); });
+      }
+      Promise.all([worker(), worker()]).then(function () {
+        btn.classList.remove('busy');
+        if (fail.length) { foldSt(box, '⚠️ ' + list.length + '장 중 ' + fail.length + '장을 못 올렸어요. ' + (lastErr ? '(' + lastErr + ') ' : '') + '폴더를 다시 골라 주세요.\n(' + fail.slice(0, 5).join(', ') + (fail.length > 5 ? ' …' : '') + ')', 'bad'); return; }
+        return fetch(CAP_URL, { method: 'POST', body: JSON.stringify({ kind: 'photodone', form: ID, cls: who.cls, no: who.no, name: who.nm, summary: top + ' — ' + summary, count: list.length }) })
+          .then(function (r) { return r.json(); }).catch(function () { return {}; })
+          .then(function (j) {
+            var at = (j && j.at) || new Date().toLocaleTimeString('ko-KR');
+            box.dataset.done = at + ' · ' + list.length + '장 · ' + summary;
+            foldSt(box, '✓ 사진 ' + list.length + '장 올라갔어요 (' + at + ')' + warn, 'ok');
+            var k = foldKey(); if (k) { try { localStorage.setItem(k, box.dataset.done); } catch (e) {} }
+          });
+      });
+    }
+    folds.forEach(function (box) {
+      var inp = box.querySelector('input[type=file]');
+      inp.addEventListener('change', function () { if (inp.files && inp.files.length) uploadFolder(box, inp.files); inp.value = ''; });
+    });
+    sidEl.addEventListener('input', loadFolds);
+    sidEl.addEventListener('input', loadCaps);
+    sidEl.addEventListener('input', load);
+    blocks.addEventListener('input', save); blocks.addEventListener('change', save);
+
+    /* 제출: 작은 칸들을 문항별로 합쳐 answer1~3에 넣기 */
+    function pack(sec) {
+      var out = [];
+      Array.prototype.forEach.call(sec.querySelectorAll('[data-k]'), function (el) {
+        var label = el.dataset.label;
+        if (el.tagName === 'TABLE') {
+          var cols = JSON.parse(el.dataset.cols), lines = [];
+          Array.prototype.forEach.call(el.querySelectorAll('tr'), function (tr, r) {
+            if (!r) return;
+            var v = Array.prototype.map.call(tr.querySelectorAll('input,select'), function (i) { return i.value.trim(); });
+            if (v.join('')) lines.push(r + ') ' + cols.map(function (c, j) { return c + ': ' + (v[j] || '-'); }).join(' | '));
+          });
+          out.push('■ ' + label + '\n' + (lines.join('\n') || '(비어 있음)'));
+        } else if (el.classList.contains('caps')) {
+          out.push('■ ' + label + '\n' + Array.prototype.map.call(el.querySelectorAll('.cap'), function (c) { return c.dataset.slot + ': ' + (c.dataset.done ? '✓ ' + c.dataset.done : '(안 붙임)'); }).join('\n'));
+        } else if (el.classList.contains('pfold')) {
+          out.push('■ ' + label + '\n' + (el.dataset.done ? '✓ ' + el.dataset.done : '(안 올림)'));
+        } else if (el.classList.contains('calcbox')) {
+          out.push('■ ' + label + '\n' + (el.textContent.trim() || '(비어 있음)'));
+        } else if (el.classList.contains('cks')) {
+          out.push('■ ' + label + '\n' + Array.prototype.map.call(el.querySelectorAll('input'), function (c) { return (c.checked ? '☑ ' : '☐ ') + c.value; }).join('\n'));
+        } else if (el.tagName === 'SELECT') {
+          out.push('■ ' + label + ': ' + (el.value || '(안 고름)'));
+        } else {
+          out.push('■ ' + label + '\n' + (el.value.trim() || '(비어 있음)'));
+        }
+      });
+      return out.join('\n\n');
+    }
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var miss = [];
+      Array.prototype.forEach.call(document.querySelectorAll('.miss'), function (x) { x.classList.remove('miss'); });
+      var cls = document.getElementById('className'), nm = document.getElementById('name');
+      if (!cls.value) miss.push(cls);
+      if (!/^\d{5}$/.test((sidEl.value || '').trim())) miss.push(sidEl);
+      if (!nm.value.trim()) miss.push(nm);
+      Array.prototype.forEach.call(blocks.querySelectorAll('[data-req]'), function (el) { if (!el.value.trim()) miss.push(el); });
+      var aiSel = blocks.querySelector('select[data-k$=".ai"]'), aiWhat = blocks.querySelector('[data-k$=".aiwhat"]');
+      var testTb = blocks.querySelector('table[data-k="q3.tests"], table[data-k="q2.tests"], table[data-k="q1.acc"]');
+      if (miss.length) { miss.forEach(function (x) { x.classList.add('miss'); }); miss[0].scrollIntoView({ behavior: 'smooth', block: 'center' }); say('빨간 테두리 칸을 채워 주세요. (반 · 학번 다섯 자리 · 이름 포함' + (aiSel && aiSel.value === '사용함' ? ' · 생성형 AI를 썼다면 무엇을 어떻게 썼는지도' : '') + ')'); return; }
+      Array.prototype.forEach.call(blocks.querySelectorAll('.qb'), function (sec) { document.getElementById('answer' + sec.dataset.q).value = pack(sec); });
+      document.getElementById('clientSubmittedAt').value = new Date().toISOString();
+      document.getElementById('userAgent').value = navigator.userAgent;
+      save();
+      form.submit();
+      say('제출했어요 (' + new Date().toLocaleTimeString('ko-KR') + ').', true);
+    });
+  })();
+  </script>
+  <script>
+    /* copy-guard: 복사·잘라내기·드래그·오른쪽 클릭 막기 */
+    (function () {
+      var toastBox = document.getElementById('toast');
+      function say(msg) { toastBox.textContent = msg; toastBox.className = 'toast'; window.setTimeout(function () { if (toastBox.textContent === msg) toastBox.textContent = ''; }, 2500); }
+      function inField(e) { return e.target && e.target.closest && e.target.closest('input, textarea, select'); }
+      var MSG = '이 활동지에서는 복사할 수 없어요. 직접 생각해서 써 주세요.';
+      ['copy', 'cut'].forEach(function (type) { document.addEventListener(type, function (e) { e.preventDefault(); say(MSG); }, true); });
+      document.addEventListener('contextmenu', function (e) { if (!inField(e)) e.preventDefault(); }, true);
+      document.addEventListener('selectstart', function (e) { if (!inField(e)) e.preventDefault(); }, true);
+      document.addEventListener('dragstart', function (e) { e.preventDefault(); }, true);
+      document.addEventListener('keydown', function (e) {
+        var k = (e.key || '').toLowerCase();
+        if ((e.ctrlKey || e.metaKey) && (k === 'c' || k === 'x')) { e.preventDefault(); say(MSG); }
+        if ((e.ctrlKey || e.metaKey) && k === 'a' && !inField(e)) { e.preventDefault(); }
+      }, true);
+    })();
+  </script>
+</body>
+</html>
