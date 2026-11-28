@@ -185,14 +185,15 @@
           }
           lines.push((v[0] || (i + 1) + '번 줄') + ': ' + (v[1] || '-') + '장 중 ' + (v[2] || '-') + '장, ' + (v[3] || '-') + '% → ' + msg);
         }
-        cc.textContent = msg; cc.className = 'cc' + (ok === true ? ' ok-t' : ok === false ? ' bad-t' : '');
+        if (cc) { cc.textContent = msg; cc.className = 'cc' + (ok === true ? ' ok-t' : ok === false ? ' bad-t' : ''); }
       });
       var g = function (k) { var el = blocks.querySelector('[data-k$=".' + k + '"]'); return el ? num(el.value) : null; };
       var tn = g('tn'), tc = g('tc'), ta = g('ta'), tot = [];
       if (tn != null && rows) tot.push(tn === sn ? '✓ 전체 장수가 클래스별 장수의 합과 같아요' : '✗ 전체 장수가 클래스별 장수의 합(표)과 달라요');
       if (tc != null && rows) tot.push(tc === sc ? '✓ 전체 맞힌 장수가 클래스별 합과 같아요' : '✗ 전체 맞힌 장수가 클래스별 합(표)과 달라요');
       if (tn != null && tc != null && ta != null) tot.push(!isNaN(tn) && !isNaN(tc) && !isNaN(ta) && tn > 0 && tc <= tn && near(ta, tn, tc) ? '✓ 전체 정확도 계산이 맞아요' : '✗ 전체 정확도를 다시 계산해요');
-      box.textContent = (lines.length || tot.length) ? ['클래스별', lines.join('\n') || '(비어 있음)', '전체', tot.join('\n') || '(전체 칸을 채우면 확인해요)'].join('\n') : '';
+      var quiet = tb.getAttribute('data-calc') === 'q';
+      box.textContent = quiet ? (tot.length ? '전체\n' + tot.join('\n') : '') : ((lines.length || tot.length) ? ['클래스별', lines.join('\n') || '(비어 있음)', '전체', tot.join('\n') || '(전체 칸을 채우면 확인해요)'].join('\n') : '');
     }
     function refresh() { tally(); calc(); }
     blocks.addEventListener('input', refresh); blocks.addEventListener('change', refresh); refresh();
