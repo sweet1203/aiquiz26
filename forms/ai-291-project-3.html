@@ -94,8 +94,8 @@
         </div>
         <p class="hint">학번을 쓰면 이 기기에 임시 저장된 내 답이 있으면 다시 채워져요. 공용 컴퓨터에서는 제출 뒤 창을 닫아 주세요.</p>
         <div id="blocks">
-<section class="qb" data-q="1"><h2>1. 한계와 사회적 영향</h2><div class="fld"><label>내 사진·모델을 근거로 5문장 이상</label><textarea data-k="q1.impact" data-label="내 사진·모델을 근거로 5문장 이상" data-np="1" placeholder="데이터 편향, 특정 환경에서 성능이 떨어지는 점, 잘못 분류했을 때의 피해, 공정성, 개인정보 등. 내 숫자와 내 사진을 근거로 써요." rows="6" data-req=1 data-sent=1></textarea><div class="cnt" data-for="q1.impact"></div></div></section>
-<section class="qb" data-q="2"><h2>2. 생성형 AI 활용 기록</h2><div class="fld"><label>생성형 AI를 썼나요?</label><select data-k="q2.ai" data-label="생성형 AI를 썼나요?" data-req=1><option value="">고르세요</option><option>사용하지 않음</option><option>사용함</option></select></div><div class="fld"><label>썼다면: AI 종류 · 활용 목적 · 실제로 반영한 내용 <small>(선택)</small></label><textarea data-k="q2.aiwhat" data-label="썼다면: AI 종류 · 활용 목적 · 실제로 반영한 내용" data-np="1" placeholder="" rows="3"></textarea></div></section>
+<section class="qb" data-q="1"><h2>1. 한계와 사회적 영향</h2><div class="fld"><label>내 사진·모델을 근거로 5문장 이상</label><textarea data-k="q1.impact" data-label="내 사진·모델을 근거로 5문장 이상" data-np="1" placeholder="" rows="6" data-sent=1></textarea><div class="cnt" data-for="q1.impact"></div></div></section>
+<section class="qb" data-q="2"><h2>2. 생성형 AI 활용 기록</h2><div class="fld"><label>생성형 AI를 썼나요?</label><select data-k="q2.ai" data-label="생성형 AI를 썼나요?"><option value="">고르세요</option><option>사용하지 않음</option><option>사용함</option></select></div><div class="fld"><label>썼다면: AI 종류 · 활용 목적 · 실제로 반영한 내용 <small>(선택)</small></label><textarea data-k="q2.aiwhat" data-label="썼다면: AI 종류 · 활용 목적 · 실제로 반영한 내용" data-np="1" placeholder="" rows="3"></textarea></div></section>
 <section class="qb" data-q="3"><h2>3. 보충</h2><div class="fld"><label>앞 시간에 못 낸 내용 보충 <small>(선택)</small></label><textarea data-k="q3.more" data-label="앞 시간에 못 낸 내용 보충" data-np="1" placeholder="" rows="3"></textarea></div></section>
         </div>
         <p class="note">✍️ 모든 칸은 복사·붙여넣기·드래그가 막혀 있어요. 내 프로젝트에서 실제로 나온 이름과 숫자로 직접 써요.</p>
@@ -370,9 +370,7 @@
       if (!nm.value.trim()) miss.push(nm);
       Array.prototype.forEach.call(blocks.querySelectorAll('[data-req]'), function (el) { if (!el.value.trim()) miss.push(el); });
       var aiSel = blocks.querySelector('select[data-k$=".ai"]'), aiWhat = blocks.querySelector('[data-k$=".aiwhat"]');
-      if (aiSel && aiWhat && aiSel.value === '사용함' && !aiWhat.value.trim()) miss.push(aiWhat);
       var testTb = blocks.querySelector('table[data-k="q3.tests"], table[data-k="q2.tests"], table[data-k="q1.acc"]');
-      if (testTb && !Array.prototype.some.call(testTb.querySelectorAll('input'), function (i) { return i.value.trim(); })) miss.push(testTb);
       if (miss.length) { miss.forEach(function (x) { x.classList.add('miss'); }); miss[0].scrollIntoView({ behavior: 'smooth', block: 'center' }); say('빨간 테두리 칸을 채워 주세요. (반 · 학번 다섯 자리 · 이름 포함' + (aiSel && aiSel.value === '사용함' ? ' · 생성형 AI를 썼다면 무엇을 어떻게 썼는지도' : '') + ')'); return; }
       Array.prototype.forEach.call(blocks.querySelectorAll('.qb'), function (sec) { document.getElementById('answer' + sec.dataset.q).value = pack(sec); });
       document.getElementById('clientSubmittedAt').value = new Date().toISOString();
